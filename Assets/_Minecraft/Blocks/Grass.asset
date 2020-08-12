@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c802115257c35d4b868a7b1b66eae8a, type: 3}
+  m_Name: Grass
+  m_EditorClassIdentifier: 
+  m_BlockName: grass
+  m_Type: 1
+  m_Flags: 0
+  m_VertexType: 1
+  m_MoveResistance: 1
+  m_LightOpacity: 15
+  m_LightValue: 0
+  m_Hardness: 4
+  m_DestoryEffectColor:
+    m_Mode: 4
+    m_GradientMin:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    m_GradientMax:
+      serializedVersion: 2
+      key0: {r: 0.40392157, g: 0.30980393, b: 0.2509804, a: 1}
+      key1: {r: 0.5294118, g: 0.6, b: 0.61960787, a: 1}
+      key2: {r: 0.5921569, g: 0.45882353, b: 0.3529412, a: 0}
+      key3: {r: 0.5372549, g: 0.4, b: 0.32156864, a: 0}
+      key4: {r: 0.7764706, g: 0.6117647, b: 0.45882353, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 16580
+      ctime1: 22282
+      ctime2: 37748
+      ctime3: 53411
+      ctime4: 65535
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 1
+      m_NumColorKeys: 5
+      m_NumAlphaKeys: 2
+    m_ColorMin: {r: 0, g: 0, b: 0, a: 0}
+    m_ColorMax: {r: 0, g: 0, b: 0, a: 0}
+  m_OnTick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 7bddffbfa2ed3d24f812a6e4b7798033, type: 2}
+        m_MethodName: BlockEvent_OnTick_Grass
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_OnRandomTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockPlace:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  PositiveXLB: {x: 0.25097656, y: 0.87597656}
+  PositiveXRB: {x: 0.31152344, y: 0.87597656}
+  PositiveXRT: {x: 0.31152344, y: 0.93652344}
+  PositiveXLT: {x: 0.25097656, y: 0.93652344}
+  PositiveYLB: {x: 0.18847656, y: 0.87597656}
+  PositiveYRB: {x: 0.24902344, y: 0.87597656}
+  PositiveYRT: {x: 0.24902344, y: 0.93652344}
+  PositiveYLT: {x: 0.18847656, y: 0.93652344}
+  PositiveZLB: {x: 0.25097656, y: 0.87597656}
+  PositiveZRB: {x: 0.31152344, y: 0.87597656}
+  PositiveZRT: {x: 0.31152344, y: 0.93652344}
+  PositiveZLT: {x: 0.25097656, y: 0.93652344}
+  NegativeXLB: {x: 0.25097656, y: 0.87597656}
+  NegativeXRB: {x: 0.31152344, y: 0.87597656}
+  NegativeXRT: {x: 0.31152344, y: 0.93652344}
+  NegativeXLT: {x: 0.25097656, y: 0.93652344}
+  NegativeYLB: {x: 0.12597656, y: 0.87597656}
+  NegativeYRB: {x: 0.18652344, y: 0.87597656}
+  NegativeYRT: {x: 0.18652344, y: 0.93652344}
+  NegativeYLT: {x: 0.12597656, y: 0.93652344}
+  NegativeZLB: {x: 0.25097656, y: 0.87597656}
+  NegativeZRB: {x: 0.31152344, y: 0.87597656}
+  NegativeZRT: {x: 0.31152344, y: 0.93652344}
+  NegativeZLT: {x: 0.25097656, y: 0.93652344}
+  m_DigAudio: {fileID: 8300000, guid: ff0ebe91ce87144f38d074af58fc58d2, type: 3}
+  m_PlaceAudio: {fileID: 8300000, guid: ff0ebe91ce87144f38d074af58fc58d2, type: 3}
+  m_StepAudios:
+  - {fileID: 8300000, guid: 672d1ab32bc0a49d3b278b75220f0c0a, type: 3}
+  - {fileID: 8300000, guid: 31dc21dda39a945188ff8c18ff99e939, type: 3}
+  - {fileID: 8300000, guid: e9e2afee4ad314324ba8d265ce2df227, type: 3}
+  - {fileID: 8300000, guid: 117b39c34382848eca5b62202e16973e, type: 3}
+  - {fileID: 8300000, guid: ba5d6bc2e4d454a2caba418bbca36918, type: 3}
+  - {fileID: 8300000, guid: f7c515438fc4e4261b8a94d053395691, type: 3}
+  m_ExtraAssets: []

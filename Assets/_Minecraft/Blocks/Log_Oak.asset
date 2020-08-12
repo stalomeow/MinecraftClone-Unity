@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c802115257c35d4b868a7b1b66eae8a, type: 3}
+  m_Name: Log_Oak
+  m_EditorClassIdentifier: 
+  m_BlockName: log_oak
+  m_Type: 11
+  m_Flags: 0
+  m_VertexType: 1
+  m_MoveResistance: 1
+  m_LightOpacity: 15
+  m_LightValue: 0
+  m_Hardness: 16
+  m_DestoryEffectColor:
+    m_Mode: 4
+    m_GradientMin:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    m_GradientMax:
+      serializedVersion: 2
+      key0: {r: 0.4, g: 0.32941177, b: 0.21960784, a: 1}
+      key1: {r: 0.4967071, g: 0.4374962, b: 0.3453903, a: 1}
+      key2: {r: 0.5921569, g: 0.5058824, b: 0.3254902, a: 0}
+      key3: {r: 0.69411767, g: 0.5803922, b: 0.4, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 23057
+      ctime2: 41116
+      ctime3: 65535
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 1
+      m_NumColorKeys: 4
+      m_NumAlphaKeys: 2
+    m_ColorMin: {r: 0, g: 0, b: 0, a: 0}
+    m_ColorMax: {r: 0, g: 0, b: 0, a: 0}
+  m_OnTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnRandomTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockPlace:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  PositiveXLB: {x: 0.25097656, y: 0.81347656}
+  PositiveXRB: {x: 0.31152344, y: 0.81347656}
+  PositiveXRT: {x: 0.31152344, y: 0.87402344}
+  PositiveXLT: {x: 0.25097656, y: 0.87402344}
+  PositiveYLB: {x: 0.25097656, y: 0.75097656}
+  PositiveYRB: {x: 0.31152344, y: 0.75097656}
+  PositiveYRT: {x: 0.31152344, y: 0.81152344}
+  PositiveYLT: {x: 0.25097656, y: 0.81152344}
+  PositiveZLB: {x: 0.25097656, y: 0.81347656}
+  PositiveZRB: {x: 0.31152344, y: 0.81347656}
+  PositiveZRT: {x: 0.31152344, y: 0.87402344}
+  PositiveZLT: {x: 0.25097656, y: 0.87402344}
+  NegativeXLB: {x: 0.25097656, y: 0.81347656}
+  NegativeXRB: {x: 0.31152344, y: 0.81347656}
+  NegativeXRT: {x: 0.31152344, y: 0.87402344}
+  NegativeXLT: {x: 0.25097656, y: 0.87402344}
+  NegativeYLB: {x: 0.25097656, y: 0.75097656}
+  NegativeYRB: {x: 0.31152344, y: 0.75097656}
+  NegativeYRT: {x: 0.31152344, y: 0.81152344}
+  NegativeYLT: {x: 0.25097656, y: 0.81152344}
+  NegativeZLB: {x: 0.25097656, y: 0.81347656}
+  NegativeZRB: {x: 0.31152344, y: 0.81347656}
+  NegativeZRT: {x: 0.31152344, y: 0.87402344}
+  NegativeZLT: {x: 0.25097656, y: 0.87402344}
+  m_DigAudio: {fileID: 8300000, guid: 0f36cd3ca7fe14eda9684f2d3cb197e7, type: 3}
+  m_PlaceAudio: {fileID: 0}
+  m_StepAudios:
+  - {fileID: 8300000, guid: bb226b2c93c304cc494258f614588e28, type: 3}
+  - {fileID: 8300000, guid: d3c620592f01a43129432e1de5f9c43e, type: 3}
+  - {fileID: 8300000, guid: b4c7109681a5b421ebaaa71c2ad58273, type: 3}
+  - {fileID: 8300000, guid: cbba1fb6e2f574b2da3a5f21a6028a4c, type: 3}
+  - {fileID: 8300000, guid: c213bce8a961847e78c60f7cb625dd67, type: 3}
+  - {fileID: 8300000, guid: 53219e396b82f4e56b329ea29afd95c8, type: 3}
+  m_ExtraAssets: []

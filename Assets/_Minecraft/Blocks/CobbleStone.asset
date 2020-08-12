@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c802115257c35d4b868a7b1b66eae8a, type: 3}
+  m_Name: CobbleStone
+  m_EditorClassIdentifier: 
+  m_BlockName: cobble stone
+  m_Type: 17
+  m_Flags: 0
+  m_VertexType: 1
+  m_MoveResistance: 1
+  m_LightOpacity: 15
+  m_LightValue: 0
+  m_Hardness: 16
+  m_DestoryEffectColor:
+    m_Mode: 4
+    m_GradientMin:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    m_GradientMax:
+      serializedVersion: 2
+      key0: {r: 0.3372549, g: 0.3372549, b: 0.3372549, a: 1}
+      key1: {r: 0.3372549, g: 0.3372549, b: 0.3372549, a: 1}
+      key2: {r: 0.5372549, g: 0.5372549, b: 0.5372549, a: 0}
+      key3: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 21694
+      ctime2: 43841
+      ctime3: 65535
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 1
+      m_NumColorKeys: 4
+      m_NumAlphaKeys: 2
+    m_ColorMin: {r: 0, g: 0, b: 0, a: 0}
+    m_ColorMax: {r: 0, g: 0, b: 0, a: 0}
+  m_OnTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnRandomTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockPlace:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  PositiveXLB: {x: 0.0625, y: 0.9375}
+  PositiveXRB: {x: 0.125, y: 0.9375}
+  PositiveXRT: {x: 0.125, y: 1}
+  PositiveXLT: {x: 0.0625, y: 1}
+  PositiveYLB: {x: 0.0625, y: 0.9375}
+  PositiveYRB: {x: 0.125, y: 0.9375}
+  PositiveYRT: {x: 0.125, y: 1}
+  PositiveYLT: {x: 0.0625, y: 1}
+  PositiveZLB: {x: 0.0625, y: 0.9375}
+  PositiveZRB: {x: 0.125, y: 0.9375}
+  PositiveZRT: {x: 0.125, y: 1}
+  PositiveZLT: {x: 0.0625, y: 1}
+  NegativeXLB: {x: 0.0625, y: 0.9375}
+  NegativeXRB: {x: 0.125, y: 0.9375}
+  NegativeXRT: {x: 0.125, y: 1}
+  NegativeXLT: {x: 0.0625, y: 1}
+  NegativeYLB: {x: 0.0625, y: 0.9375}
+  NegativeYRB: {x: 0.125, y: 0.9375}
+  NegativeYRT: {x: 0.125, y: 1}
+  NegativeYLT: {x: 0.0625, y: 1}
+  NegativeZLB: {x: 0.0625, y: 0.9375}
+  NegativeZRB: {x: 0.125, y: 0.9375}
+  NegativeZRT: {x: 0.125, y: 1}
+  NegativeZLT: {x: 0.0625, y: 1}
+  m_DigAudio: {fileID: 8300000, guid: 35ed714dad7fdc449a11e42e6a001166, type: 3}
+  m_PlaceAudio: {fileID: 0}
+  m_StepAudios:
+  - {fileID: 8300000, guid: e6c88b998612c4cd0bf5db5b15e5187d, type: 3}
+  - {fileID: 8300000, guid: 0881b4e81551f4f8e9f9bc43a6943481, type: 3}
+  - {fileID: 8300000, guid: f12039a2a30ba4db1823c619c9310535, type: 3}
+  - {fileID: 8300000, guid: 0304af60e843a4acaafeda8a02907cae, type: 3}
+  - {fileID: 8300000, guid: 357a84b54cd0848be90aae266696daf4, type: 3}
+  - {fileID: 8300000, guid: 94cd9f063cd9c4c7d8475d53ff81c07b, type: 3}
+  m_ExtraAssets: []

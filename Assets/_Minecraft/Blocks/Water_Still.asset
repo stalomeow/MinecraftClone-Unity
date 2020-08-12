@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c802115257c35d4b868a7b1b66eae8a, type: 3}
+  m_Name: Water_Still
+  m_EditorClassIdentifier: 
+  m_BlockName: water_still
+  m_Type: 15
+  m_Flags: 161
+  m_VertexType: 1
+  m_MoveResistance: 1
+  m_LightOpacity: 5
+  m_LightValue: 0
+  m_Hardness: 1
+  m_DestoryEffectColor:
+    m_Mode: 0
+    m_GradientMin:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    m_GradientMax:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    m_ColorMin: {r: 0, g: 0, b: 0, a: 0}
+    m_ColorMax: {r: 0.27450982, g: 0.50980395, b: 0.7058824, a: 1}
+  m_OnTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnRandomTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockPlace:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  PositiveXLB: {x: 0, y: 0}
+  PositiveXRB: {x: 1, y: 0}
+  PositiveXRT: {x: 1, y: 1}
+  PositiveXLT: {x: 0, y: 1}
+  PositiveYLB: {x: 0, y: 0}
+  PositiveYRB: {x: 1, y: 0}
+  PositiveYRT: {x: 1, y: 1}
+  PositiveYLT: {x: 0, y: 1}
+  PositiveZLB: {x: 0, y: 0}
+  PositiveZRB: {x: 1, y: 0}
+  PositiveZRT: {x: 1, y: 1}
+  PositiveZLT: {x: 0, y: 1}
+  NegativeXLB: {x: 0, y: 0}
+  NegativeXRB: {x: 1, y: 0}
+  NegativeXRT: {x: 1, y: 1}
+  NegativeXLT: {x: 0, y: 1}
+  NegativeYLB: {x: 0, y: 0}
+  NegativeYRB: {x: 1, y: 0}
+  NegativeYRT: {x: 1, y: 1}
+  NegativeYLT: {x: 0, y: 1}
+  NegativeZLB: {x: 0, y: 0}
+  NegativeZRB: {x: 1, y: 0}
+  NegativeZRT: {x: 1, y: 1}
+  NegativeZLT: {x: 0, y: 1}
+  m_DigAudio: {fileID: 8300000, guid: 430e527929405493992b3433fea56113, type: 3}
+  m_PlaceAudio: {fileID: 8300000, guid: 20ae8eb168b224d5f8c6e3274737b2c0, type: 3}
+  m_StepAudios: []
+  m_ExtraAssets: []

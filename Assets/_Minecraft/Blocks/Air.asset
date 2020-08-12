@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c802115257c35d4b868a7b1b66eae8a, type: 3}
+  m_Name: Air
+  m_EditorClassIdentifier: 
+  m_BlockName: air
+  m_Type: 0
+  m_Flags: 135
+  m_VertexType: 0
+  m_MoveResistance: 0
+  m_LightOpacity: 0
+  m_LightValue: 0
+  m_Hardness: 0
+  m_OnTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnRandomTick:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnBlockPlace:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+  PositiveXLB: {x: 0, y: 0}
+  PositiveXRB: {x: 0, y: 0}
+  PositiveXRT: {x: 0, y: 0}
+  PositiveXLT: {x: 0, y: 0}
+  PositiveYLB: {x: 0, y: 0}
+  PositiveYRB: {x: 0, y: 0}
+  PositiveYRT: {x: 0, y: 0}
+  PositiveYLT: {x: 0, y: 0}
+  PositiveZLB: {x: 0, y: 0}
+  PositiveZRB: {x: 0, y: 0}
+  PositiveZRT: {x: 0, y: 0}
+  PositiveZLT: {x: 0, y: 0}
+  NegativeXLB: {x: 0, y: 0}
+  NegativeXRB: {x: 0, y: 0}
+  NegativeXRT: {x: 0, y: 0}
+  NegativeXLT: {x: 0, y: 0}
+  NegativeYLB: {x: 0, y: 0}
+  NegativeYRB: {x: 0, y: 0}
+  NegativeYRT: {x: 0, y: 0}
+  NegativeYLT: {x: 0, y: 0}
+  NegativeZLB: {x: 0, y: 0}
+  NegativeZRB: {x: 0, y: 0}
+  NegativeZRT: {x: 0, y: 0}
+  NegativeZLT: {x: 0, y: 0}
+  m_DigAudio: {fileID: 0}
+  m_PlaceAudio: {fileID: 0}
+  m_StepAudios: []
+  m_ExtraAssets: []
