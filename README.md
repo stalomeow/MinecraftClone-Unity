@@ -1,5 +1,7 @@
 # A Minecraft clone made with Unity
 
+[这里是中文的README（Here is the README in Chinese）](README_CN.md)
+
 ![Screenshot](Screenshots/0.png)
 
 ![Screenshot](Screenshots/1.png)
