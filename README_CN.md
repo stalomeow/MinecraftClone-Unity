@@ -1,10 +1,10 @@
 # 使用Unity制作的Minecraft
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/0.png)
+![Screenshot](Screenshots/0.png)
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/1.png)
+![Screenshot](Screenshots/1.png)
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/2.png)
+![Screenshot](Screenshots/2.png)
 
 
 
@@ -24,13 +24,13 @@
 
 ## Unity中的方块编辑器和物品编辑器
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/3.png)
+![Screenshot](Screenshots/3.png)
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/4.png)
+![Screenshot](Screenshots/4.png)
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/5.png)
+![Screenshot](Screenshots/5.png)
 
-![Screenshot](E:/GitHub/MinecraftClone-Unity/Screenshots/6.png)
+![Screenshot](Screenshots/6.png)
 
 你可以不写一行代码创建一个新的方块或物品！一些复杂方块的逻辑只需要写在对应的事件中。
 
