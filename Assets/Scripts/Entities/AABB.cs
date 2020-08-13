@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Minecraft.BlocksData;
+using UnityEngine;
 
 namespace Minecraft
 {
@@ -23,9 +24,23 @@ namespace Minecraft
                    && ((Min.z >= aabb.Min.z && Min.z <= aabb.Max.z) || (aabb.Min.z >= Min.z && aabb.Min.z <= Max.z));
         }
 
-        public static AABB CreateNormalBlockAABB(float x, float y, float z)
+        public static AABB CreateBlockAABB(float x, float y, float z)
         {
             return new AABB(new Vector3(x, y, z), new Vector3(x + 1, y + 1, z + 1));
+        }
+
+        public static AABB CreateBlockAABB(float x, float y, float z, Block block)
+        {
+            Vector3 min = new Vector3(x, y, z);
+            Vector3 max = block.HasAnyFlag(BlockFlags.IgnoreCollisions) ? min : new Vector3(x + 1, y + 1, z + 1);
+            return new AABB(min, max);
+        }
+
+        public static AABB Merge(AABB left, AABB right)
+        {
+            Vector3 min = Vector3.Min(left.Min, right.Min);
+            Vector3 max = Vector3.Max(left.Max, right.Max);
+            return new AABB(min, max);
         }
 
         public static AABB operator +(AABB aabb, Vector3 vec) => new AABB(aabb.Min + vec, aabb.Max + vec);

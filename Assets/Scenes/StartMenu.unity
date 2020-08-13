@@ -924,7 +924,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 27.012001}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 575.04, y: 236.27}
+  m_AnchoredPosition: {x: 538, y: 236.27}
   m_SizeDelta: {x: 769.92676, y: 100.80194}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &416572864
@@ -1068,7 +1068,7 @@ MonoBehaviour:
   - Always sunny
   - Open Source
   - Caves and trees
-  - Using TNT to do something
+  - Create anything you want
 --- !u!1 &617992811
 GameObject:
   m_ObjectHideFlags: 0

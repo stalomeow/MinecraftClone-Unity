@@ -160,7 +160,7 @@ namespace Minecraft
             ChunkManager = new ChunkManager(settings, MainCamera, m_PlayerTransform, chunkSavingDirectory, m_ChunkMaterial, m_LiquidMaterial);
             EntityManager = new EntityManager(m_BlockEntityMaterial, m_Player);
 
-            m_PlayerTransform.position = Settings.Position;
+            m_PlayerTransform.position = (settings.Position.y < 0 || settings.Position.y >= WorldConsts.WorldHeight) ? new Vector3(0, WorldConsts.WorldHeight, 0) : settings.Position;
 
             ChunkManager.OnChunksReadyWhenStartingUp += () =>
             {

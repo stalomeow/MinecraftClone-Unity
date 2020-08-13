@@ -34,6 +34,22 @@
 
 你可以不写一行代码创建一个新的方块或物品！一些复杂方块的逻辑只需要写在对应的事件中。
 
+## 修改世界的配置
+
+进入`C:\Users\${你的用户名}\AppData\LocalLow\JinYuhan\MinecraftClone\Worlds`路径，打开以要修改的世界的名称命名的文件夹，找到`settings.json`，双击打开编辑。
+
+| 字段                    | 类型                  | 用途                                                         |
+| ----------------------- | --------------------- | ------------------------------------------------------------ |
+| `Name`                  | `System.String`       | 世界的名称                                                   |
+| `Type`                  | `System.Int32`        | 世界的类型（暂时保留）                                       |
+| `Mode`                  | `System.Byte`         | 世界的玩法（暂时保留）                                       |
+| `Seed`                  | `System.Int32`        | 世界的种子                                                   |
+| `RenderChunkRadius`     | `System.Int32`        | 渲染区块的半径（半径以内的区块才会被渲染）                   |
+| `HorizontalFOVInDEG`    | `System.Single`       | 水平视角大小（角度制）                                       |
+| `MaxChunkCountInMemory` | `System.Int32`        | 内存中最多保留的区块数量，超出这个数字后，将开始卸载部分区块 |
+| `EnableDestroyEffect`   | `System.Boolean`      | 是否显示摧毁方块的特效                                       |
+| `Position`              | `UnityEngine.Vector3` | 玩家上一次结束游戏时的坐标                                   |
+
 
 
 ## 参考

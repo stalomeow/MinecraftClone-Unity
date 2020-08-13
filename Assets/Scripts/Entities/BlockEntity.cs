@@ -27,7 +27,7 @@ namespace Minecraft
             get
             {
                 Vector3 pos = m_Transform.position;
-                return AABB.CreateNormalBlockAABB(pos.x, pos.y, pos.z);
+                return AABB.CreateBlockAABB(pos.x, pos.y, pos.z);
             }
         }
 
@@ -36,26 +36,39 @@ namespace Minecraft
             get
             {
                 AABB aabb = BoundingBox;
+                WorldManager world = WorldManager.Active;
 
-                int y = Mathf.FloorToInt(aabb.Min.y) - 1; // 碰撞盒下面的方块
+                int y = Mathf.FloorToInt(aabb.Min.y) - 1;
 
                 if (y >= WorldHeight || y < 0)
                 {
                     return false;
                 }
 
-                int x = Mathf.FloorToInt(aabb.Min.x);
-                int z = Mathf.FloorToInt(aabb.Min.z);
+                int startX = Mathf.FloorToInt(aabb.Min.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
+                int startZ = Mathf.FloorToInt(aabb.Min.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
 
-                Block block = WorldManager.Active.GetBlock(x, y, z);
-
-                if (block.HasAnyFlag(BlockFlags.IgnoreCollisions))
+                for (int x = startX; x <= endX; x++)
                 {
-                    return false;
+                    for (int z = startZ; z <= endZ; z++)
+                    {
+                        Block block = world.GetBlock(x, y, z);
+
+                        if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                        {
+                            AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                            if (aabb.Intersects(blockAABB))
+                            {
+                                return true;
+                            }
+                        }
+                    }
                 }
 
-                AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
-                return aabb.Intersects(blockAABB);
+                return false;
             }
         }
 
@@ -209,7 +222,6 @@ namespace Minecraft
             if (!m_PreviouslyGrounded && isGrounded)
             {
                 OnGrounded();
-                OnCollisions(CollisionFlags.Below);
 
                 m_MoveDir.y = 0;
             }
@@ -225,7 +237,7 @@ namespace Minecraft
                 m_MoveDir += Physics.gravity * GravityMultiplier * Time.fixedDeltaTime;
             }
 
-            Move(m_MoveDir * Time.fixedDeltaTime, Time.fixedDeltaTime);
+            Move(m_MoveDir * Time.fixedDeltaTime, Time.fixedDeltaTime, isGrounded);
         }
 
 
@@ -238,10 +250,15 @@ namespace Minecraft
         protected virtual void OnCollisions(CollisionFlags flags) { }
 
 
-        private void Move(Vector3 translation, float deltaTime)
+        private void Move(Vector3 translation, float deltaTime, bool isGrounded)
         {
             AABB aabb = BoundingBox;
             CollisionFlags flags = CheckCollisions(aabb, ref translation.x, ref translation.y, ref translation.z);
+
+            if (isGrounded)
+            {
+                flags |= CollisionFlags.Below;
+            }
 
             m_Transform.position = aabb.Min + translation;
             Velocity = translation / deltaTime;
@@ -257,175 +274,225 @@ namespace Minecraft
             WorldManager world = WorldManager.Active;
             CollisionFlags flags = CollisionFlags.None;
 
-            if (moveX > 0)
+            if (moveY > 0)
             {
-                int startX = Mathf.FloorToInt(aabb.Max.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x + moveX);
-                int y = Mathf.FloorToInt(aabb.Min.y);
-                int z = Mathf.FloorToInt(aabb.Min.z);
+                int startX = Mathf.FloorToInt(aabb.Min.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
+                int startY = Mathf.FloorToInt(aabb.Max.y);
+                int endY = Mathf.FloorToInt(aabb.Max.y + moveY);
+                int startZ = Mathf.FloorToInt(aabb.Min.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
 
                 for (int x = startX; x <= endX; x++)
                 {
-                    Block block = world.GetBlock(x, y, z);
-
-                    if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                    for (int z = startZ; z <= endZ; z++)
                     {
-                        AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
-
-                        if (aabb.Intersects(blockAABB))
+                        for (int y = startY; y <= endY; y++)
                         {
-                            flags |= CollisionFlags.Sides;
-                            moveX = 0;
+                            Block block = world.GetBlock(x, y, z);
+
+                            if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                            {
+                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                                if (aabb.Intersects(blockAABB))
+                                {
+                                    flags |= CollisionFlags.Above;
+                                    moveY = 0;
+                                }
+                                else
+                                {
+                                    moveY = Mathf.Min(moveY, blockAABB.Min.y - aabb.Max.y);
+                                }
+                                break;
+                            }
                         }
-                        else
-                        {
-                            moveX = blockAABB.Min.x - aabb.Max.x;
-                        }
-                        break;
-                    }
-                }
-            }
-            else if (moveX < 0)
-            {
-                int startX = Mathf.FloorToInt(aabb.Min.x - 1);
-                int endX = Mathf.FloorToInt(aabb.Min.x + moveX);
-                int y = Mathf.FloorToInt(aabb.Min.y);
-                int z = Mathf.FloorToInt(aabb.Min.z);
-
-                for (int x = startX; x >= endX; x--)
-                {
-                    Block block = world.GetBlock(x, y, z);
-
-                    if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
-                    {
-                        AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
-
-                        if (aabb.Intersects(blockAABB))
-                        {
-                            flags |= CollisionFlags.Sides;
-                            moveX = 0;
-                        }
-                        else
-                        {
-                            moveX = blockAABB.Max.x - aabb.Min.x;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if (moveZ > 0)
-            {
-                int x = Mathf.FloorToInt(aabb.Min.x);
-                int y = Mathf.FloorToInt(aabb.Min.y);
-                int startZ = Mathf.FloorToInt(aabb.Max.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z + moveZ);
-
-                for (int z = startZ; z <= endZ; z++)
-                {
-                    Block block = world.GetBlock(x, y, z);
-
-                    if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
-                    {
-                        AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
-
-                        if (aabb.Intersects(blockAABB))
-                        {
-                            flags |= CollisionFlags.Sides;
-                            moveZ = 0;
-                        }
-                        else
-                        {
-                            moveZ = blockAABB.Min.z - aabb.Max.z;
-                        }
-                        break;
-                    }
-                }
-            }
-            else if (moveZ < 0)
-            {
-                int x = Mathf.FloorToInt(aabb.Min.x);
-                int y = Mathf.FloorToInt(aabb.Min.y);
-                int startZ = Mathf.FloorToInt(aabb.Min.z - 1);
-                int endZ = Mathf.FloorToInt(aabb.Min.z + moveZ);
-
-                for (int z = startZ; z >= endZ; z--)
-                {
-                    Block block = world.GetBlock(x, y, z);
-
-                    if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
-                    {
-                        AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
-
-                        if (aabb.Intersects(blockAABB))
-                        {
-                            flags |= CollisionFlags.Sides;
-                            moveZ = 0;
-                        }
-                        else
-                        {
-                            moveZ = blockAABB.Max.z - aabb.Min.z;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if (moveY > 0)
-            {
-                int x = Mathf.FloorToInt(aabb.Min.x);
-                int z = Mathf.FloorToInt(aabb.Min.z);
-
-                int startY = Mathf.FloorToInt(aabb.Max.y);
-                int endY = Mathf.FloorToInt(aabb.Max.y + moveY);
-
-                for (int y = startY; y <= endY; y++)
-                {
-                    Block block = world.GetBlock(x, y, z);
-
-                    if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
-                    {
-                        AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
-
-                        if (aabb.Intersects(blockAABB))
-                        {
-                            flags |= CollisionFlags.Above;
-                            moveY = 0;
-                        }
-                        else
-                        {
-                            moveY = blockAABB.Min.y - aabb.Max.y;
-                        }
-                        break;
                     }
                 }
             }
             else if (moveY < 0)
             {
-                int x = Mathf.FloorToInt(aabb.Min.x);
-                int z = Mathf.FloorToInt(aabb.Min.z);
-
-                int startY = Mathf.FloorToInt(aabb.Min.y - 1);
+                int startX = Mathf.FloorToInt(aabb.Min.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
+                int startY = Mathf.FloorToInt(aabb.Min.y);
                 int endY = Mathf.FloorToInt(aabb.Min.y + moveY);
+                int startZ = Mathf.FloorToInt(aabb.Min.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
 
-                for (int y = startY; y >= endY; y--)
+                for (int x = startX; x <= endX; x++)
                 {
-                    Block block = world.GetBlock(x, y, z);
-
-                    if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                    for (int z = startZ; z <= endZ; z++)
                     {
-                        AABB blockAABB = AABB.CreateNormalBlockAABB(x, y, z);
+                        for (int y = startY; y >= endY; y--)
+                        {
+                            Block block = world.GetBlock(x, y, z);
 
-                        if (aabb.Intersects(blockAABB))
-                        {
-                            flags |= CollisionFlags.Below;
-                            moveY = 0;
+                            if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                            {
+                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                                if (aabb.Intersects(blockAABB))
+                                {
+                                    flags |= CollisionFlags.Below;
+                                    moveY = 0;
+                                }
+                                else
+                                {
+                                    moveY = Mathf.Max(moveY, blockAABB.Max.y - aabb.Min.y);
+                                }
+                                break;
+                            }
                         }
-                        else
+                    }
+                }
+            }
+
+            aabb += new Vector3(0, moveY, 0);
+
+            if (moveX > 0)
+            {
+                int startX = Mathf.FloorToInt(aabb.Max.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x + moveX);
+                int startY = Mathf.FloorToInt(aabb.Min.y);
+                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
+                int startZ = Mathf.FloorToInt(aabb.Min.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
+
+                for (int z = startZ; z <= endZ; z++)
+                {
+                    for (int y = startY; y <= endY; y++)
+                    {
+                        for (int x = startX; x <= endX; x++)
                         {
-                            moveY = blockAABB.Max.y - aabb.Min.y;
+                            Block block = world.GetBlock(x, y, z);
+
+                            if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                            {
+                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                                if (aabb.Intersects(blockAABB))
+                                {
+                                    flags |= CollisionFlags.Sides;
+                                    moveX = 0;
+                                }
+                                else
+                                {
+                                    moveX = Mathf.Min(moveX, blockAABB.Min.x - aabb.Max.x);
+                                }
+                                break;
+                            }
                         }
-                        break;
+                    }
+                }
+            }
+            else if (moveX < 0)
+            {
+                int startX = Mathf.FloorToInt(aabb.Min.x);
+                int endX = Mathf.FloorToInt(aabb.Min.x + moveX);
+                int startY = Mathf.FloorToInt(aabb.Min.y);
+                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
+                int startZ = Mathf.FloorToInt(aabb.Min.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
+
+                for (int z = startZ; z <= endZ; z++)
+                {
+                    for (int y = startY; y <= endY; y++)
+                    {
+                        for (int x = startX; x >= endX; x--)
+                        {
+                            Block block = world.GetBlock(x, y, z);
+
+                            if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                            {
+                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                                if (aabb.Intersects(blockAABB))
+                                {
+                                    flags |= CollisionFlags.Sides;
+                                    moveX = 0;
+                                }
+                                else
+                                {
+                                    moveX = Mathf.Max(moveX, blockAABB.Max.x - aabb.Min.x);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            aabb += new Vector3(moveX, 0, 0);
+
+            if (moveZ > 0)
+            {
+                int startX = Mathf.FloorToInt(aabb.Min.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
+                int startY = Mathf.FloorToInt(aabb.Min.y);
+                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
+                int startZ = Mathf.FloorToInt(aabb.Max.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z + moveZ);
+
+                for (int x = startX; x <= endX; x++)
+                {
+                    for (int y = startY; y <= endY; y++)
+                    {
+                        for (int z = startZ; z <= endZ; z++)
+                        {
+                            Block block = world.GetBlock(x, y, z);
+
+                            if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                            {
+                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                                if (aabb.Intersects(blockAABB))
+                                {
+                                    flags |= CollisionFlags.Sides;
+                                    moveZ = 0;
+                                }
+                                else
+                                {
+                                    moveZ = Mathf.Min(moveZ, blockAABB.Min.z - aabb.Max.z);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (moveZ < 0)
+            {
+                int startX = Mathf.FloorToInt(aabb.Min.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
+                int startY = Mathf.FloorToInt(aabb.Min.y);
+                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
+                int startZ = Mathf.FloorToInt(aabb.Min.z);
+                int endZ = Mathf.FloorToInt(aabb.Min.z + moveZ);
+
+                for (int x = startX; x <= endX; x++)
+                {
+                    for (int y = startY; y <= endY; y++)
+                    {
+                        for (int z = startZ; z >= endZ; z--)
+                        {
+                            Block block = world.GetBlock(x, y, z);
+
+                            if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
+                            {
+                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+
+                                if (aabb.Intersects(blockAABB))
+                                {
+                                    flags |= CollisionFlags.Sides;
+                                    moveZ = 0;
+                                }
+                                else
+                                {
+                                    moveZ = Mathf.Max(moveZ, blockAABB.Max.z - aabb.Min.z);
+                                }
+                                break;
+                            }
+                        }
                     }
                 }
             }
