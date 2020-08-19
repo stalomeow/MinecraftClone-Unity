@@ -1,10 +1,10 @@
 ﻿using Minecraft.BlocksData;
 using Minecraft.ItemsData;
+using System;
 using System.Collections;
 using UnityEngine;
-using System;
-using UnityEngine.UI;
 using static Minecraft.WorldConsts;
+using UnityEngine.Serialization;
 
 #pragma warning disable CS0649
 
@@ -52,14 +52,17 @@ namespace Minecraft
         [Space]
 
         [SerializeField] [Range(3, 12)] private float m_BlockRaycastDistance = 8;
-        [SerializeField] private Image m_DestroyProgress;
-        [SerializeField] private GameObject m_DestroyEffect;
+        [SerializeField] private GameObject m_DestroyEffectPrefab;
+        [SerializeField] private GameObject m_DestroyBlockPrefab;
 
 
         private Camera m_Camera;
         private Transform m_CameraTransform;
         private Transform m_Transform;
         private AudioSource m_AudioSource;
+        private Transform m_DestroyBlockObj;
+        private MeshRenderer m_DestroyBlockObjRenderer;
+        private MaterialPropertyBlock m_DestroyBlockObjProperty;
 
         private WorldManager m_Manager;
 
@@ -113,12 +116,14 @@ namespace Minecraft
 
         private void Start()
         {
-            m_DestroyProgress.fillAmount = 0;
-
             m_Camera = GetComponentInChildren<Camera>();
             m_CameraTransform = m_Camera.GetComponent<Transform>();
             m_Transform = GetComponent<Transform>();
             m_AudioSource = GetComponent<AudioSource>();
+
+            m_DestroyBlockObj = Instantiate(m_DestroyBlockPrefab, Vector3.zero, Quaternion.identity).transform;
+            m_DestroyBlockObjRenderer = m_DestroyBlockObj.GetComponent<MeshRenderer>();
+            m_DestroyBlockObjProperty = new MaterialPropertyBlock();
 
             m_MouseLook.Init(m_Transform, m_CameraTransform);
             m_HeadBob.Setup(m_CameraTransform, m_StepInterval);
@@ -264,7 +269,7 @@ namespace Minecraft
                         {
                             m_Manager.SetBlockType(pos.x, pos.y, pos.z, item.MappedBlockType);
 
-                            Block block = m_Manager.GetBlockByType(item.MappedBlockType);
+                            Block block = m_Manager.DataManager.GetBlockByType(item.MappedBlockType);
                             block.OnBlockPlace(pos.x, pos.y, pos.z);
                             block.PlayPlaceAudio(m_AudioSource);
                         }
@@ -292,6 +297,7 @@ namespace Minecraft
         private IEnumerator DigBlock(Block block, Vector3Int firstHitPos, bool raycastLiquid)
         {
             m_IsDigging = true;
+            m_DestroyBlockObj.position = firstHitPos + new Vector3(0.5f, 0.5f, 0.5f);
 
             int hardness = block.Hardness;
             float damage = 0;
@@ -305,31 +311,38 @@ namespace Minecraft
                     if (RaycastBlock(raycastLiquid, out Vector3Int hit, out _, b => b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast)) && hit == firstHitPos)
                     {
                         damage += Time.deltaTime * 5;
-                        m_DestroyProgress.fillAmount = damage / hardness;
+
+                        SetDigProgress(block.VertexType == BlockVertexType.Cube ? (damage / hardness) : 0);
 
                         yield return null;
                         continue;
                     }
                 }
 
-                m_DestroyProgress.fillAmount = 0;
+                SetDigProgress(0);
                 m_IsDigging = false;
                 yield break;
             }
 
-            m_DestroyProgress.fillAmount = 0;
             m_Manager.SetBlockType(firstHitPos.x, firstHitPos.y, firstHitPos.z, BlockType.Air);
             block.OnBlockDestroy(firstHitPos.x, firstHitPos.y, firstHitPos.z);
             block.PlayDigAudio(m_AudioSource);
 
             if (m_Manager.Settings.EnableDestroyEffect)
             {
-                ParticleSystem effect = Instantiate(m_DestroyEffect, firstHitPos + new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity).GetComponent<ParticleSystem>();
+                ParticleSystem effect = Instantiate(m_DestroyEffectPrefab, firstHitPos + new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity).GetComponent<ParticleSystem>();
                 ParticleSystem.MainModule main = effect.main;
                 main.startColor = block.DestoryEffectColor;
             }
 
+            SetDigProgress(0);
             m_IsDigging = false;
+        }
+
+        private void SetDigProgress(float progress)
+        {
+            m_DestroyBlockObjProperty.SetFloat("_DestroyProgress", progress);
+            m_DestroyBlockObjRenderer.SetPropertyBlock(m_DestroyBlockObjProperty);
         }
 
         /// <summary>
@@ -608,7 +621,7 @@ namespace Minecraft
             if (m_AudioSource.isPlaying)
                 return;
 
-            m_Manager.GetBlockByType(BlockType.Water).PlayPlaceAudio(m_AudioSource);
+            m_Manager.DataManager.GetBlockByType(BlockType.Water).PlayPlaceAudio(m_AudioSource);
         }
 
         private void OnExitWater()
@@ -616,7 +629,7 @@ namespace Minecraft
             if (m_AudioSource.isPlaying)
                 return;
 
-            m_Manager.GetBlockByType(BlockType.Water).PlayDigAudio(m_AudioSource);
+            m_Manager.DataManager.GetBlockByType(BlockType.Water).PlayDigAudio(m_AudioSource);
         }
 
 

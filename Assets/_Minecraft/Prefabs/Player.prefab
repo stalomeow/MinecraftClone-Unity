@@ -221,8 +221,9 @@ MonoBehaviour:
     m_BobDuration: 0.2
     m_BobAmount: 0.1
   m_BlockRaycastDistance: 8
-  m_DestroyProgress: {fileID: 0}
-  m_DestroyEffect: {fileID: 4597644893682057420, guid: ca332020d4238b14997acdd00bb3b5de,
+  m_DestroyEffectPrefab: {fileID: 4597644893682057420, guid: ca332020d4238b14997acdd00bb3b5de,
+    type: 3}
+  m_DestroyBlockPrefab: {fileID: 5680987909003117288, guid: c1635a3ff4e7d7b4bb6e93c5b0019e7e,
     type: 3}
 --- !u!1 &8174688378270880554
 GameObject:

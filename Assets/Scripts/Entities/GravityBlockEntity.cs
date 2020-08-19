@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
+using XLua;
 
 namespace Minecraft
 {
+    [LuaCallCSharp]
     [DisallowMultipleComponent]
     public class GravityBlockEntity : BlockEntity
     {

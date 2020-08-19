@@ -1,0 +1,21 @@
+﻿
+
+<linker>
+
+	<assembly fullname="Assembly-CSharp">
+	    <type fullname="Minecraft.DataManager" preserve="all"/>
+		<type fullname="Minecraft.Entity" preserve="all"/>
+		<type fullname="Minecraft.EntityManager" preserve="all"/>
+		<type fullname="Minecraft.GravityBlockEntity" preserve="all"/>
+		<type fullname="Minecraft.InventoryManager" preserve="all"/>
+		<type fullname="Minecraft.WorldManager" preserve="all"/>
+		<type fullname="Minecraft.ItemsData.Item" preserve="all"/>
+		<type fullname="Minecraft.ItemsData.ItemType" preserve="all"/>
+		<type fullname="Minecraft.BlocksData.Block" preserve="all"/>
+		<type fullname="Minecraft.BlocksData.BlockFlags" preserve="all"/>
+		<type fullname="Minecraft.BlocksData.BlockType" preserve="all"/>
+		<type fullname="Minecraft.BlocksData.BlockVertexType" preserve="all"/>
+		
+	</assembly>
+
+</linker>

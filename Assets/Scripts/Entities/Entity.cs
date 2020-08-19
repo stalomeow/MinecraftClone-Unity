@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Minecraft.WorldConsts;
-using Minecraft.BlocksData;
+﻿using UnityEngine;
+using XLua;
 
 namespace Minecraft
 {
+    [LuaCallCSharp]
     [DisallowMultipleComponent]
     public abstract class Entity : MonoBehaviour
     {

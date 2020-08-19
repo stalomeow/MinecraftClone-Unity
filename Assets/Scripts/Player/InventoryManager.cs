@@ -1,14 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Minecraft.ItemsData;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Minecraft.ItemsData;
-using TMPro;
+using XLua;
 
 #pragma warning disable CS0649
 
 namespace Minecraft
 {
+    [LuaCallCSharp]
     [DisallowMultipleComponent]
     public sealed class InventoryManager : MonoBehaviour
     {
@@ -22,21 +23,11 @@ namespace Minecraft
 
         public ItemType CurrentItem => m_ItemTypes[m_CurrentIndex];
 
-        private void Awake()
+        private void OnEnable()
         {
             m_ItemText.text = string.Empty;
             m_ItemTypes = new ItemType[m_Items.Length];
             m_CurrentIndex = 0;
-
-            SetItem(0, ItemType.BookShelf);
-            SetItem(1, ItemType.CobbleStone);
-            SetItem(2, ItemType.CraftingTable);
-            SetItem(3, ItemType.DiamondBlock);
-            SetItem(4, ItemType.Glass);
-            SetItem(5, ItemType.GlowStone);
-            SetItem(6, ItemType.Log_Oak);
-            SetItem(7, ItemType.Planks_Oak);
-            SetItem(8, ItemType.TNT);
         }
 
         private void Update()
@@ -78,7 +69,7 @@ namespace Minecraft
                 return;
 
             m_ItemTypes[index] = type;
-            Item item = WorldManager.Active.GetItemByType(type);
+            Item item = WorldManager.Active.DataManager.GetItemByType(type);
             m_Items[index].sprite = item.Icon;
         }
     }

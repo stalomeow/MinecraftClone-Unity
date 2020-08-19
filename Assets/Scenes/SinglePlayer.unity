@@ -164,15 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a20c33c1da0257a4f8a84244df3eecce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BlockEntityMaterial: {fileID: 2100000, guid: 801ea5dda890cc64e89449240ad85951,
-    type: 2}
-  m_ChunkMaterial: {fileID: 2100000, guid: da5305b249bd56642b16bff05c2f0093, type: 2}
-  m_LiquidMaterial: {fileID: 2100000, guid: 0b3ad422c14bb1a4fb9d66e5af2383c4, type: 2}
   m_Player: {fileID: 2106091985}
   m_LoadingMenu: {fileID: 117225245}
   m_MainCamera: {fileID: 5796858149611858893}
-  m_BlockRegistry: {fileID: 11400000, guid: 7f41c289769652c4fb1da9385774507e, type: 2}
-  m_ItemRegistry: {fileID: 11400000, guid: 25798eee640dd16419a6484687048e5d, type: 2}
   m_InventoryManager: {fileID: 1258337993}
 --- !u!1 &99066659
 GameObject:
@@ -213,7 +207,7 @@ RectTransform:
   - {fileID: 990806640}
   - {fileID: 1236703562}
   m_Father: {fileID: 265900252}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -278,7 +272,7 @@ RectTransform:
   - {fileID: 1901762914}
   - {fileID: 236575947}
   m_Father: {fileID: 265900252}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -670,7 +664,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 241195675}
-  - {fileID: 897975336}
   - {fileID: 99066660}
   - {fileID: 421050502}
   - {fileID: 1768902307}
@@ -940,7 +933,7 @@ RectTransform:
   m_Children:
   - {fileID: 1910904463}
   m_Father: {fileID: 265900252}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1430,80 +1423,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619857220}
   m_CullTransparentMesh: 0
---- !u!1 &897975335
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 897975336}
-  - component: {fileID: 897975338}
-  - component: {fileID: 897975337}
-  m_Layer: 5
-  m_Name: DestroyProgress
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &897975336
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897975335}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 265900252}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 157.91, y: 92}
-  m_SizeDelta: {x: 230, y: 5}
-  m_Pivot: {x: 0.5, y: 0}
---- !u!114 &897975337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897975335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.9372549, b: 0.17254902, a: 1}
-  m_RaycastTarget: 0
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c188a2ef32ec7fe4ba7673b4356e85e4, type: 3}
-  m_Type: 3
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 0
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &897975338
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897975335}
-  m_CullTransparentMesh: 0
 --- !u!1 &990806639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1762,7 +1681,7 @@ RectTransform:
   - {fileID: 585538493}
   - {fileID: 1486876176}
   m_Father: {fileID: 265900252}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -2452,7 +2371,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 265900252}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -2983,7 +2902,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_DestroyProgress
       value: 
-      objectReference: {fileID: 897975337}
+      objectReference: {fileID: 0}
+    - target: {fileID: 2378111720510952212, guid: 168db0e3e15880d4cbea8de4699d3042,
+        type: 3}
+      propertyPath: m_HighlightObj
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2378111720510952212, guid: 168db0e3e15880d4cbea8de4699d3042,
+        type: 3}
+      propertyPath: m_DestroyBlockObj
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8174688378270880552, guid: 168db0e3e15880d4cbea8de4699d3042,
         type: 3}
       propertyPath: m_Name

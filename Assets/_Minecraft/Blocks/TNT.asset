@@ -98,7 +98,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 7bddffbfa2ed3d24f812a6e4b7798033, type: 2}
-        m_MethodName: BlockEvent_OnCick_TNT
+        m_MethodName: BlockEvent_OnClick_TNT
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

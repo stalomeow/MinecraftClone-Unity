@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using XLua;
+using System;
 
 namespace Minecraft
 {
+    [LuaCallCSharp]
     public sealed class EntityManager
     {
         private sealed class EntityComparer : IEqualityComparer<Entity>
@@ -40,6 +43,13 @@ namespace Minecraft
             return m_Entities.Add(entity) ? entity : null;
         }
 
+        public Entity CreateEntity(Type type)
+        {
+            GameObject go = new GameObject();
+            Entity entity = go.AddComponent(type) as Entity;
+            return m_Entities.Add(entity) ? entity : null;
+        }
+
         public T CreateEntity<T>(T prefab) where T : Entity
         {
             T entity = GameObject.Instantiate<T>(prefab, null);
@@ -48,11 +58,14 @@ namespace Minecraft
 
         public void DestroyEntity(Entity entity)
         {
-            m_Entities.Remove(entity);
-            GameObject.Destroy(entity.gameObject);
+            if (entity)
+            {
+                m_Entities.Remove(entity);
+                GameObject.Destroy(entity.gameObject);
+            }
         }
 
-        public IEnumerator<Entity> EnumerateEntities()
+        public HashSet<Entity>.Enumerator EnumerateEntities()
         {
             return m_Entities.GetEnumerator();
         }

@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2019_4_0;UNITY_2019_4;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CROSS_PLATFORM_INPUT;UNITY_POST_PROCESSING_STACK_V2;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2019_4_0;UNITY_2019_4;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CROSS_PLATFORM_INPUT;UNITY_POST_PROCESSING_STACK_V2;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;CS0649;IDE0051</NoWarn>
@@ -50,7 +50,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
-    <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
+    <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>2019.4.0f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -62,10 +62,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\AssetManagement\AssetBundleLoader.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\AssetBundleManifest.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\AssetBundleMeta.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\AsyncAsset.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\AsyncHandler.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\EditorAssetBundle.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\IAssetBundle.cs" />
+    <Compile Include="Assets\Scripts\AssetManagement\RuntimeAssetBundle.cs" />
     <Compile Include="Assets\Scripts\BlocksData\Block.cs" />
-    <Compile Include="Assets\Scripts\BlocksData\BlockEvents.cs" />
+    <Compile Include="Assets\Scripts\BlocksData\BlockEventAction.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockFlags.cs" />
-    <Compile Include="Assets\Scripts\BlocksData\BlockRegistry.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockType.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockVertexHelper.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockVertexType.cs" />
@@ -77,10 +84,10 @@
     <Compile Include="Assets\Scripts\Collections\NibbleArray.cs" />
     <Compile Include="Assets\Scripts\Collections\ObjectPool.cs" />
     <Compile Include="Assets\Scripts\Collections\PriorityQueue.cs" />
+    <Compile Include="Assets\Scripts\DataManager.cs" />
     <Compile Include="Assets\Scripts\DebugUtils\ChunkInfoPrinter.cs" />
     <Compile Include="Assets\Scripts\DebugUtils\FPSCounter.cs" />
     <Compile Include="Assets\Scripts\DebugUtils\PositionPrinter.cs" />
-    <Compile Include="Assets\Scripts\DebugUtils\TargetedBlock.cs" />
     <Compile Include="Assets\Scripts\DebugUtils\UsedMemory.cs" />
     <Compile Include="Assets\Scripts\Entities\AABB.cs" />
     <Compile Include="Assets\Scripts\Entities\BlockEntity.cs" />
@@ -90,12 +97,12 @@
     <Compile Include="Assets\Scripts\Entities\PlayerEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\TNTBlockEntity.cs" />
     <Compile Include="Assets\Scripts\ItemsData\Item.cs" />
-    <Compile Include="Assets\Scripts\ItemsData\ItemRegistry.cs" />
     <Compile Include="Assets\Scripts\ItemsData\ItemType.cs" />
     <Compile Include="Assets\Scripts\Noises\FastNoise.cs" />
     <Compile Include="Assets\Scripts\Noises\INoise.cs" />
     <Compile Include="Assets\Scripts\Noises\PerlinNoise.cs" />
     <Compile Include="Assets\Scripts\Noises\SimplexNoise.cs" />
+    <Compile Include="Assets\Scripts\PlayMode.cs" />
     <Compile Include="Assets\Scripts\Player\CurveControlledBob.cs" />
     <Compile Include="Assets\Scripts\Player\FOVKick.cs" />
     <Compile Include="Assets\Scripts\Player\InventoryManager.cs" />
@@ -108,31 +115,74 @@
     <Compile Include="Assets\Scripts\UI\NewWorldMenu.cs" />
     <Compile Include="Assets\Scripts\UI\SelectWorldMenu.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonOnClick.cs" />
-    <Compile Include="Assets\Scripts\World\PlayMode.cs" />
-    <Compile Include="Assets\Scripts\World\WorldManager.cs" />
-    <Compile Include="Assets\Scripts\World\WorldType.cs" />
+    <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\WorldConsts.cs" />
+    <Compile Include="Assets\Scripts\WorldManager.cs" />
     <Compile Include="Assets\Scripts\WorldSettings.cs" />
+    <Compile Include="Assets\Scripts\WorldType.cs" />
+    <Compile Include="Assets\XLua\Gen\DelegatesGensBridge.cs" />
+    <Compile Include="Assets\XLua\Gen\EnumWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftBlocksDataBlockWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftDataManagerWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftEntityManagerWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftEntityWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftGravityBlockEntityWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftInventoryManagerWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftItemsDataItemWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\MinecraftWorldManagerWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\PackUnpack.cs" />
+    <Compile Include="Assets\XLua\Gen\WrapPusher.cs" />
+    <Compile Include="Assets\XLua\Gen\XLuaGenAutoRegister.cs" />
+    <Compile Include="Assets\XLua\Src\CodeEmit.cs" />
+    <Compile Include="Assets\XLua\Src\CopyByValue.cs" />
+    <Compile Include="Assets\XLua\Src\DelegateBridge.cs" />
+    <Compile Include="Assets\XLua\Src\GenAttributes.cs" />
+    <Compile Include="Assets\XLua\Src\GenericDelegateBridge.cs" />
+    <Compile Include="Assets\XLua\Src\InternalGlobals.cs" />
+    <Compile Include="Assets\XLua\Src\LuaBase.cs" />
+    <Compile Include="Assets\XLua\Src\LuaDLL.cs" />
+    <Compile Include="Assets\XLua\Src\LuaEnv.cs" />
+    <Compile Include="Assets\XLua\Src\LuaException.cs" />
+    <Compile Include="Assets\XLua\Src\LuaFunction.cs" />
+    <Compile Include="Assets\XLua\Src\LuaTable.cs" />
+    <Compile Include="Assets\XLua\Src\MethodWarpsCache.cs" />
+    <Compile Include="Assets\XLua\Src\ObjectCasters.cs" />
+    <Compile Include="Assets\XLua\Src\ObjectPool.cs" />
+    <Compile Include="Assets\XLua\Src\ObjectTranslator.cs" />
+    <Compile Include="Assets\XLua\Src\ObjectTranslatorPool.cs" />
+    <Compile Include="Assets\XLua\Src\RawObject.cs" />
+    <Compile Include="Assets\XLua\Src\SignatureLoader.cs" />
+    <Compile Include="Assets\XLua\Src\StaticLuaCallbacks.cs" />
+    <Compile Include="Assets\XLua\Src\TemplateEngine\TemplateEngine.cs" />
+    <Compile Include="Assets\XLua\Src\TypeExtensions.cs" />
+    <Compile Include="Assets\XLua\Src\Utils.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Shaders\Skybox.shader" />
+    <None Include="Assets\XLua\Resources\xlua\util.lua.txt" />
     <None Include="Assets\Shaders\Liquid.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\XLua\Resources\perf\profiler.lua.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\Shaders\BlockEntity.shader" />
     <None Include="Assets\Shaders\Chunk.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Shaders\DestroyBlock.shader" />
+    <None Include="Assets\XLua\Gen\link.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\XLua\Resources\tdr\tdr.lua.txt" />
+    <None Include="Assets\XLua\CHANGELOG.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
@@ -698,6 +748,9 @@
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
       <HintPath>D:/Unity/Unity Projects/Minecraft Demo/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AssetBundleBrowser.Editor">
+      <HintPath>D:/Unity/Unity Projects/Minecraft Demo/Library/ScriptAssemblies/Unity.AssetBundleBrowser.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
       <HintPath>D:/Unity/Unity Projects/Minecraft Demo/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>

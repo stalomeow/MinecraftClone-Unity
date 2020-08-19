@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
 namespace Minecraft.BlocksData
 {
-    [CanEditMultipleObjects]
     [CustomEditor(typeof(Block))]
     public sealed class BlockEditor : Editor
     {
-        private const string BlockRegistryPath = "Assets/_Minecraft/Blocks/_Registry.asset";
         private const string BlockTypeScriptPath = "/Scripts/BlocksData/BlockType.cs";
 
         private bool m_UVFoldout;
@@ -53,55 +49,39 @@ namespace Minecraft.BlocksData
 
         public override void OnInspectorGUI()
         {
-            BlockRegistry registry = GetRegistry();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_BlockName"));
 
-            if (targets.Length == 1)
+            SerializedProperty ty = serializedObject.FindProperty("m_Type");
+            BlockType type = (BlockType)Enum.Parse(typeof(BlockType), ty.enumNames[ty.enumValueIndex], true);
+            ShowBlockTypeEnum(ty);
+
+            SerializedProperty fs = serializedObject.FindProperty("m_Flags");
+            BlockFlags flags = (target as Block).Flags;
+            EditorGUILayout.PropertyField(fs);
+
+            SerializedProperty vertexType = serializedObject.FindProperty("m_VertexType");
+            BlockVertexType v = (BlockVertexType)Enum.Parse(typeof(BlockVertexType), vertexType.enumNames[vertexType.enumValueIndex], true);
+            EditorGUILayout.PropertyField(vertexType);
+
+            if ((flags & BlockFlags.Liquid) == BlockFlags.Liquid && v == BlockVertexType.PerpendicularQuads)
             {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_BlockName"));
-
-                SerializedProperty ty = serializedObject.FindProperty("m_Type");
-                BlockType type = (BlockType)Enum.Parse(typeof(BlockType), ty.enumNames[ty.enumValueIndex], true);
-                ShowBlockTypeEnum(ty);
-
-                SerializedProperty fs = serializedObject.FindProperty("m_Flags");
-                BlockFlags flags = (target as Block).Flags;
-                EditorGUILayout.PropertyField(fs);
-
-                SerializedProperty vertexType = serializedObject.FindProperty("m_VertexType");
-                BlockVertexType v = (BlockVertexType)Enum.Parse(typeof(BlockVertexType), vertexType.enumNames[vertexType.enumValueIndex], true);
-                EditorGUILayout.PropertyField(vertexType);
-
-                if ((flags & BlockFlags.Liquid) == BlockFlags.Liquid && v == BlockVertexType.PerpendicularQuads)
-                {
-                    Debug.LogWarning("液体的顶点类型应该是立方体");
-                }
-
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_MoveResistance"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_LightOpacity"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_LightValue"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Hardness"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_DestoryEffectColor"));
-
-                EditorGUILayout.Space();
-                m_ExtraAssets.DoLayoutList();
-
-                EditorGUILayout.Space();
-                UVFoldout(v);
-
-                EditorGUILayout.Space();
-                AudioClipsFoldout(type);
-
-                EditorGUILayout.Space();
-                EventsFoldout(type, (flags & BlockFlags.NeedsRandomTick) == BlockFlags.NeedsRandomTick);
+                Debug.LogWarning("液体的顶点类型应该是立方体");
             }
-            else
-            {
-                ShowAllBlockNames(registry);
-            }
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_MoveResistance"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_LightOpacity"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_LightValue"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Hardness"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_DestoryEffectColor"));
 
             EditorGUILayout.Space();
+            m_ExtraAssets.DoLayoutList();
 
-            RegisterBlockButton(registry);
+            EditorGUILayout.Space();
+            UVFoldout(v);
+
+            EditorGUILayout.Space();
+            AudioClipsFoldout(type);
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -127,7 +107,7 @@ namespace Minecraft.BlocksData
                 string scriptPath = Application.dataPath + BlockTypeScriptPath;
                 BlockType[] blockTypes = Enum.GetValues(typeof(BlockType)) as BlockType[];
 
-                string script = "namespace Minecraft.BlocksData\n{\n    public enum BlockType : byte\n    {\n";
+                string script = "using XLua;\n\nnamespace Minecraft.BlocksData\n{\n    [LuaCallCSharp]\n    public enum BlockType : byte\n    {\n";
 
                 foreach (var t in blockTypes)
                 {
@@ -139,86 +119,6 @@ namespace Minecraft.BlocksData
 
                 File.WriteAllText(scriptPath, script);
                 AssetDatabase.Refresh();
-            }
-        }
-
-        private void ShowAllBlockNames(BlockRegistry registry)
-        {
-            EditorGUILayout.LabelField("Block", "Registered");
-
-            EditorGUILayout.Separator();
-
-            foreach (var obj in targets)
-            {
-                Block block = obj as Block;
-                EditorGUILayout.Toggle(block.BlockName, registry.RegisteredBlocks.Contains(block));
-            }
-        }
-
-        private BlockRegistry GetRegistry()
-        {
-            BlockRegistry registry = AssetDatabase.LoadAssetAtPath<BlockRegistry>(BlockRegistryPath);
-
-            if (registry == null)
-            {
-                registry = CreateInstance<BlockRegistry>();
-                AssetDatabase.CreateAsset(registry, BlockRegistryPath);
-            }
-
-            return registry;
-        }
-
-        private void RegisterBlockButton(BlockRegistry registry)
-        {
-            bool disabled = registry.RegisteredBlocks != null && targets.All(obj => registry.RegisteredBlocks.Contains(obj as Block));
-
-            using (new EditorGUI.DisabledGroupScope(disabled))
-            {
-                if (GUILayout.Button("Register"))
-                {
-                    List<Block> blocks = new List<Block>();
-
-                    if (registry.RegisteredBlocks != null)
-                    {
-                        blocks.AddRange(registry.RegisteredBlocks);
-                    }
-
-                    for (int i = 0; i < targets.Length; i++)
-                    {
-                        Block block = targets[i] as Block;
-
-                        if (block == null || blocks.Contains(block))
-                            continue;
-
-                        blocks.Add(block);
-                    }
-
-                    registry.RegisteredBlocks = (from b in blocks orderby b.Type ascending select b).ToArray();
-                    EditorUtility.SetDirty(registry);
-                }
-            }
-
-            disabled = registry.RegisteredBlocks == null || targets.All(obj => !registry.RegisteredBlocks.Contains(obj as Block));
-
-            using (new EditorGUI.DisabledGroupScope(disabled))
-            {
-                if (GUILayout.Button("Unregister"))
-                {
-                    List<Block> blocks = new List<Block>(registry.RegisteredBlocks);
-
-                    for (int i = 0; i < targets.Length; i++)
-                    {
-                        Block block = targets[i] as Block;
-
-                        if (block == null)
-                            continue;
-
-                        blocks.Remove(block);
-                    }
-
-                    registry.RegisteredBlocks = (from b in blocks orderby b.Type ascending select b).ToArray();
-                    EditorUtility.SetDirty(registry);
-                }
             }
         }
 
@@ -456,31 +356,6 @@ namespace Minecraft.BlocksData
                     EditorGUILayout.Space();
 
                     m_StepSounds.DoLayoutList();
-                }
-            }
-
-            EditorGUILayout.EndFoldoutHeaderGroup();
-        }
-
-        private void EventsFoldout(BlockType type, bool needsRandomTick)
-        {
-            if (m_EventsFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(m_EventsFoldout, "Events"))
-            {
-                if (type == BlockType.Air)
-                {
-                    EditorGUILayout.HelpBox("No Event", MessageType.Info);
-                }
-                else
-                {
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty("m_OnTick"));
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty("m_OnBlockDestroy"));
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty("m_OnBlockPlace"));
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty("m_OnClick"));
-
-                    if (needsRandomTick)
-                    {
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("m_OnRandomTick"));
-                    }
                 }
             }
 

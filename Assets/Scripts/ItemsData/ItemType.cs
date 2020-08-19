@@ -1,5 +1,8 @@
+using XLua;
+
 namespace Minecraft.ItemsData
 {
+    [LuaCallCSharp]
     public enum ItemType : byte
     {
         None = 0,
@@ -12,5 +15,6 @@ namespace Minecraft.ItemsData
         Planks_Oak = 7,
         CraftingTable = 8,
         DiamondBlock = 9,
+        Noteblock = 10,
     }
 }

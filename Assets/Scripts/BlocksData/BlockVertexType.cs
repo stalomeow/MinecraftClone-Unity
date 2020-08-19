@@ -1,5 +1,8 @@
-﻿namespace Minecraft.BlocksData
+﻿using XLua;
+
+namespace Minecraft.BlocksData
 {
+    [LuaCallCSharp]
     public enum BlockVertexType
     {
         /// <summary>

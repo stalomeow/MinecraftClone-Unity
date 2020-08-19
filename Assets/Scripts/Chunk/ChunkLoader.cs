@@ -9,10 +9,13 @@ namespace Minecraft
 
         public string ChunkSavingDirectory { get; }
 
-        public ChunkLoader(int seed, string chunkSavingDirectory)
+        private WorldType m_WorldType;
+
+        public ChunkLoader(int seed, string chunkSavingDirectory, WorldType worldType)
         {
             Seed = seed;
             ChunkSavingDirectory = chunkSavingDirectory;
+            m_WorldType = worldType;
 
             Directory.CreateDirectory(chunkSavingDirectory);//不存在，则创建
         }
@@ -27,7 +30,7 @@ namespace Minecraft
             }
             else
             {
-                chunk.Init(x, z, Seed);
+                chunk.Init(x, z, Seed, m_WorldType);
             }
 
             return chunk;
@@ -64,7 +67,10 @@ namespace Minecraft
                 fs.WriteByte((byte)(chunk.PositionZ >> 16));
                 fs.WriteByte((byte)(chunk.PositionZ >> 24));
 
-                fs.Write(chunk.GetRawBlockData(), 0, BlockCountInChunk);
+                chunk.GetRawBlockData(out byte[] blocks, out byte[] states);
+
+                fs.Write(blocks, 0, BlockCountInChunk);
+                fs.Write(states, 0, BlockCountInChunk);
             }
         }
 
@@ -86,7 +92,7 @@ namespace Minecraft
 
                 int posZ = z_b0 | (z_b1 << 8) | (z_b2 << 16) | (z_b3 << 24);
 
-                byte[] blocks = new byte[BlockCountInChunk];
+                chunk.GetRawBlockData(out byte[] blocks, out byte[] states);
 
                 int count = 0;
 
@@ -96,7 +102,15 @@ namespace Minecraft
 
                 } while (count < BlockCountInChunk);
 
-                chunk.Init(posX, posZ, blocks);
+                count = 0;
+
+                do
+                {
+                    count += fs.Read(states, count, BlockCountInChunk);
+
+                } while (count < BlockCountInChunk);
+
+                chunk.Init(posX, posZ);
             }
         }
     }

@@ -94,7 +94,7 @@ namespace Minecraft
                 }
             }
 
-            IEnumerator<Entity> iterator = entityManager.EnumerateEntities();
+            var iterator = entityManager.EnumerateEntities();
 
             while (iterator.MoveNext())
             {

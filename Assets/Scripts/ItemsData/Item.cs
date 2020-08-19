@@ -1,10 +1,12 @@
 ﻿using Minecraft.BlocksData;
 using UnityEngine;
+using XLua;
 
 #pragma warning disable CS0649
 
 namespace Minecraft.ItemsData
 {
+    [LuaCallCSharp]
     [CreateAssetMenu(menuName = "Minecraft/Item")]
     public sealed class Item : ScriptableObject
     {

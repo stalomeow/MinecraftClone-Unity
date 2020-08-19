@@ -53,6 +53,7 @@ namespace Minecraft
         public bool ShouldUpdateMesh => m_MeshUpdateFlags != MeshUpdateFlags.Neither;
 
         private byte[] m_Blocks; // 所有方块信息
+        private byte[] m_BlockStates; // 所有方块的状态
         private byte[] m_HeightMap; // chunk 的高度图, 第一个非空方块的y
         private int[] m_TickRefCounts; // 每一个section（高度16）需要tick的数量
         private NibbleArray m_SkyLights; // 每一个方块受到的天空光照值，不公开
@@ -63,7 +64,6 @@ namespace Minecraft
         private bool m_IsBuildingMesh;
         private List<VertexData> m_VertexBuffer;
         private List<int> m_TrianglesBuffer;
-        private Queue<Vector2Int> m_DirtyColumns; // local pos, lock
 
         private object m_SyncLock;
 
@@ -71,6 +71,7 @@ namespace Minecraft
         public Chunk()
         {
             m_Blocks = new byte[BlockCountInChunk];
+            m_BlockStates = new byte[BlockCountInChunk];
             m_HeightMap = new byte[ChunkWidth * ChunkWidth];
             m_TickRefCounts = new int[SectionCountInChunk];
             m_SkyLights = new NibbleArray(BlockCountInChunk);
@@ -78,7 +79,6 @@ namespace Minecraft
 
             m_VertexBuffer = new List<VertexData>();
             m_TrianglesBuffer = new List<int>();
-            m_DirtyColumns = new Queue<Vector2Int>();
 
             m_SyncLock = new object();
         }
@@ -102,6 +102,7 @@ namespace Minecraft
                 LiquidMesh = null;
 
                 m_Blocks = null;
+                m_BlockStates = null;
                 m_HeightMap = null;
                 m_TickRefCounts = null;
                 m_SkyLights = null;
@@ -109,7 +110,6 @@ namespace Minecraft
 
                 m_VertexBuffer = null;
                 m_TrianglesBuffer = null;
-                m_DirtyColumns = null;
 
                 m_SyncLock = null;
             }
@@ -118,6 +118,7 @@ namespace Minecraft
                 // mesh 会在build前clear
 
                 Array.Clear(m_Blocks, 0, m_Blocks.Length);
+                Array.Clear(m_BlockStates, 0, m_BlockStates.Length);
                 Array.Clear(m_HeightMap, 0, m_HeightMap.Length);
                 Array.Clear(m_TickRefCounts, 0, m_TickRefCounts.Length);
 
@@ -151,7 +152,7 @@ namespace Minecraft
             }
 
             BlockType type = (BlockType)m_Blocks[(localX << 12) | (y << 4) | localZ];
-            Block block = WorldManager.Active.GetBlockByType(type);
+            Block block = WorldManager.Active.DataManager.GetBlockByType(type);
 
             byte skyLight = (byte)Mathf.Clamp(m_SkyLights[(localX << 12) | (y << 4) | localZ] - SkyLightSubtracted, 0, MaxLight); // temp
             byte blockLight = m_BlockLights[(localX << 12) | (y << 4) | localZ];
@@ -194,8 +195,8 @@ namespace Minecraft
             }
 
             BlockType type = GetBlockTypePrivateUnchecked(localX, y, localZ);
-            Block block = WorldManager.Active.GetBlockByType(type);
-            m_MeshUpdateFlags = block.HasAnyFlag(BlockFlags.Liquid) ? MeshUpdateFlags.LightingBoth : MeshUpdateFlags.LightingSolidMesh; // 液体的mesh不计算环境光照
+            Block block = WorldManager.Active.DataManager.GetBlockByType(type);
+            m_MeshUpdateFlags |= block.HasAnyFlag(BlockFlags.Liquid) ? MeshUpdateFlags.LightingBoth : MeshUpdateFlags.LightingSolidMesh; // 液体的mesh不计算环境光照
         }
 
         public BlockType GetBlockType(int worldX, int y, int worldZ)
@@ -208,7 +209,7 @@ namespace Minecraft
         private BlockType GetBlockTypePrivateUnchecked(int localX, int y, int localZ) => (BlockType)m_Blocks[(localX << 12) | (y << 4) | localZ];
 
         // return: 是否设置成功
-        public bool SetBlockType(int worldX, int y, int worldZ, BlockType value, bool lightBlocks = true, bool tickBlocks = true, bool updateNeighborChunks = true)
+        public bool SetBlockType(int worldX, int y, int worldZ, BlockType value, byte state = 0, bool lightBlocks = true, bool tickBlocks = true, bool updateNeighborChunks = true)
         {
             int localX = worldX - PositionX;
             int localZ = worldZ - PositionZ;
@@ -226,28 +227,29 @@ namespace Minecraft
             lock (m_SyncLock)
             {
                 m_Blocks[index] = (byte)value;
-                m_DirtyColumns.Enqueue(new Vector2Int(localX, localZ));
-            }
+                SetBlockStatePrivateUnchecked(localX, y, localZ, state);
 
-            int height = GetHighestNonAirYPrivate(localX, localZ);
+                int height = GetHighestNonAirYPrivate(localX, localZ);
 
-            if (y >= height)
-            {
-                for (int i = y; i > -1; i--)
+                if (y >= height)
                 {
-                    if (GetBlockTypePrivateUnchecked(localX, i, localZ) != BlockType.Air)
+                    for (int i = y; i > -1; i--)
                     {
-                        SetHighestNonAirY(localX, localZ, (byte)i); // 至少会有一个非空方块，比如基岩
-                        break;
+                        if (GetBlockTypePrivateUnchecked(localX, i, localZ) != BlockType.Air)
+                        {
+                            SetHighestNonAirY(localX, localZ, (byte)i); // 至少会有一个非空方块，比如基岩
+                            break;
+                        }
                     }
                 }
             }
 
             WorldManager world = WorldManager.Active;
             ChunkManager manager = world.ChunkManager;
+            DataManager dataManager = world.DataManager;
 
-            Block previousBlock = world.GetBlockByType(previousBlockType);
-            Block block = world.GetBlockByType(value);
+            Block previousBlock = dataManager.GetBlockByType(previousBlockType);
+            Block block = dataManager.GetBlockByType(value);
             int sectionIndex = Mathf.FloorToInt(y * OverSectionHeight);
 
             if (previousBlock.HasAnyFlag(BlockFlags.NeedsRandomTick))
@@ -316,13 +318,13 @@ namespace Minecraft
 
             if (flag1 != flag2)
             {
-                m_MeshUpdateFlags = block.VertexType == BlockVertexType.None || previousBlock.VertexType == BlockVertexType.None
+                m_MeshUpdateFlags |= block.VertexType == BlockVertexType.None || previousBlock.VertexType == BlockVertexType.None
                     ? MeshUpdateFlags.LiquidMesh
                     : MeshUpdateFlags.Both;
             }
             else
             {
-                m_MeshUpdateFlags = flag2 ? MeshUpdateFlags.LiquidMesh : MeshUpdateFlags.SolidMesh;
+                m_MeshUpdateFlags |= flag2 ? MeshUpdateFlags.LiquidMesh : MeshUpdateFlags.SolidMesh;
             }
 
             return IsModified = true;
@@ -331,18 +333,48 @@ namespace Minecraft
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetBlockTypePrivate(int localX, int y, int localZ, BlockType value) => m_Blocks[(localX << 12) | (y << 4) | localZ] = (byte)value;
 
+        private void SetBlockStatePrivateUnchecked(int localX, int y, int localZ, byte value) => m_BlockStates[(localX << 12) | (y << 4) | localZ] = value;
 
-        public void Init(int posX, int posZ, byte[] blocks)
+        public void SetBlockState(int worldX, int y, int worldZ, byte value)
+        {
+            int localX = worldX - PositionX;
+            int localZ = worldZ - PositionZ;
+
+            int index = (localX << 12) | (y << 4) | localZ;
+
+            if (index < 0 || index >= m_Blocks.Length)
+                return;
+
+            if (m_BlockStates[index] != value)
+            {
+                m_BlockStates[index] = value;
+                IsModified = true;
+            }
+        }
+
+        public byte GetBlockState(int worldX, int y, int worldZ)
+        {
+            int localX = worldX - PositionX;
+            int localZ = worldZ - PositionZ;
+
+            int index = (localX << 12) | (y << 4) | localZ;
+
+            if (index < 0 || index >= m_Blocks.Length)
+                return default;
+
+            return m_BlockStates[index];
+        }
+
+        public void Init(int posX, int posZ)
         {
             PositionX = posX;
             PositionZ = posZ;
-            m_Blocks = blocks;
 
             GenerateHeightMapAndTickCountMapAndLightBlocks();
             GenerateSkyLightData();
         }
 
-        public void Init(int posX, int posZ, int seed)
+        public void Init(int posX, int posZ, int seed, WorldType type)
         {
             PositionX = posX;
             PositionZ = posZ;
@@ -357,253 +389,287 @@ namespace Minecraft
             {
                 for (int dz = 0; dz < ChunkWidth; dz++)
                 {
-                    int x = posX + dx;
-                    int z = posZ + dz;
-
-                    int bottomHeight = 0;
-                    float hills = noise.GetPerlin(x * 4f + 500, z * 4f) * 0.5f + 0.5f;
-
-                    int hillHeight = (int)(BaseHeight + (hills * 16));
-                    float bedrock = noise.GetPerlin(x * 64f, z * 64f) * 0.5f + 0.5f;
-                    int bedrockHeight = (int)(1 + bedrock * 4);
-
-                    for (int y = 0; y < WorldHeight; y++)
+                    switch (type)
                     {
-                        if (y > hillHeight || y < bottomHeight)
-                        {
-                            if (y < waterLevel)
+                        case WorldType.Normal:
+                        case WorldType.Fixed:
                             {
-                                SetBlockTypePrivate(dx, y, dz, BlockType.Water);
-                            }
-                            else
-                            {
-                                SetBlockTypePrivate(dx, y, dz, BlockType.Air);
+                                int x = posX + dx;
+                                int z = posZ + dz;
 
-                                if (y == hillHeight + 1 && GetBlockTypePrivateUnchecked(dx, y - 1, dz) == BlockType.Grass)
+                                int bottomHeight = 0;
+                                float hills = noise.GetPerlin(x * 4f + 500, z * 4f) * 0.5f + 0.5f;
+
+                                int hillHeight = (int)(BaseHeight + (hills * 16));
+                                float bedrock = noise.GetPerlin(x * 64f, z * 64f) * 0.5f + 0.5f;
+                                int bedrockHeight = (int)(1 + bedrock * 4);
+
+                                for (int y = 0; y < WorldHeight; y++)
                                 {
-                                    int r = random.Next(0, 50);
-
-                                    if (r == 1)
+                                    if (y > hillHeight || y < bottomHeight)
                                     {
-                                        SetBlockTypePrivate(dx, y, dz, BlockType.Plant_Grass);
-                                    }
-                                    else
-                                    {
-                                        r = random.Next(0, 150);
-
-                                        if (r == 1)
+                                        if (y < waterLevel)
                                         {
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Flower_Rose_Blue);
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Water);
                                         }
+                                        else
+                                        {
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Air);
+
+                                            if (y == hillHeight + 1 && GetBlockTypePrivateUnchecked(dx, y - 1, dz) == BlockType.Grass)
+                                            {
+                                                int r = random.Next(0, 50);
+
+                                                if (r == 1)
+                                                {
+                                                    SetBlockTypePrivate(dx, y, dz, BlockType.Plant_Grass);
+                                                }
+                                                else
+                                                {
+                                                    r = random.Next(0, 150);
+
+                                                    if (r == 1)
+                                                    {
+                                                        SetBlockTypePrivate(dx, y, dz, BlockType.Flower_Rose_Blue);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        continue;
                                     }
-                                }
-                            }
-                            continue;
-                        }
 
-                        if (y < bedrockHeight)
-                        {
-                            SetBlockTypePrivate(dx, y, dz, BlockType.Bedrock);
-                            continue;
-                        }
-
-                        if (y > hillHeight - 4)
-                        {
-                            if (GenerateCaves(dx, y, dz, x, z, 0.2f, noise))
-                                continue;
-
-                            if (y == hillHeight)
-                            {
-                                if (y < waterLevel - 1)
-                                {
-                                    int r = random.Next(0, 100);
-
-                                    if (r == 1)
+                                    if (y < bedrockHeight)
                                     {
-                                        SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                        SetBlockTypePrivate(dx, y, dz, BlockType.Bedrock);
+                                        continue;
+                                    }
+
+                                    if (y > hillHeight - 4)
+                                    {
+                                        if (GenerateCaves(dx, y, dz, x, z, 0.2f, noise))
+                                            continue;
+
+                                        if (y == hillHeight)
+                                        {
+                                            if (y < waterLevel - 1)
+                                            {
+                                                int r = random.Next(0, 100);
+
+                                                if (r == 1)
+                                                {
+                                                    SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                                }
+                                                else
+                                                {
+                                                    SetBlockTypePrivate(dx, y, dz, BlockType.Sand);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                SetBlockTypePrivate(dx, y, dz, BlockType.Grass);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                        }
+
+                                        continue;
                                     }
                                     else
                                     {
-                                        SetBlockTypePrivate(dx, y, dz, BlockType.Sand);
+                                        if (GenerateCaves(dx, y, dz, x, z, 0f, noise))
+                                            continue;
+
+                                        if (GenerateOres(dx, y, dz, noise)) continue;
+
+                                        SetBlockTypePrivate(dx, y, dz, BlockType.Stone);
+                                        continue;
                                     }
                                 }
-                                else
+                            }
+                            break;
+                        case WorldType.Plain:
+                            {
+                                for (int y = 0; y < WorldHeight; y++)
                                 {
-                                    SetBlockTypePrivate(dx, y, dz, BlockType.Grass);
+                                    switch (y)
+                                    {
+                                        case 0:
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Bedrock);
+                                            break;
+                                        case 1:
+                                        case 2:
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                            break;
+                                        case 3:
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Grass);
+                                            break;
+                                        default:
+                                            SetBlockTypePrivate(dx, y, dz, BlockType.Air);
+                                            break;
+                                    }
                                 }
                             }
-                            else
-                            {
-                                SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
-                            }
-
-                            continue;
-                        }
-                        else
-                        {
-                            if (GenerateCaves(dx, y, dz, x, z, 0f, noise))
-                                continue;
-
-                            if (GenerateOres(dx, y, dz, noise)) continue;
-
-                            SetBlockTypePrivate(dx, y, dz, BlockType.Stone);
-                            continue;
-                        }
+                            break;
                     }
                 }
             }
 
-            bool[,] spotsTaken = new bool[16, 16];
-
-            //cave entrances
-            if (random.Next() < (int.MaxValue / 20))
+            if (type != WorldType.Plain)
             {
-                int h = WorldHeight - 1;
+                bool[,] spotsTaken = new bool[16, 16];
 
-                while (h-- > 0)
+                //cave entrances
+                if (random.Next() < (int.MaxValue / 20))
                 {
-                    if (GetBlockTypePrivateUnchecked(8, h, 8) != BlockType.Air)
+                    int h = WorldHeight - 1;
+
+                    while (h-- > 0)
                     {
-                        Queue<Vector3Int> path = new Queue<Vector3Int>();
-                        int depth = random.Next(5, 11);
-
-                        for (int i = 0; i < depth; i++)
+                        if (GetBlockTypePrivateUnchecked(8, h, 8) != BlockType.Air)
                         {
-                            path.Enqueue(new Vector3Int(random.Next(2, 13), 44 - (i * 4), random.Next(2, 13)));
-                        }
+                            Queue<Vector3Int> path = new Queue<Vector3Int>();
+                            int depth = random.Next(5, 11);
 
-                        float d = 0;
-                        Vector3Int nextPos = path.Dequeue();
-
-                        while (path.Count > 0)
-                        {
-                            Vector3Int currentPos = nextPos;
-                            nextPos = path.Dequeue();
-                            float size = Mathf.Lerp(2, 0.75f, d / depth);
-
-                            for (int i = 0; i < 16; ++i)
+                            for (int i = 0; i < depth; i++)
                             {
-                                float lerpPos = i / 15f;
-                                Vector3 lerped = Vector3.Lerp(currentPos, nextPos, lerpPos);
-                                Vector3Int p = new Vector3Int((int)lerped.x, (int)lerped.y, (int)lerped.z);
+                                path.Enqueue(new Vector3Int(random.Next(2, 13), 44 - (i * 4), random.Next(2, 13)));
+                            }
 
-                                for (int z = -2; z < 3; ++z)
+                            float d = 0;
+                            Vector3Int nextPos = path.Dequeue();
+
+                            while (path.Count > 0)
+                            {
+                                Vector3Int currentPos = nextPos;
+                                nextPos = path.Dequeue();
+                                float size = Mathf.Lerp(2, 0.75f, d / depth);
+
+                                for (int i = 0; i < 16; ++i)
                                 {
-                                    for (int y = -2; y < 3; ++y)
+                                    float lerpPos = i / 15f;
+                                    Vector3 lerped = Vector3.Lerp(currentPos, nextPos, lerpPos);
+                                    Vector3Int p = new Vector3Int((int)lerped.x, (int)lerped.y, (int)lerped.z);
+
+                                    for (int z = -2; z < 3; ++z)
                                     {
-                                        for (int x = -2; x < 3; ++x)
+                                        for (int y = -2; y < 3; ++y)
                                         {
-                                            Vector3Int b = new Vector3Int(p.x + x, p.y + y, p.z + z);
+                                            for (int x = -2; x < 3; ++x)
+                                            {
+                                                Vector3Int b = new Vector3Int(p.x + x, p.y + y, p.z + z);
 
-                                            if (Vector3Int.Distance(p, b) > size)
-                                                continue;
+                                                if (Vector3Int.Distance(p, b) > size)
+                                                    continue;
 
-                                            if (b.x < 0 || b.x > ChunkWidth - 1)
-                                                continue;
+                                                if (b.x < 0 || b.x > ChunkWidth - 1)
+                                                    continue;
 
-                                            if (b.y < 0 || b.y > 47)
-                                                continue;
+                                                if (b.y < 0 || b.y > 47)
+                                                    continue;
 
-                                            if (b.z < 0 || b.z > ChunkWidth - 1)
-                                                continue;
+                                                if (b.z < 0 || b.z > ChunkWidth - 1)
+                                                    continue;
 
-                                            int ry = b.y + h + 6 - 48;
+                                                int ry = b.y + h + 6 - 48;
 
-                                            if (ry < 0 || ry > ChunkWidth - 1)
-                                                continue;
+                                                if (ry < 0 || ry > ChunkWidth - 1)
+                                                    continue;
 
-                                            SetBlockTypePrivate(b.x, ry, b.z, BlockType.Air);
+                                                SetBlockTypePrivate(b.x, ry, b.z, BlockType.Air);
+                                            }
                                         }
                                     }
                                 }
+                                d++;
                             }
-                            d++;
+                            break;
                         }
-                        break;
                     }
                 }
-            }
 
-            //trees
-            for (int y = 2; y < 14; ++y)
-            {
-                for (int x = 2; x < 14; ++x)
+                //trees
+                for (int y = 2; y < 14; ++y)
                 {
-                    if (random.Next() < (int.MaxValue / 100))
+                    for (int x = 2; x < 14; ++x)
                     {
-                        if (IsSpotFree(spotsTaken, new Vector2Int(x, y), 2))
+                        if (random.Next() < (int.MaxValue / 100))
                         {
-                            spotsTaken[x, y] = true;
-                            int h = WorldHeight - 1;
-
-                            while (h-- > 0)
+                            if (IsSpotFree(spotsTaken, new Vector2Int(x, y), 2))
                             {
-                                if (GetBlockTypePrivateUnchecked(x, h, y) == BlockType.Grass)
+                                spotsTaken[x, y] = true;
+                                int h = WorldHeight - 1;
+
+                                while (h-- > 0)
                                 {
-                                    Vector3Int p = new Vector3Int(x, h + 1, y);
-
-                                    SetBlockTypePrivate(p.x, p.y - 1, p.z, BlockType.Dirt);
-                                    bool cutOff = random.Next(100) == 0;
-
-                                    if (cutOff)
+                                    if (GetBlockTypePrivateUnchecked(x, h, y) == BlockType.Grass)
                                     {
-                                        SetBlockTypePrivate(p.x, p.y, p.z, BlockType.Log_Oak);
-                                        goto End;
+                                        Vector3Int p = new Vector3Int(x, h + 1, y);
+
+                                        SetBlockTypePrivate(p.x, p.y - 1, p.z, BlockType.Dirt);
+                                        bool cutOff = random.Next(100) == 0;
+
+                                        if (cutOff)
+                                        {
+                                            SetBlockTypePrivate(p.x, p.y, p.z, BlockType.Log_Oak);
+                                            goto End;
+                                        }
+
+                                        int height = (byte)random.Next(4, 7);
+                                        bool superHigh = random.Next(100) == 0;
+                                        if (superHigh) height = 10;
+
+                                        for (int i = 0; i < height; ++i)
+                                        {
+                                            SetBlockTypePrivate(p.x, p.y + i, p.z, BlockType.Log_Oak);
+                                        }
+                                        SetBlockTypePrivate(p.x, p.y + height, p.z, BlockType.Leaves_Oak);
+
+                                        for (int i = 0; i < 4; ++i)
+                                        {
+                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                        }
+
+                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
+
+                                        for (int i = 2; i < 4; ++i)
+                                        {
+                                            SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+
+                                            SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+
+                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 0, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+
+                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 0, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+
+                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+
+                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+
+                                        }
+                                        break;
                                     }
-
-                                    int height = (byte)random.Next(4, 7);
-                                    bool superHigh = random.Next(100) == 0;
-                                    if (superHigh) height = 10;
-
-                                    for (int i = 0; i < height; ++i)
-                                    {
-                                        SetBlockTypePrivate(p.x, p.y + i, p.z, BlockType.Log_Oak);
-                                    }
-                                    SetBlockTypePrivate(p.x, p.y + height, p.z, BlockType.Leaves_Oak);
-
-                                    for (int i = 0; i < 4; ++i)
-                                    {
-                                        SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                    }
-
-                                    if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
-                                    if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
-                                    if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
-                                    if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
-
-                                    for (int i = 2; i < 4; ++i)
-                                    {
-                                        SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-
-                                        SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-
-                                        SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 0, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-
-                                        SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 0, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-
-                                        SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                        SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-
-                                    }
-                                    break;
                                 }
                             }
                         }
@@ -723,7 +789,7 @@ namespace Minecraft
                     for (int y = WorldHeight - 1; y >= 0; y--)
                     {
                         BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
-                        Block block = world.GetBlockByType(type);
+                        Block block = world.DataManager.GetBlockByType(type);
 
                         if (type != BlockType.Air && height == -1)
                         {
@@ -763,7 +829,7 @@ namespace Minecraft
                     // 其实基本就tick不到重要的方块...
 
                     BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
-                    world.GetBlockByType(type).OnRandomTick(x + PositionX, y, z + PositionZ);
+                    world.DataManager.GetBlockByType(type).OnRandomTick(x + PositionX, y, z + PositionZ);
                 }
             }
         }
@@ -773,7 +839,7 @@ namespace Minecraft
         {
             if (m_IsBuildingMesh || !ShouldUpdateMesh)
                 return;
-
+            
             m_IsBuildingMesh = true;
 
             MeshUpdateFlags updateFlags = m_MeshUpdateFlags;
@@ -804,7 +870,7 @@ namespace Minecraft
                     await WorldManager.Active.ChunkManager.WaitForAllNeighborChunksLoaded(this);
                 }
                 
-                await Task.Factory.StartNew(UpdateDirtyColumsSkyLightData);
+                await Task.Factory.StartNew(GenerateSkyLightData);
 
                 if (updateSolid)
                 {
@@ -898,7 +964,7 @@ namespace Minecraft
                         for (int ry = 0; ry < height; ry++)
                         {
                             BlockType type = GetBlockTypePrivateUnchecked(dx, ry, dz);
-                            Block block = world.GetBlockByType(type);
+                            Block block = world.DataManager.GetBlockByType(type);
 
                             if (block.VertexType == BlockVertexType.None || block.HasAnyFlag(BlockFlags.Liquid))
                                 continue;
@@ -1024,7 +1090,7 @@ namespace Minecraft
                         for (int ry = 1; ry < height; ry++)
                         {
                             BlockType type = GetBlockTypePrivateUnchecked(dx, ry, dz);
-                            Block block = world.GetBlockByType(type);
+                            Block block = world.DataManager.GetBlockByType(type);
 
                             if (block.VertexType != BlockVertexType.Cube || !block.HasAllFlags(BlockFlags.Liquid))
                                 continue;
@@ -1094,15 +1160,6 @@ namespace Minecraft
             }
         }
 
-        private void UpdateDirtyColumsSkyLightData()
-        {
-            while (m_DirtyColumns.Count > 0)
-            {
-                Vector2Int column = m_DirtyColumns.Dequeue();
-                UpdateSkyLightData(column.x, column.y);
-            }
-        }
-
         private void UpdateSkyLightData(int localX, int localZ)
         {
             int height = m_HeightMap[(localX << 4) | localZ];
@@ -1118,7 +1175,7 @@ namespace Minecraft
             do
             {
                 BlockType type = GetBlockTypePrivateUnchecked(localX, height, localZ);
-                Block block = WorldManager.Active.GetBlockByType(type);
+                Block block = WorldManager.Active.DataManager.GetBlockByType(type);
 
                 light = Mathf.Clamp(light - opacity, 0, MaxNonAirBlockSkyLightValue);
                 m_SkyLights[(localX << 12) | (height << 4) | localZ] = (byte)light;
@@ -1128,9 +1185,10 @@ namespace Minecraft
             } while (--height > -1);
         }
 
-        internal byte[] GetRawBlockData()
+        internal void GetRawBlockData(out byte[] blocks, out byte[] states)
         {
-            return m_Blocks;
+            blocks = m_Blocks;
+            states = m_BlockStates;
         }
 
         public void OnSaved()

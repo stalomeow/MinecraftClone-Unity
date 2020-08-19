@@ -13,7 +13,7 @@ using Random = System.Random;
 
 namespace Minecraft
 {
-    public sealed class ChunkManager 
+    public sealed class ChunkManager : IDisposable
     {
         private struct ChunkNeedsLoading
         {
@@ -83,6 +83,7 @@ namespace Minecraft
         private readonly Transform m_PlayerTransform;
 
         private bool m_IsStartUp;
+        private bool m_Disposed;
 
         public event Action OnChunksReadyWhenStartingUp;
 
@@ -110,7 +111,7 @@ namespace Minecraft
 
             m_ChunksToLoad = new ConcurrentQueue<Vector2Int>();
             m_ChunksToUnload = new ConcurrentQueue<Vector2Int>();
-            m_ChunkLoader = new ChunkLoader(settings.Seed, chunkSavingDirectory);
+            m_ChunkLoader = new ChunkLoader(settings.Seed, chunkSavingDirectory, settings.Type);
             m_BuildAndUnloadChunksThread = new Thread(BuildAndUnloadChunksThreadMethod) { IsBackground = true };
 
             m_ChunksToRender = new HashSet<Vector2Int>(m_ChunkPositionComparer);
@@ -149,6 +150,7 @@ namespace Minecraft
             InitMaterialProperties(settings);
 
             m_IsStartUp = true;
+            m_Disposed = false;
 
 #if UNITY_EDITOR
             m_BuildAndUnloadChunksThread.Name = "Build And Unload Chunks Thread";
@@ -183,13 +185,17 @@ namespace Minecraft
             m_BuildAndUnloadChunksThread.Start();
         }
 
-        public void Destroy()
+        public void Dispose()
         {
-            m_UpdateChunksThread.Abort();
-            m_BuildAndUnloadChunksThread.Abort();
+            if (!m_Disposed)
+            {
+                m_Disposed = true;
+                //m_UpdateChunksThread.Abort();
+                //m_BuildAndUnloadChunksThread.Abort();
 
-            // 保存chunks
-            Parallel.ForEach(m_Chunks.Values, chunk => m_ChunkLoader.SaveChunk(chunk));
+                // 保存chunks
+                Parallel.ForEach(m_Chunks.Values, chunk => m_ChunkLoader.SaveChunk(chunk));
+            }
         }
 
 
@@ -424,7 +430,7 @@ namespace Minecraft
             PriorityQueue<ChunkNeedsLoading> updateChunkQueue = new PriorityQueue<ChunkNeedsLoading>(priorityComparer);
             HashSet<Vector2Int> inRangeChunks = new HashSet<Vector2Int>(m_ChunkPositionComparer); // 求交集优化
 
-            while (true)
+            while (!m_Disposed)
             {
                 if (!m_ChunksUpdatingRequired) // 不需要更新
                     continue;
@@ -522,7 +528,7 @@ namespace Minecraft
         {
             ObjectPool<Chunk> chunkPool = new ObjectPool<Chunk>(m_RenderChunkRadius * 2, m_RenderChunkRadius * m_RenderChunkRadius * 4);
 
-            while (true)
+            while (!m_Disposed)
             {
                 // unload chunks
 

@@ -1,5 +1,8 @@
+using XLua;
+
 namespace Minecraft.BlocksData
 {
+    [LuaCallCSharp]
     public enum BlockType : byte
     {
         Air = 0,
@@ -28,5 +31,6 @@ namespace Minecraft.BlocksData
         Diamond = 23,
         Diorite = 24,
         Granite = 25,
+        Noteblock = 26,
     }
 }

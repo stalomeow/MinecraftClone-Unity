@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
+using XLua;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -12,13 +13,10 @@ namespace Minecraft.BlocksData
     /// <summary>
     /// 保存方块的元数据，提供部分操作方块的接口
     /// </summary>
+    [LuaCallCSharp]
     [CreateAssetMenu(menuName = "Minecraft/Block")]
     public sealed class Block : ScriptableObject
     {
-        [Serializable]
-        private sealed class BlockEvent : UnityEvent<int, int, int, Block> { }
-
-
         [SerializeField] [Tooltip("方块的名称")] private string m_BlockName;
         [SerializeField] [Tooltip("方块的类型")] private BlockType m_Type;
         [SerializeField] [Tooltip("方块的设置")] private BlockFlags m_Flags = BlockFlags.None;
@@ -28,13 +26,6 @@ namespace Minecraft.BlocksData
         [SerializeField] [Range(0, 15)] [Tooltip("方块的亮度值")] private byte m_LightValue = 0;
         [SerializeField] [Range(0, 60)] [Tooltip("方块的硬度")] private byte m_Hardness = 16;
         [SerializeField] [Tooltip("方块摧毁特效颜色")] private ParticleSystem.MinMaxGradient m_DestoryEffectColor;
-
-
-        [SerializeField] [Tooltip("方块更新事件，通常在周围方块发生变化、方块被放置时触发")] private BlockEvent m_OnTick;
-        [SerializeField] [Tooltip("方块随机更新事件")] private BlockEvent m_OnRandomTick;
-        [SerializeField] [Tooltip("方块被破坏事件")] private BlockEvent m_OnBlockDestroy;
-        [SerializeField] [Tooltip("方块被放置事件")] private BlockEvent m_OnBlockPlace;
-        [SerializeField] [Tooltip("方块被点击事件")] private BlockEvent m_OnClick;
 
         // uv groups
         [SerializeField] private Vector2 PositiveXLB; // main
@@ -76,6 +67,13 @@ namespace Minecraft.BlocksData
         [SerializeField] [Tooltip("方块的额外资源")] private Object[] m_ExtraAssets;
 
 
+        private event BlockEventAction m_OnTick;
+        private event BlockEventAction m_OnRandomTick;
+        private event BlockEventAction m_OnBlockDestroy;
+        private event BlockEventAction m_OnBlockPlace;
+        private event BlockEventAction m_OnClick;
+
+
         public string BlockName => m_BlockName;
 
         public BlockType Type => m_Type;
@@ -95,46 +93,46 @@ namespace Minecraft.BlocksData
         public ParticleSystem.MinMaxGradient DestoryEffectColor => m_DestoryEffectColor;
 
 
-        public event UnityAction<int, int, int, Block> OnTickEvent
+        public event BlockEventAction OnTickEvent
         {
-            add => m_OnTick.AddListener(value);
-            remove => m_OnTick.RemoveListener(value);
+            add => m_OnTick += value;
+            remove => m_OnTick -= value;
         }
 
-        public event UnityAction<int, int, int, Block> OnRandomTickEvent
+        public event BlockEventAction OnRandomTickEvent
         {
             add
             {
                 if ((m_Flags & BlockFlags.NeedsRandomTick) == BlockFlags.NeedsRandomTick)
                 {
-                    m_OnRandomTick.AddListener(value);
+                    m_OnRandomTick += value;
                 }
             }
             remove
             {
                 if ((m_Flags & BlockFlags.NeedsRandomTick) == BlockFlags.NeedsRandomTick)
                 {
-                    m_OnRandomTick.RemoveListener(value);
+                    m_OnRandomTick -= value;
                 }
             }
         }
 
-        public event UnityAction<int, int, int, Block> OnBlockDestroyEvent
+        public event BlockEventAction OnBlockDestroyEvent
         {
-            add => m_OnBlockDestroy.AddListener(value);
-            remove => m_OnBlockDestroy.RemoveListener(value);
+            add => m_OnBlockDestroy += value;
+            remove => m_OnBlockDestroy -= value;
         }
 
-        public event UnityAction<int, int, int, Block> OnBlockPlaceEvent
+        public event BlockEventAction OnBlockPlaceEvent
         {
-            add => m_OnBlockPlace.AddListener(value);
-            remove => m_OnBlockPlace.RemoveListener(value);
+            add => m_OnBlockPlace += value;
+            remove => m_OnBlockPlace -= value;
         }
 
-        public event UnityAction<int, int, int, Block> OnClickEvent
+        public event BlockEventAction OnClickEvent
         {
-            add => m_OnClick.AddListener(value);
-            remove => m_OnClick.RemoveListener(value);
+            add => m_OnClick += value;
+            remove => m_OnClick -= value;
         }
 
 
@@ -143,30 +141,39 @@ namespace Minecraft.BlocksData
 
         public void OnTick(int x, int y, int z)
         {
-            m_OnTick.Invoke(x, y, z, this);
+            m_OnTick?.Invoke(x, y, z, this);
         }
 
         public void OnRandomTick(int x, int y, int z)
         {
             if ((m_Flags & BlockFlags.NeedsRandomTick) == BlockFlags.NeedsRandomTick)
             {
-                m_OnRandomTick.Invoke(x, y, z, this);
+                m_OnRandomTick?.Invoke(x, y, z, this);
             }
         }
 
         public void OnBlockDestroy(int x, int y, int z)
         {
-            m_OnBlockDestroy.Invoke(x, y, z, this);
+            m_OnBlockDestroy?.Invoke(x, y, z, this);
         }
 
         public void OnBlockPlace(int x, int y, int z)
         {
-            m_OnBlockPlace.Invoke(x, y, z, this);
+            m_OnBlockPlace?.Invoke(x, y, z, this);
         }
 
         public void OnClick(int x, int y, int z)
         {
-            m_OnClick.Invoke(x, y, z, this);
+            m_OnClick?.Invoke(x, y, z, this);
+        }
+
+        public void ClearEvents()
+        {
+            m_OnTick = null;
+            m_OnRandomTick = null;
+            m_OnBlockDestroy = null;
+            m_OnBlockPlace = null;
+            m_OnClick = null;
         }
 
 
