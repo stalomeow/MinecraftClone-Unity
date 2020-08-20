@@ -1,7 +1,6 @@
 ﻿using Minecraft.BlocksData;
 using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Minecraft
 {
@@ -33,6 +32,8 @@ namespace Minecraft
 
             m_AudioSource.clip = m_Fuse;
             m_AudioSource.Play();
+
+            LifeTime = float.PositiveInfinity;
         }
 
         private void OnDestroy()

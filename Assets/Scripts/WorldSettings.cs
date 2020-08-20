@@ -22,6 +22,8 @@ namespace Minecraft
 
         public Vector3 Position;
 
+        public string ResourcePackageName;
+
         public int RenderRadius => RenderChunkRadius * WorldConsts.ChunkWidth;
 
         public Color DefaultAmbientColor => new Color(0.3632075f, 0.6424405f, 1f, 1f);

@@ -1,22 +1,21 @@
-﻿using System.Runtime.InteropServices;
-using UnityEngine;
+﻿using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Minecraft.AssetManagement
 {
 #if UNITY_EDITOR
 
-    public readonly struct AsyncAsset
+    public readonly struct AsyncAsset<T> where T : Object
     {
         private readonly bool m_IsLoadedObject;
-        private readonly Object m_Object;
+        private readonly T m_Object;
         private readonly AssetBundleRequest m_Request;
 
         public bool IsDone => m_IsLoadedObject ? true : m_Request.isDone;
 
         public float Progress => m_IsLoadedObject ? 1 : m_Request.progress;
 
-        public Object Asset => m_IsLoadedObject ? m_Object : m_Request.asset;
+        public T Asset => m_IsLoadedObject ? m_Object: (m_Request.asset as T);
 
         public AsyncAsset(AssetBundleRequest request) : this()
         {
@@ -24,7 +23,7 @@ namespace Minecraft.AssetManagement
             m_Request = request;
         }
 
-        public AsyncAsset(Object obj) : this()
+        public AsyncAsset(T obj) : this()
         {
             m_IsLoadedObject = true;
             m_Object = obj;
@@ -58,7 +57,7 @@ namespace Minecraft.AssetManagement
 
 #else
 
-    public readonly struct AsyncAsset
+    public readonly struct AsyncAsset<T> where T : Object
     {
         private readonly AssetBundleRequest m_Request;
 
@@ -66,7 +65,7 @@ namespace Minecraft.AssetManagement
 
         public float Progress => m_Request.progress;
 
-        public Object Asset => m_Request.asset;
+        public T Asset => m_Request.asset as T;
 
         public AsyncAsset(AssetBundleRequest request)
         {

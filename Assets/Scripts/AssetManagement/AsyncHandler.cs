@@ -1,16 +1,19 @@
-﻿using System;
+﻿using Minecraft.DebugUtils;
+using System;
+using System.Collections;
 using System.Threading;
 using UnityEngine;
-using System.Collections;
 
 namespace Minecraft.AssetManagement
 {
-    public sealed class AsyncHandler : IEnumerator
+    public sealed class AsyncHandler : IEnumerator, IDebugMessageSender
     {
         private readonly AsyncOperation[] m_Operations;
         private readonly int m_MainOperationIndex;
         private Action<AsyncOperation> m_OnCompleted;
         private int m_CompletedCount;
+
+        public bool DisableLog { get; set; }
 
         public float Progress
         {
@@ -95,10 +98,16 @@ namespace Minecraft.AssetManagement
 
         private void OnCompletedCallback(AsyncOperation operation)
         {
-            if (Interlocked.Increment(ref m_CompletedCount) >= m_Operations.Length)
+            int count = Interlocked.Increment(ref m_CompletedCount);
+
+            this.Log("completed callback");
+
+            if (count >= m_Operations.Length)
             {
                 AsyncOperation op = m_Operations[m_MainOperationIndex];
                 m_OnCompleted?.Invoke(op);
+
+                this.Log("加载完成");
             }
         }
 
@@ -110,6 +119,8 @@ namespace Minecraft.AssetManagement
 
 
         object IEnumerator.Current => null;
+
+        string IDebugMessageSender.DisplayName => $"AsyncHandler({m_CompletedCount}/{(m_Operations == null ? 0 : m_Operations.Length)})";
 
         bool IEnumerator.MoveNext() => m_Operations != null && m_CompletedCount < m_Operations.Length;
 

@@ -9,7 +9,7 @@ namespace Minecraft.AssetManagement
 {
     public static class AssetBundleBuilder
     {
-        public static void Build(string outputPath, BuildTarget buildTarget)
+        public static void Build(string outputPath, BuildTarget buildTarget, Texture2D icon)
         {
             string desOutputPath = outputPath;
             outputPath = Application.dataPath.Replace("Assets", string.Empty) + "Library/AssetBundleBuild";
@@ -82,6 +82,10 @@ namespace Minecraft.AssetManagement
                 }
 
                 File.Delete(manifestBundlePath);
+
+                string iconPath = Path.Combine(outputPath, WorldConsts.ResourcePackageIconName);
+                byte[] iconData = icon.EncodeToPNG();
+                File.WriteAllBytes(iconPath, iconData);
 
                 DirectoryCopy(outputPath, desOutputPath);
 

@@ -21,12 +21,13 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Minecraft.DataManager);
-			Utils.BeginObjectRegister(type, L, translator, 0, 8, 5, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 9, 6, 1);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitBlocks", _m_InitBlocks);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitItems", _m_InitItems);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InitMaterials", _m_InitMaterials);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DoLua", _m_DoLua);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LuaFullGC", _m_LuaFullGC);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Dispose", _m_Dispose);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ForeachAllBlocks", _m_ForeachAllBlocks);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetBlockByType", _m_GetBlockByType);
@@ -38,8 +39,10 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "BlockEntityMaterial", _g_get_BlockEntityMaterial);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "BlockCount", _g_get_BlockCount);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "ItemCount", _g_get_ItemCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "DisableLog", _g_get_DisableLog);
             
-			
+			Utils.RegisterFunc(L, Utils.SETTER_IDX, "DisableLog", _s_set_DisableLog);
+            
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
@@ -60,10 +63,11 @@ namespace XLua.CSObjectWrap
             
 			try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-				if(LuaAPI.lua_gettop(L) == 1)
+				if(LuaAPI.lua_gettop(L) == 2 && (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING))
 				{
+					string _resourcePackName = LuaAPI.lua_tostring(L, 2);
 					
-					Minecraft.DataManager gen_ret = new Minecraft.DataManager();
+					Minecraft.DataManager gen_ret = new Minecraft.DataManager(_resourcePackName);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -188,6 +192,33 @@ namespace XLua.CSObjectWrap
                     
                     
                     return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_LuaFullGC(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Minecraft.DataManager gen_to_be_invoked = (Minecraft.DataManager)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                    gen_to_be_invoked.LuaFullGC(  );
+                    
+                    
+                    
+                    return 0;
                 }
                 
             } catch(System.Exception gen_e) {
@@ -382,7 +413,36 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_DisableLog(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Minecraft.DataManager gen_to_be_invoked = (Minecraft.DataManager)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.DisableLog);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
         
+        
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_DisableLog(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Minecraft.DataManager gen_to_be_invoked = (Minecraft.DataManager)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.DisableLog = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
         
 		
 		

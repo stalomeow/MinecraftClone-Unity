@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using XLua;
 using Object = UnityEngine.Object;
+using System.IO;
+using Minecraft.DebugUtils;
 
 namespace Minecraft
 {
     [LuaCallCSharp]
-    public sealed class DataManager : IDisposable
+    public sealed class DataManager : IDisposable, IDebugMessageSender
     {
         private sealed class BlockTypeComparer : IEqualityComparer<BlockType>
         {
@@ -56,12 +58,16 @@ namespace Minecraft
 
         public int ItemCount => m_ItemsMap.Count;
 
-        public DataManager()
+        string IDebugMessageSender.DisplayName => "DataManager";
+
+        public bool DisableLog { get; set; }
+
+        public DataManager(string resourcePackName)
         {
             m_BlocksMap = new Dictionary<BlockType, Block>(new BlockTypeComparer());
             m_ItemsMap = new Dictionary<ItemType, Item>(new ItemTypeComparer());
             m_LuaMap = new Dictionary<string, byte[]>(StringComparer.Ordinal);
-            m_Loader = new AssetBundleLoader(Application.streamingAssetsPath);
+            m_Loader = new AssetBundleLoader(Path.Combine(Application.streamingAssetsPath, WorldConsts.ResourcePackagesFolderName, resourcePackName));
             m_LuaEnv = new LuaEnv();
             
             m_LuaEnv.AddLoader((ref string s) =>
@@ -91,6 +97,8 @@ namespace Minecraft
             {
                 Block block = blocks[i] as Block;
                 m_BlocksMap.Add(block.Type, block);
+
+                this.Log("加载方块：", block.BlockName);
             }
         }
 
@@ -112,6 +120,8 @@ namespace Minecraft
             {
                 Item item = items[i] as Item;
                 m_ItemsMap.Add(item.Type, item);
+
+                this.Log("加载物品：", item.ItemName);
             }
         }
 
@@ -120,34 +130,40 @@ namespace Minecraft
             IAssetBundle ab = m_Loader.LoadAssetBundle("minecraft/materials");
             yield return ab.AsyncHandler;
 
-            AsyncAsset asset;
+            AsyncAsset<Material> asset;
 
-            asset = ab.LoadAsset<Material>("assets/_minecraft/materials/chunkmaterial.mat");
-
-            while (!asset.IsDone)
-            {
-                yield return null;
-            }
-
-            ChunkMaterial = asset.Asset as Material;
-
-            asset = ab.LoadAsset<Material>("assets/_minecraft/materials/liquidmaterial.mat");
+            asset = ab.LoadAsset<Material>("chunkmaterial.mat");
 
             while (!asset.IsDone)
             {
                 yield return null;
             }
 
-            LiquidMaterial = asset.Asset as Material;
+            ChunkMaterial = asset.Asset;
 
-            asset = ab.LoadAsset<Material>("assets/_minecraft/materials/blockentitymaterial.mat");
+            this.Log("加载Chunk材质球");
+
+            asset = ab.LoadAsset<Material>("liquidmaterial.mat");
 
             while (!asset.IsDone)
             {
                 yield return null;
             }
 
-            BlockEntityMaterial = asset.Asset as Material;
+            LiquidMaterial = asset.Asset;
+
+            this.Log("加载Liquid材质球");
+
+            asset = ab.LoadAsset<Material>("blockentitymaterial.mat");
+
+            while (!asset.IsDone)
+            {
+                yield return null;
+            }
+
+            BlockEntityMaterial = asset.Asset;
+
+            this.Log("加载BlockEntity材质球");
         }
 
         public IEnumerator DoLua()
@@ -172,6 +188,8 @@ namespace Minecraft
 
                 m_LuaMap.Add(text.name, bytes);
 
+                this.Log("加载lua：", text.name);
+
                 if (text.name == "main.lua")
                 {
                     mainLuaBytes = bytes;
@@ -181,9 +199,17 @@ namespace Minecraft
             if (mainLuaBytes != null)
             {
                 m_LuaEnv.DoString(mainLuaBytes);
+
+                this.Log("调用main.lua");
             }
 
             m_Loader.UnloadAssetBundle(ab, true);
+        }
+
+
+        public void LuaFullGC()
+        {
+            m_LuaEnv.FullGc();
         }
 
 

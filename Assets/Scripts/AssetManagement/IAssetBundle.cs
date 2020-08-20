@@ -11,9 +11,9 @@ namespace Minecraft.AssetManagement
 
         AsyncHandler AsyncHandler { get; }
 
-        AsyncAsset LoadAsset<T>(string path) where T : Object;
+        AsyncAsset<T> LoadAsset<T>(string path) where T : Object;
 
-        AsyncAsset LoadAsset(string path, Type type);
+        AsyncAsset<Object> LoadAsset(string path, Type type);
 
         AsyncAssets LoadAllAssets<T>() where T : Object;
 

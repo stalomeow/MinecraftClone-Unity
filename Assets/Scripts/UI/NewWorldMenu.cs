@@ -13,6 +13,8 @@ namespace Minecraft
     {
         [SerializeField] private TMP_InputField m_NameInput;
         [SerializeField] private TMP_InputField m_SeedInput;
+        [SerializeField] private TMP_Dropdown m_WorldTypeDropdown;
+        [SerializeField] private ResourcePackageSelector m_ResPackSelector;
 
         public void Play()
         {
@@ -32,17 +34,42 @@ namespace Minecraft
                 seed = string.IsNullOrEmpty(s) ? (Process.GetCurrentProcess().Id +  DateTime.Now.GetHashCode()): s.GetHashCode();
             }
 
+            WorldType worldType;
+
+            switch (m_WorldTypeDropdown.captionText.text)
+            {
+                case "Endless":
+                    worldType = WorldType.Normal;
+                    break;
+                case "Plain":
+                    worldType = WorldType.Plain;
+                    break;
+                case "Old":
+                    worldType = WorldType.Fixed;
+                    break;
+                default:
+                    return;
+            }
+
+            string resPackName = m_ResPackSelector.Selected;
+
+            if (string.IsNullOrEmpty(resPackName))
+            {
+                resPackName = WorldConsts.DefaultResourcePackageName;
+            }
+
             WorldSettings.Active = new WorldSettings
             {
                 Name = name,
-                Type = WorldType.Normal,
+                Type = worldType,
                 Mode = PlayMode.Creative,
                 Seed = seed,
                 RenderChunkRadius = 6,
                 HorizontalFOVInDEG = 90,
                 MaxChunkCountInMemory = 700,
                 EnableDestroyEffect = true,
-                Position = Vector3.down
+                Position = Vector3.down,
+                ResourcePackageName = resPackName
             };
 
             SceneManager.LoadScene(1);

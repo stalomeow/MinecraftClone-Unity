@@ -85,10 +85,8 @@
     <Compile Include="Assets\Scripts\Collections\ObjectPool.cs" />
     <Compile Include="Assets\Scripts\Collections\PriorityQueue.cs" />
     <Compile Include="Assets\Scripts\DataManager.cs" />
-    <Compile Include="Assets\Scripts\DebugUtils\ChunkInfoPrinter.cs" />
-    <Compile Include="Assets\Scripts\DebugUtils\FPSCounter.cs" />
-    <Compile Include="Assets\Scripts\DebugUtils\PositionPrinter.cs" />
-    <Compile Include="Assets\Scripts\DebugUtils\UsedMemory.cs" />
+    <Compile Include="Assets\Scripts\DebugUtils\DebugMessageUtility.cs" />
+    <Compile Include="Assets\Scripts\DebugUtils\IDebugMessageSender.cs" />
     <Compile Include="Assets\Scripts\Entities\AABB.cs" />
     <Compile Include="Assets\Scripts\Entities\BlockEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
@@ -113,6 +111,7 @@
     <Compile Include="Assets\Scripts\UI\MenuCamera.cs" />
     <Compile Include="Assets\Scripts\UI\MenuSubTitle.cs" />
     <Compile Include="Assets\Scripts\UI\NewWorldMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\ResourcePackageSelector.cs" />
     <Compile Include="Assets\Scripts\UI\SelectWorldMenu.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonOnClick.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />

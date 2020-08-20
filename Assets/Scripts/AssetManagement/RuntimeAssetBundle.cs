@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Minecraft.AssetManagement
 {
@@ -61,24 +62,24 @@ namespace Minecraft.AssetManagement
             return new AsyncAssets(m_AssetBundle.LoadAllAssetsAsync(type));
         }
 
-        AsyncAsset IAssetBundle.LoadAsset<T>(string path)
+        AsyncAsset<T> IAssetBundle.LoadAsset<T>(string path)
         {
             if (m_AssetBundle == null)
             {
                 throw new InvalidOperationException("AssetBundle未加载完成，无法加载资源");
             }
 
-            return new AsyncAsset(m_AssetBundle.LoadAssetAsync<T>(path));
+            return new AsyncAsset<T>(m_AssetBundle.LoadAssetAsync<T>(path));
         }
 
-        AsyncAsset IAssetBundle.LoadAsset(string path, Type type)
+        AsyncAsset<Object> IAssetBundle.LoadAsset(string path, Type type)
         {
             if (m_AssetBundle == null)
             {
                 throw new InvalidOperationException("AssetBundle未加载完成，无法加载资源");
             }
 
-            return new AsyncAsset(m_AssetBundle.LoadAssetAsync(path, type));
+            return new AsyncAsset<Object>(m_AssetBundle.LoadAssetAsync(path, type));
         }
 
         void IAssetBundle.Unload(bool unloadAllLoadedObjects)

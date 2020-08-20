@@ -16,5 +16,6 @@ namespace Minecraft.ItemsData
         CraftingTable = 8,
         DiamondBlock = 9,
         Noteblock = 10,
+        Bilibili_SanLian = 11,
     }
 }

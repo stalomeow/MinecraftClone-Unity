@@ -44,5 +44,11 @@
         /// https://minecraft-zh.gamepedia.com/%E4%BA%AE%E5%BA%A6
         /// </remarks>
         public const int MaxNonAirBlockSkyLightValue = MaxLight - 1;
+
+        public const string ResourcePackagesFolderName = "resource_packs";
+
+        public const string ResourcePackageIconName = "icon.png";
+
+        public const string DefaultResourcePackageName = "default";
     }
 }

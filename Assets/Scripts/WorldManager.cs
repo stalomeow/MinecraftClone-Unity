@@ -43,7 +43,8 @@ namespace Minecraft
 
         private IEnumerator Start()
         {
-            DataManager = new DataManager();
+            WorldSettings settings = WorldSettings.Active;
+            DataManager = new DataManager(settings.ResourcePackageName);
 
             yield return DataManager.InitBlocks();
             yield return DataManager.InitItems();
@@ -53,9 +54,12 @@ namespace Minecraft
             Active = this;
             m_PlayerTransform = m_Player.transform;
 
-            Initialize(WorldSettings.Active);
+            Initialize(settings);
 
             yield return DataManager.DoLua();
+
+            DataManager.LuaFullGC();
+            GC.Collect();
         }
 
         private void Update()

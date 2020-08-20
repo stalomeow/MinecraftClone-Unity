@@ -21,6 +21,8 @@ namespace Minecraft
         private List<VertexData> m_VertexBuffer;
         private List<int> m_TrianglesBuffer;
 
+        private float m_TimeCounter;
+
 
         public sealed override AABB BoundingBox
         {
@@ -94,6 +96,8 @@ namespace Minecraft
 
         public bool Initialized { get; private set; }
 
+        public float LifeTime { get; protected set; }
+
         public Block Block { get; protected set; }
 
         protected virtual MaterialPropertyBlock MaterialPropertyBlock => null;
@@ -101,7 +105,7 @@ namespace Minecraft
         protected virtual bool ShouldRenderBlock => true;
 
 
-        public void Initialize(int x, int y, int z, Block block, float gravityMultiplier = 3)
+        public void Initialize(int x, int y, int z, Block block, float lifeTime = 3, float gravityMultiplier = 3)
         {
             m_Transform = GetComponent<Transform>();
 
@@ -114,8 +118,11 @@ namespace Minecraft
             m_VertexBuffer = new List<VertexData>();
             m_TrianglesBuffer = new List<int>();
 
+            m_TimeCounter = 0;
+
             m_Transform.position = new Vector3(x, y, z);
             WorldManager world = WorldManager.Active;
+            LifeTime = lifeTime;
             GravityMultiplier = gravityMultiplier;
             Block = block;
 
@@ -204,9 +211,14 @@ namespace Minecraft
 
         private void Update()
         {
+            m_TimeCounter += Time.deltaTime;
             WorldManager world = WorldManager.Active;
 
-            if (m_Mesh.vertexCount > 0 && ShouldRenderBlock)
+            if (m_TimeCounter > LifeTime)
+            {
+                world.EntityManager.DestroyEntity(this);
+            }
+            else if (m_Mesh.vertexCount > 0 && ShouldRenderBlock)
             {
                 Graphics.DrawMesh(m_Mesh, m_Transform.position, Quaternion.identity, world.EntityManager.BlockEntityMaterial, BlockLayer, world.MainCamera, 0, MaterialPropertyBlock, false, false, false);
             }
