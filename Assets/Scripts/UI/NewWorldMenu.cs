@@ -64,11 +64,9 @@ namespace Minecraft
                 Type = worldType,
                 Mode = PlayMode.Creative,
                 Seed = seed,
-                RenderChunkRadius = 6,
-                HorizontalFOVInDEG = 90,
-                MaxChunkCountInMemory = 700,
-                EnableDestroyEffect = true,
                 Position = Vector3.down,
+                BodyRotation = Quaternion.identity,
+                CameraRotation = Quaternion.identity,
                 ResourcePackageName = resPackName
             };
 

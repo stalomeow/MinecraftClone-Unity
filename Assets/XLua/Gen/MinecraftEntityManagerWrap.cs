@@ -21,11 +21,12 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Minecraft.EntityManager);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 2, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 2, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "CreateEntity", _m_CreateEntity);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DestroyEntity", _m_DestroyEntity);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EnumerateEntities", _m_EnumerateEntities);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EnumerateOtherEntities", _m_EnumerateOtherEntities);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "BlockEntityMaterial", _g_get_BlockEntityMaterial);
@@ -164,7 +165,36 @@ namespace XLua.CSObjectWrap
                 
                 {
                     
-                        System.Collections.Generic.HashSet<Minecraft.Entity>.Enumerator gen_ret = gen_to_be_invoked.EnumerateEntities(  );
+                        Minecraft.EntityManager.EntityEnumerator gen_ret = gen_to_be_invoked.EnumerateEntities(  );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_EnumerateOtherEntities(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Minecraft.EntityManager gen_to_be_invoked = (Minecraft.EntityManager)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    Minecraft.Entity _self = (Minecraft.Entity)translator.GetObject(L, 2, typeof(Minecraft.Entity));
+                    
+                        Minecraft.EntityManager.EntityEnumerator gen_ret = gen_to_be_invoked.EnumerateOtherEntities( _self );
                         translator.Push(L, gen_ret);
                     
                     

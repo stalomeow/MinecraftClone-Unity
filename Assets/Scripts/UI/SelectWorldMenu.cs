@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,7 @@ namespace Minecraft
             	Directory.CreateDirectory(folder);
 
             string[] worlds = Directory.GetDirectories(folder);
+            Array.Sort(worlds, (w1, w2) => File.GetLastWriteTime(w1) > File.GetLastWriteTime(w2) ? 1 : -1);
 
             for (int i = 0; i < worlds.Length; i++)
             {

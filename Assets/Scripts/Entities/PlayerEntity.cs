@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using static Minecraft.WorldConsts;
-using UnityEngine.Serialization;
 
 #pragma warning disable CS0649
 
@@ -328,7 +327,7 @@ namespace Minecraft
             block.OnBlockDestroy(firstHitPos.x, firstHitPos.y, firstHitPos.z);
             block.PlayDigAudio(m_AudioSource);
 
-            if (m_Manager.Settings.EnableDestroyEffect)
+            if (GlobalSettings.Instance.EnableDestroyEffect)
             {
                 ParticleSystem effect = Instantiate(m_DestroyEffectPrefab, firstHitPos + new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity).GetComponent<ParticleSystem>();
                 ParticleSystem.MainModule main = effect.main;
@@ -612,8 +611,8 @@ namespace Minecraft
         private void OnHeadExitWater()
         {
             m_UseHeadBob = true;
-            m_Manager.ChunkManager.MaterialProperties.SetRenderRadius(m_Manager.Settings.RenderRadius);
-            m_Manager.ChunkManager.MaterialProperties.SetAmbientColor(m_Manager.Settings.DefaultAmbientColor);
+            m_Manager.ChunkManager.MaterialProperties.SetRenderRadius(GlobalSettings.Instance.RenderRadius);
+            m_Manager.ChunkManager.MaterialProperties.SetAmbientColor(GlobalSettings.Instance.DefaultAmbientColor);
         }
 
         private void OnEnterWater()

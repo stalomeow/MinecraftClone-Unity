@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using XLua;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -136,7 +134,15 @@ namespace Minecraft.BlocksData
         }
 
 
-        public Object[] ExtraAssets => m_ExtraAssets;
+        public Object GetExtraAsset(int index)
+        {
+            return m_ExtraAssets[index];
+        }
+
+        public T GetExtraAsset<T>(int index) where T : Object
+        {
+            return m_ExtraAssets[index] as T;
+        }
 
 
         public void OnTick(int x, int y, int z)

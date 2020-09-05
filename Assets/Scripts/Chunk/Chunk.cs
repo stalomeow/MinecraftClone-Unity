@@ -1,44 +1,17 @@
 ﻿using Minecraft.BlocksData;
 using Minecraft.Collections;
+using Minecraft.DebugUtils;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.Rendering;
-using static Minecraft.BlocksData.BlockVertexHelper;
 using static Minecraft.WorldConsts;
 using Random = System.Random;
 
 namespace Minecraft
 {
-    public sealed class Chunk : IReusableObject
+    public sealed partial class Chunk : IReusableObject, IDebugMessageSender
     {
-        [Flags]
-        private enum MeshUpdateFlags : byte
-        {
-            Neither = 0,
-
-            SolidMesh = 1 << 0,
-            LiquidMesh = 1 << 1,
-
-            LightingUpdate = 1 << 2,
-
-            LightingSolidMesh = LightingUpdate | SolidMesh,
-            LightingLiquidMesh = LightingUpdate | LiquidMesh,
-
-            Both = SolidMesh | LiquidMesh,
-            LightingBoth = LightingUpdate | Both
-        }
-
-
-        private static readonly Bounds s_ChunkBounds = new Bounds(
-            new Vector3(ChunkWidth * 0.5f, WorldHeight * 0.5f, ChunkWidth * 0.5f),
-            new Vector3(ChunkWidth, WorldHeight, ChunkWidth)
-        );
-
+        string IDebugMessageSender.DisplayName => $"Chunk({PositionX.ToString()},{PositionZ.ToString()})";
 
         public int PositionX { get; private set; }
 
@@ -46,24 +19,28 @@ namespace Minecraft
 
         public bool IsModified { get; private set; }
 
-        public Mesh SolidMesh { get; private set; }
+        public bool DisableLog { get; set; }
 
-        public Mesh LiquidMesh { get; private set; }
+        public bool ShouldUpdateMesh => m_MeshDirtyFlags != MeshDirtyFlags.Neither;
 
-        public bool ShouldUpdateMesh => m_MeshUpdateFlags != MeshUpdateFlags.Neither;
 
         private byte[] m_Blocks; // 所有方块信息
         private byte[] m_BlockStates; // 所有方块的状态
         private byte[] m_HeightMap; // chunk 的高度图, 第一个非空方块的y
         private int[] m_TickRefCounts; // 每一个section（高度16）需要tick的数量
+        private int[] m_SolidCounts; // 每一个section（高度16）可以被绘制的固体的数量
+        private int[] m_LiquidCounts; // 每一个section（高度16）可以被绘制的流体的数量
         private NibbleArray m_SkyLights; // 每一个方块受到的天空光照值，不公开
         private NibbleArray m_BlockLights; // 每一个方块受到的由其他方块引起的光照值
 
-        private MeshUpdateFlags m_MeshUpdateFlags;
+        private MeshDirtyFlags m_MeshDirtyFlags;
         private bool m_IsStartUp; // 有chunk被卸载后会重新赋值
         private bool m_IsBuildingMesh;
-        private List<VertexData> m_VertexBuffer;
-        private List<int> m_TrianglesBuffer;
+        private ushort m_DirtyMeshIndexes; //16位标识
+        
+        private Mesh[] m_SolidMeshes;
+        private Mesh[] m_LiquidMeshes;
+        private MeshDataBuffer m_MeshDataBuffer;
 
         private object m_SyncLock;
 
@@ -74,11 +51,14 @@ namespace Minecraft
             m_BlockStates = new byte[BlockCountInChunk];
             m_HeightMap = new byte[ChunkWidth * ChunkWidth];
             m_TickRefCounts = new int[SectionCountInChunk];
+            m_SolidCounts = new int[SectionCountInChunk];
+            m_LiquidCounts = new int[SectionCountInChunk];
             m_SkyLights = new NibbleArray(BlockCountInChunk);
             m_BlockLights = new NibbleArray(BlockCountInChunk);
 
-            m_VertexBuffer = new List<VertexData>();
-            m_TrianglesBuffer = new List<int>();
+            m_SolidMeshes = new Mesh[SectionCountInChunk];
+            m_LiquidMeshes = new Mesh[SectionCountInChunk];
+            m_MeshDataBuffer = new MeshDataBuffer();
 
             m_SyncLock = new object();
         }
@@ -88,8 +68,10 @@ namespace Minecraft
             PositionX = 0;
             PositionZ = 0;
             IsModified = false;
+         
+            m_MeshDirtyFlags = MeshDirtyFlags.Both;
+            m_DirtyMeshIndexes = ushort.MaxValue;
 
-            m_MeshUpdateFlags = MeshUpdateFlags.Both;
             m_IsStartUp = true;
             m_IsBuildingMesh = false;
         }
@@ -98,32 +80,39 @@ namespace Minecraft
         {
             if (destroy)
             {
-                SolidMesh = null;
-                LiquidMesh = null;
-
                 m_Blocks = null;
                 m_BlockStates = null;
                 m_HeightMap = null;
                 m_TickRefCounts = null;
+                m_SolidCounts = null;
+                m_LiquidCounts = null;
                 m_SkyLights = null;
                 m_BlockLights = null;
 
-                m_VertexBuffer = null;
-                m_TrianglesBuffer = null;
+                m_SolidMeshes = null;
+                m_LiquidMeshes = null;
+                m_MeshDataBuffer = null;
 
                 m_SyncLock = null;
             }
             else
             {
-                // mesh 会在build前clear
-
                 Array.Clear(m_Blocks, 0, m_Blocks.Length);
                 Array.Clear(m_BlockStates, 0, m_BlockStates.Length);
                 Array.Clear(m_HeightMap, 0, m_HeightMap.Length);
                 Array.Clear(m_TickRefCounts, 0, m_TickRefCounts.Length);
+                Array.Clear(m_SolidCounts, 0, m_SolidCounts.Length);
+                Array.Clear(m_LiquidCounts, 0, m_LiquidCounts.Length);
 
                 m_SkyLights.Clear();
                 m_BlockLights.Clear();
+
+                //避免再次创建 mesh，这里循环使用
+                //Array.Clear(m_SolidMeshes, 0, m_SolidMeshes.Length);
+                //Array.Clear(m_LiquidMeshes, 0, m_LiquidMeshes.Length);
+
+                //build mesh 前会重置
+                //m_MeshDataBuffer.Reset(0);
             }
         }
 
@@ -134,243 +123,12 @@ namespace Minecraft
         }
 
 
-        public int GetHighestNonAirY(int worldX, int worldZ) => GetHighestNonAirYPrivate(worldX - PositionX, worldZ - PositionZ);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int GetHighestNonAirYPrivate(int localX, int localZ) => m_HeightMap[(localX << 4) | localZ];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetHighestNonAirY(int localX, int localZ, byte value) => m_HeightMap[(localX << 4) | localZ] = value;
-
-        public byte GetFinalLightLevel(int worldX, int y, int worldZ) => GetFinalLightLevelPrivate(worldX - PositionX, y, worldZ - PositionZ);
-
-        private byte GetFinalLightLevelPrivate(int localX, int y, int localZ)
-        {
-            if (y >= WorldHeight || y < 0)
-            {
-                return MaxLight; // default
-            }
-
-            BlockType type = (BlockType)m_Blocks[(localX << 12) | (y << 4) | localZ];
-            Block block = WorldManager.Active.DataManager.GetBlockByType(type);
-
-            byte skyLight = (byte)Mathf.Clamp(m_SkyLights[(localX << 12) | (y << 4) | localZ] - SkyLightSubtracted, 0, MaxLight); // temp
-            byte blockLight = m_BlockLights[(localX << 12) | (y << 4) | localZ];
-            byte light = block.LightValue;
-
-            // MAX(skyLight, blockLight, emission)
-
-            if (skyLight > light)
-                light = skyLight;
-
-            if (blockLight > light)
-                light = blockLight;
-
-            return light;
-        }
-
-        public byte GetSkyLight(int worldX, int y, int worldZ) => GetSkyLightPrivate(worldX - PositionX, y, worldZ - PositionZ);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private byte GetSkyLightPrivate(int localX, int y, int localZ) => y >= WorldHeight || y < 0 ? MaxLight : m_SkyLights[(localX << 12) | (y << 4) | localZ];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetSkyLight(int localX, int y, int localZ, byte value) => m_SkyLights[(localX << 12) | (y << 4) | localZ] = value;
-
-        public byte GetBlockLight(int worldX, int y, int worldZ) => GetBlockLightPrivate(worldX - PositionX, y, worldZ - PositionZ);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private byte GetBlockLightPrivate(int localX, int y, int localZ) => y >= WorldHeight || y < 0 ? (byte)0 : m_BlockLights[(localX << 12) | (y << 4) | localZ];
-
-        public void SetBlockLight(int worldX, int y, int worldZ, byte value) => SetBlockLightPrivate(worldX - PositionX, y, worldZ - PositionZ, value);
-
-        private void SetBlockLightPrivate(int localX, int y, int localZ, byte value)
-        {
-            if (y >= WorldHeight || y < 0)
-                return;
-
-            lock (m_SyncLock)
-            {
-                m_BlockLights[(localX << 12) | (y << 4) | localZ] = value;
-            }
-
-            BlockType type = GetBlockTypePrivateUnchecked(localX, y, localZ);
-            Block block = WorldManager.Active.DataManager.GetBlockByType(type);
-            m_MeshUpdateFlags |= block.HasAnyFlag(BlockFlags.Liquid) ? MeshUpdateFlags.LightingBoth : MeshUpdateFlags.LightingSolidMesh; // 液体的mesh不计算环境光照
-        }
-
-        public BlockType GetBlockType(int worldX, int y, int worldZ)
-        {
-            int index = ((worldX - PositionX) << 12) | (y << 4) | (worldZ - PositionZ);
-            return index < 0 || index >= m_Blocks.Length ? BlockType.Air : (BlockType)m_Blocks[index];
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private BlockType GetBlockTypePrivateUnchecked(int localX, int y, int localZ) => (BlockType)m_Blocks[(localX << 12) | (y << 4) | localZ];
-
-        // return: 是否设置成功
-        public bool SetBlockType(int worldX, int y, int worldZ, BlockType value, byte state = 0, bool lightBlocks = true, bool tickBlocks = true, bool updateNeighborChunks = true)
-        {
-            int localX = worldX - PositionX;
-            int localZ = worldZ - PositionZ;
-
-            int index = (localX << 12) | (y << 4) | localZ;
-
-            if (index < 0 || index >= m_Blocks.Length)
-                return false;
-
-            BlockType previousBlockType = (BlockType)m_Blocks[index];
-
-            if (previousBlockType == value)
-                return false;
-
-            lock (m_SyncLock)
-            {
-                m_Blocks[index] = (byte)value;
-                SetBlockStatePrivateUnchecked(localX, y, localZ, state);
-
-                int height = GetHighestNonAirYPrivate(localX, localZ);
-
-                if (y >= height)
-                {
-                    for (int i = y; i > -1; i--)
-                    {
-                        if (GetBlockTypePrivateUnchecked(localX, i, localZ) != BlockType.Air)
-                        {
-                            SetHighestNonAirY(localX, localZ, (byte)i); // 至少会有一个非空方块，比如基岩
-                            break;
-                        }
-                    }
-                }
-            }
-
-            WorldManager world = WorldManager.Active;
-            ChunkManager manager = world.ChunkManager;
-            DataManager dataManager = world.DataManager;
-
-            Block previousBlock = dataManager.GetBlockByType(previousBlockType);
-            Block block = dataManager.GetBlockByType(value);
-            int sectionIndex = Mathf.FloorToInt(y * OverSectionHeight);
-
-            if (previousBlock.HasAnyFlag(BlockFlags.NeedsRandomTick))
-            {
-                m_TickRefCounts[sectionIndex]--;
-            }
-
-            if (block.HasAnyFlag(BlockFlags.NeedsRandomTick))
-            {
-                m_TickRefCounts[sectionIndex]++;
-            }
-
-            if (tickBlocks)
-            {
-                manager.TickBlock(worldX, y, worldZ);
-            }
-
-            if (lightBlocks)
-            {
-                manager.LightBlock(worldX, y, worldZ);
-            }
-
-            if (updateNeighborChunks)
-            {
-                if (localX == 0)
-                {
-                    Chunk chunk = manager.GetChunk(PositionX - ChunkWidth, PositionZ);
-
-                    if (chunk != null)
-                    {
-                        chunk.m_MeshUpdateFlags = MeshUpdateFlags.Both;
-                    }
-                }
-                else if (localX == ChunkWidth - 1)
-                {
-                    Chunk chunk = manager.GetChunk(PositionX + ChunkWidth, PositionZ);
-
-                    if (chunk != null)
-                    {
-                        chunk.m_MeshUpdateFlags = MeshUpdateFlags.Both;
-                    }
-                }
-
-                if (localZ == 0)
-                {
-                    Chunk chunk = manager.GetChunk(PositionX, PositionZ - ChunkWidth);
-
-                    if (chunk != null)
-                    {
-                        chunk.m_MeshUpdateFlags = MeshUpdateFlags.Both;
-                    }
-                }
-                else if (localZ == ChunkWidth - 1)
-                {
-                    Chunk chunk = manager.GetChunk(PositionX, PositionZ + ChunkWidth);
-
-                    if (chunk != null)
-                    {
-                        chunk.m_MeshUpdateFlags = MeshUpdateFlags.Both;
-                    }
-                }
-            }
-
-            bool flag1 = previousBlock.HasAnyFlag(BlockFlags.Liquid);
-            bool flag2 = block.HasAnyFlag(BlockFlags.Liquid);
-
-            if (flag1 != flag2)
-            {
-                m_MeshUpdateFlags |= block.VertexType == BlockVertexType.None || previousBlock.VertexType == BlockVertexType.None
-                    ? MeshUpdateFlags.LiquidMesh
-                    : MeshUpdateFlags.Both;
-            }
-            else
-            {
-                m_MeshUpdateFlags |= flag2 ? MeshUpdateFlags.LiquidMesh : MeshUpdateFlags.SolidMesh;
-            }
-
-            return IsModified = true;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetBlockTypePrivate(int localX, int y, int localZ, BlockType value) => m_Blocks[(localX << 12) | (y << 4) | localZ] = (byte)value;
-
-        private void SetBlockStatePrivateUnchecked(int localX, int y, int localZ, byte value) => m_BlockStates[(localX << 12) | (y << 4) | localZ] = value;
-
-        public void SetBlockState(int worldX, int y, int worldZ, byte value)
-        {
-            int localX = worldX - PositionX;
-            int localZ = worldZ - PositionZ;
-
-            int index = (localX << 12) | (y << 4) | localZ;
-
-            if (index < 0 || index >= m_Blocks.Length)
-                return;
-
-            if (m_BlockStates[index] != value)
-            {
-                m_BlockStates[index] = value;
-                IsModified = true;
-            }
-        }
-
-        public byte GetBlockState(int worldX, int y, int worldZ)
-        {
-            int localX = worldX - PositionX;
-            int localZ = worldZ - PositionZ;
-
-            int index = (localX << 12) | (y << 4) | localZ;
-
-            if (index < 0 || index >= m_Blocks.Length)
-                return default;
-
-            return m_BlockStates[index];
-        }
-
         public void Init(int posX, int posZ)
         {
             PositionX = posX;
             PositionZ = posZ;
 
-            GenerateHeightMapAndTickCountMapAndLightBlocks();
+            GenerateOtherInitialDataAndLightBlocks();
             GenerateSkyLightData();
         }
 
@@ -678,7 +436,7 @@ namespace Minecraft
             }
 
         End:
-            GenerateHeightMapAndTickCountMapAndLightBlocks();
+            GenerateOtherInitialDataAndLightBlocks();
             GenerateSkyLightData();
         }
 
@@ -776,7 +534,7 @@ namespace Minecraft
             return !spotTaken;
         }
 
-        private void GenerateHeightMapAndTickCountMapAndLightBlocks()
+        private void GenerateOtherInitialDataAndLightBlocks()
         {
             WorldManager world = WorldManager.Active;
 
@@ -790,6 +548,7 @@ namespace Minecraft
                     {
                         BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
                         Block block = world.DataManager.GetBlockByType(type);
+                        int sectionIndex = Mathf.FloorToInt(y * OverSectionHeight);
 
                         if (type != BlockType.Air && height == -1)
                         {
@@ -798,7 +557,19 @@ namespace Minecraft
 
                         if (block.HasAnyFlag(BlockFlags.NeedsRandomTick))
                         {
-                            m_TickRefCounts[Mathf.FloorToInt(y * OverSectionHeight)]++;
+                            m_TickRefCounts[sectionIndex]++;
+                        }
+
+                        if (block.VertexType != BlockVertexType.None)
+                        {
+                            if (block.HasAnyFlag(BlockFlags.Liquid))
+                            {
+                                m_LiquidCounts[sectionIndex]++;
+                            }
+                            else
+                            {
+                                m_SolidCounts[sectionIndex]++;
+                            }
                         }
 
                         if (block.LightValue > 0)
@@ -834,320 +605,6 @@ namespace Minecraft
             }
         }
         
-
-        public async void StartBuildMesh()
-        {
-            if (m_IsBuildingMesh || !ShouldUpdateMesh)
-                return;
-            
-            m_IsBuildingMesh = true;
-
-            MeshUpdateFlags updateFlags = m_MeshUpdateFlags;
-            m_MeshUpdateFlags = MeshUpdateFlags.Neither;
-
-            bool updateSolid = (updateFlags & MeshUpdateFlags.SolidMesh) == MeshUpdateFlags.SolidMesh;
-            bool updateLiquid = (updateFlags & MeshUpdateFlags.LiquidMesh) == MeshUpdateFlags.LiquidMesh;
-            bool lightingUpdate = (updateFlags & MeshUpdateFlags.LightingUpdate) == MeshUpdateFlags.LightingUpdate;
-
-            if (lightingUpdate && (SolidMesh == null || SolidMesh.vertexCount == 0))
-            {
-                updateSolid = false;
-            }
-
-            if (lightingUpdate && (LiquidMesh == null || LiquidMesh.vertexCount == 0))
-            {
-                updateLiquid = false;
-            }
-
-            try
-            {
-                Monitor.Enter(m_SyncLock);
-
-                if (m_IsStartUp)
-                {
-                    m_IsStartUp = false;
-
-                    await WorldManager.Active.ChunkManager.WaitForAllNeighborChunksLoaded(this);
-                }
-                
-                await Task.Factory.StartNew(GenerateSkyLightData);
-
-                if (updateSolid)
-                {
-                    m_VertexBuffer.Clear();
-                    m_TrianglesBuffer.Clear();
-
-                    await Task.Factory.StartNew(BuildSolidMesh);
-
-                    if (m_VertexBuffer.Count > 0 && m_TrianglesBuffer.Count > 0)
-                    {
-                        if (SolidMesh == null)
-                        {
-                            SolidMesh = new Mesh
-                            {
-                                indexFormat = SystemInfo.supports32bitsIndexBuffer ? IndexFormat.UInt32 : IndexFormat.UInt16,
-                                bounds = s_ChunkBounds
-                            };
-                            SolidMesh.MarkDynamic();
-                        }
-                        else
-                        {
-                            SolidMesh.Clear();
-                        }
-
-                        SolidMesh.SetVertexBufferParams(m_VertexBuffer.Count, VertexLayout);
-                        SolidMesh.SetVertexBufferData(m_VertexBuffer, 0, 0, m_VertexBuffer.Count);
-                        SolidMesh.SetTriangles(m_TrianglesBuffer, 0);
-                        SolidMesh.UploadMeshData(false);
-                    }
-                }
-
-                if (updateLiquid)
-                {
-                    m_VertexBuffer.Clear();
-                    m_TrianglesBuffer.Clear();
-
-                    await Task.Factory.StartNew(BuildLiquidMesh);
-
-                    if (m_VertexBuffer.Count > 0 && m_TrianglesBuffer.Count > 0)
-                    {
-                        if (LiquidMesh == null)
-                        {
-                            LiquidMesh = new Mesh
-                            {
-                                indexFormat = SystemInfo.supports32bitsIndexBuffer ? IndexFormat.UInt32 : IndexFormat.UInt16,
-                                bounds = s_ChunkBounds
-                            };
-                            LiquidMesh.MarkDynamic();
-                        }
-                        else
-                        {
-                            LiquidMesh.Clear();
-                        }
-
-                        LiquidMesh.SetVertexBufferParams(m_VertexBuffer.Count, VertexLayout);
-                        LiquidMesh.SetVertexBufferData(m_VertexBuffer, 0, 0, m_VertexBuffer.Count);
-                        LiquidMesh.SetTriangles(m_TrianglesBuffer, 0);
-                        LiquidMesh.UploadMeshData(false);
-                    }
-                }
-            }
-#if !UNITY_EDITOR
-            catch
-            {
-
-            }
-#endif
-            finally
-            {
-                Monitor.Exit(m_SyncLock);
-                m_IsBuildingMesh = false;
-            }
-        }
-
-        private void BuildSolidMesh()
-        {
-            WorldManager world = WorldManager.Active;
-            Profiler.BeginSample("Build Solid Mesh");
-
-            try
-            {
-                for (int dx = 0; dx < ChunkWidth; dx++)
-                {
-                    for (int dz = 0; dz < ChunkWidth; dz++)
-                    {
-                        int rx = PositionX + dx;
-                        int rz = PositionZ + dz;
-
-                        int height = GetHighestNonAirYPrivate(dx, dz) + 1;
-
-                        for (int ry = 0; ry < height; ry++)
-                        {
-                            BlockType type = GetBlockTypePrivateUnchecked(dx, ry, dz);
-                            Block block = world.DataManager.GetBlockByType(type);
-
-                            if (block.VertexType == BlockVertexType.None || block.HasAnyFlag(BlockFlags.Liquid))
-                                continue;
-
-                            switch (block.VertexType)
-                            {
-                                case BlockVertexType.Cube:
-                                    {
-                                        float light = block.LightValue * OverMaxLight;
-
-                                        if (world.IsBlockTransparent(rx + 1, ry, rz))
-                                        {
-                                            float lb = (world.GetFinalLightLevel(rx + 1, ry, rz) + world.GetFinalLightLevel(rx + 1, ry - 1, rz) + world.GetFinalLightLevel(rx + 1, ry, rz - 1) + world.GetFinalLightLevel(rx + 1, ry - 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rb = (world.GetFinalLightLevel(rx + 1, ry, rz) + world.GetFinalLightLevel(rx + 1, ry - 1, rz) + world.GetFinalLightLevel(rx + 1, ry, rz + 1) + world.GetFinalLightLevel(rx + 1, ry - 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float rt = (world.GetFinalLightLevel(rx + 1, ry, rz) + world.GetFinalLightLevel(rx + 1, ry + 1, rz) + world.GetFinalLightLevel(rx + 1, ry, rz + 1) + world.GetFinalLightLevel(rx + 1, ry + 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float lt = (world.GetFinalLightLevel(rx + 1, ry, rz) + world.GetFinalLightLevel(rx + 1, ry + 1, rz) + world.GetFinalLightLevel(rx + 1, ry, rz - 1) + world.GetFinalLightLevel(rx + 1, ry + 1, rz - 1)) * 0.25f * OverMaxLight;
-
-                                            AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                            AddCubeVertexDataPX(dx, ry, dz, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                                        }
-
-                                        if (world.IsBlockTransparent(rx - 1, ry, rz))
-                                        {
-                                            float lb = (world.GetFinalLightLevel(rx - 1, ry, rz) + world.GetFinalLightLevel(rx - 1, ry - 1, rz) + world.GetFinalLightLevel(rx - 1, ry, rz + 1) + world.GetFinalLightLevel(rx - 1, ry - 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float rb = (world.GetFinalLightLevel(rx - 1, ry, rz) + world.GetFinalLightLevel(rx - 1, ry - 1, rz) + world.GetFinalLightLevel(rx - 1, ry, rz - 1) + world.GetFinalLightLevel(rx - 1, ry - 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rt = (world.GetFinalLightLevel(rx - 1, ry, rz) + world.GetFinalLightLevel(rx - 1, ry + 1, rz) + world.GetFinalLightLevel(rx - 1, ry, rz - 1) + world.GetFinalLightLevel(rx - 1, ry + 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float lt = (world.GetFinalLightLevel(rx - 1, ry, rz) + world.GetFinalLightLevel(rx - 1, ry + 1, rz) + world.GetFinalLightLevel(rx - 1, ry, rz + 1) + world.GetFinalLightLevel(rx - 1, ry + 1, rz + 1)) * 0.25f * OverMaxLight;
-
-                                            AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                            AddCubeVertexDataNX(dx, ry, dz, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                                        }
-
-                                        if (world.IsBlockTransparent(rx, ry + 1, rz))
-                                        {
-                                            float lb = (world.GetFinalLightLevel(rx, ry + 1, rz) + world.GetFinalLightLevel(rx, ry + 1, rz - 1) + world.GetFinalLightLevel(rx - 1, ry + 1, rz) + world.GetFinalLightLevel(rx - 1, ry + 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rb = (world.GetFinalLightLevel(rx, ry + 1, rz) + world.GetFinalLightLevel(rx, ry + 1, rz - 1) + world.GetFinalLightLevel(rx + 1, ry + 1, rz) + world.GetFinalLightLevel(rx + 1, ry + 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rt = (world.GetFinalLightLevel(rx, ry + 1, rz) + world.GetFinalLightLevel(rx, ry + 1, rz + 1) + world.GetFinalLightLevel(rx + 1, ry + 1, rz) + world.GetFinalLightLevel(rx + 1, ry + 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float lt = (world.GetFinalLightLevel(rx, ry + 1, rz) + world.GetFinalLightLevel(rx, ry + 1, rz + 1) + world.GetFinalLightLevel(rx - 1, ry + 1, rz) + world.GetFinalLightLevel(rx - 1, ry + 1, rz + 1)) * 0.25f * OverMaxLight;
-
-                                            AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                            AddCubeVertexDataPY(dx, ry, dz, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                                        }
-
-                                        if (ry > 0 && world.IsBlockTransparent(rx, ry - 1, rz))
-                                        {
-                                            float lb = (world.GetFinalLightLevel(rx, ry - 1, rz) + world.GetFinalLightLevel(rx, ry - 1, rz - 1) + world.GetFinalLightLevel(rx + 1, ry - 1, rz) + world.GetFinalLightLevel(rx + 1, ry - 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rb = (world.GetFinalLightLevel(rx, ry - 1, rz) + world.GetFinalLightLevel(rx, ry - 1, rz - 1) + world.GetFinalLightLevel(rx - 1, ry - 1, rz) + world.GetFinalLightLevel(rx - 1, ry - 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rt = (world.GetFinalLightLevel(rx, ry - 1, rz) + world.GetFinalLightLevel(rx, ry - 1, rz + 1) + world.GetFinalLightLevel(rx - 1, ry - 1, rz) + world.GetFinalLightLevel(rx - 1, ry - 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float lt = (world.GetFinalLightLevel(rx, ry - 1, rz) + world.GetFinalLightLevel(rx, ry - 1, rz + 1) + world.GetFinalLightLevel(rx + 1, ry - 1, rz) + world.GetFinalLightLevel(rx + 1, ry - 1, rz + 1)) * 0.25f * OverMaxLight;
-
-                                            AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                            AddCubeVertexDataNY(dx, ry, dz, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                                        }
-
-                                        if (world.IsBlockTransparent(rx, ry, rz + 1))
-                                        {
-                                            float lb = (world.GetFinalLightLevel(rx, ry, rz + 1) + world.GetFinalLightLevel(rx, ry - 1, rz + 1) + world.GetFinalLightLevel(rx + 1, ry, rz + 1) + world.GetFinalLightLevel(rx + 1, ry - 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float rb = (world.GetFinalLightLevel(rx, ry, rz + 1) + world.GetFinalLightLevel(rx, ry - 1, rz + 1) + world.GetFinalLightLevel(rx - 1, ry, rz + 1) + world.GetFinalLightLevel(rx - 1, ry - 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float rt = (world.GetFinalLightLevel(rx, ry, rz + 1) + world.GetFinalLightLevel(rx, ry + 1, rz + 1) + world.GetFinalLightLevel(rx - 1, ry, rz + 1) + world.GetFinalLightLevel(rx - 1, ry + 1, rz + 1)) * 0.25f * OverMaxLight;
-                                            float lt = (world.GetFinalLightLevel(rx, ry, rz + 1) + world.GetFinalLightLevel(rx, ry + 1, rz + 1) + world.GetFinalLightLevel(rx + 1, ry, rz + 1) + world.GetFinalLightLevel(rx + 1, ry + 1, rz + 1)) * 0.25f * OverMaxLight;
-
-                                            AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                            AddCubeVertexDataPZ(dx, ry, dz, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                                        }
-
-                                        if (world.IsBlockTransparent(rx, ry, rz - 1))
-                                        {
-                                            float lb = (world.GetFinalLightLevel(rx, ry, rz - 1) + world.GetFinalLightLevel(rx, ry - 1, rz - 1) + world.GetFinalLightLevel(rx - 1, ry, rz - 1) + world.GetFinalLightLevel(rx - 1, ry - 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rb = (world.GetFinalLightLevel(rx, ry, rz - 1) + world.GetFinalLightLevel(rx, ry - 1, rz - 1) + world.GetFinalLightLevel(rx + 1, ry, rz - 1) + world.GetFinalLightLevel(rx + 1, ry - 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float rt = (world.GetFinalLightLevel(rx, ry, rz - 1) + world.GetFinalLightLevel(rx, ry + 1, rz - 1) + world.GetFinalLightLevel(rx + 1, ry, rz - 1) + world.GetFinalLightLevel(rx + 1, ry + 1, rz - 1)) * 0.25f * OverMaxLight;
-                                            float lt = (world.GetFinalLightLevel(rx, ry, rz - 1) + world.GetFinalLightLevel(rx, ry + 1, rz - 1) + world.GetFinalLightLevel(rx - 1, ry, rz - 1) + world.GetFinalLightLevel(rx - 1, ry + 1, rz - 1)) * 0.25f * OverMaxLight;
-
-                                            AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                            AddCubeVertexDataNZ(dx, ry, dz, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                                        }
-                                    }
-                                    break;
-                                case BlockVertexType.PerpendicularQuads:
-                                    {
-                                        float light = GetFinalLightLevelPrivate(dx, ry, dz) * OverMaxLight;
-
-                                        AddPerpendicularQuadsTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                        AddPerpendicularQuadsVertexDataFirstQuad(dx, ry, dz, light, block, m_VertexBuffer);
-
-                                        AddPerpendicularQuadsTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                        AddPerpendicularQuadsVertexDataSecondQuad(dx, ry, dz, light, block, m_VertexBuffer);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-#if !UNITY_EDITOR
-            catch
-            {
-                
-            }
-#endif
-            finally
-            {
-                
-                Profiler.EndSample();
-            }
-        }
-
-        private void BuildLiquidMesh()
-        {
-            WorldManager world = WorldManager.Active;
-            Profiler.BeginSample("Build Liquid Mesh");
-
-            try
-            {
-                for (int dx = 0; dx < ChunkWidth; dx++)
-                {
-                    for (int dz = 0; dz < ChunkWidth; dz++)
-                    {
-                        int rx = PositionX + dx;
-                        int rz = PositionZ + dz;
-
-                        int height = GetHighestNonAirYPrivate(dx, dz) + 1;
-
-                        for (int ry = 1; ry < height; ry++)
-                        {
-                            BlockType type = GetBlockTypePrivateUnchecked(dx, ry, dz);
-                            Block block = world.DataManager.GetBlockByType(type);
-
-                            if (block.VertexType != BlockVertexType.Cube || !block.HasAllFlags(BlockFlags.Liquid))
-                                continue;
-
-                            float light = GetFinalLightLevelPrivate(dx, ry, dz) * OverMaxLight;
-
-                            if (world.IsBlockTransparentAndNotWater(rx + 1, ry, rz))
-                            {
-                                AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                AddCubeVertexDataPX(dx, ry, dz, light, light, light, light, block, m_VertexBuffer);
-                            }
-
-                            if (world.IsBlockTransparentAndNotWater(rx - 1, ry, rz))
-                            {
-                                AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                AddCubeVertexDataNX(dx, ry, dz, light, light, light, light, block, m_VertexBuffer);
-                            }
-
-                            //if (world.IsBlockTransparentAndNotWater(rx, ry + 1, rz))
-                            if (world.GetBlockType(rx, ry + 1, rz) != BlockType.Water)
-                            {
-                                AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                AddCubeVertexDataPY(dx, ry, dz, light, light, light, light, block, m_VertexBuffer);
-                            }
-
-                            if (world.IsBlockTransparentAndNotWater(rx, ry - 1, rz))
-                            {
-                                AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                AddCubeVertexDataNY(dx, ry, dz, light, light, light, light, block, m_VertexBuffer);
-                            }
-
-                            if (world.IsBlockTransparentAndNotWater(rx, ry, rz + 1))
-                            {
-                                AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                AddCubeVertexDataPZ(dx, ry, dz, light, light, light, light, block, m_VertexBuffer);
-                            }
-
-                            if (world.IsBlockTransparentAndNotWater(rx, ry, rz - 1))
-                            {
-                                AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                                AddCubeVertexDataNZ(dx, ry, dz, light, light, light, light, block, m_VertexBuffer);
-                            }
-                        }
-                    }
-                }
-            }
-#if !UNITY_EDITOR
-            catch
-            {
-
-            }
-#endif
-            finally
-            {
-                Profiler.EndSample();
-            }
-        }
 
         private void GenerateSkyLightData()
         {
@@ -1193,6 +650,8 @@ namespace Minecraft
 
         public void OnSaved()
         {
+            this.Log("Saved!");
+
             IsModified = false;
         }
 

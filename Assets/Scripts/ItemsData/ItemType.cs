@@ -15,7 +15,6 @@ namespace Minecraft.ItemsData
         Planks_Oak = 7,
         CraftingTable = 8,
         DiamondBlock = 9,
-        Noteblock = 10,
-        Bilibili_SanLian = 11,
+        Noteblock = 10
     }
 }

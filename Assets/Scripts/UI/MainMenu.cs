@@ -7,6 +7,7 @@ namespace Minecraft
     public sealed class MainMenu : MonoBehaviour
     {
         [SerializeField] private GameObject m_SelectWorldMenu;
+        [SerializeField] private GameObject m_OptionsMenu;
 
         public void Quit()
         {
@@ -21,7 +22,8 @@ namespace Minecraft
 
         public void Options()
         {
-
+            m_OptionsMenu.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 }

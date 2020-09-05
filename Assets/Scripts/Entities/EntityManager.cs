@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using XLua;
-using System;
 
 namespace Minecraft
 {
@@ -65,9 +66,61 @@ namespace Minecraft
             }
         }
 
-        public HashSet<Entity>.Enumerator EnumerateEntities()
+        public EntityEnumerator EnumerateEntities()
         {
-            return m_Entities.GetEnumerator();
+            return new EntityEnumerator(m_Entities.GetEnumerator(), null);
+        }
+
+        public EntityEnumerator EnumerateOtherEntities(Entity self)
+        {
+            return new EntityEnumerator(m_Entities.GetEnumerator(), self);
+        }
+
+
+        public struct EntityEnumerator : IEnumerator<Entity>
+        {
+            private HashSet<Entity>.Enumerator m_Enumerator;
+            private readonly Entity m_Self;
+
+            public EntityEnumerator(HashSet<Entity>.Enumerator enumerator, Entity self)
+            {
+                m_Enumerator = enumerator;
+                m_Self = self;
+            }
+
+            public Entity Current => m_Enumerator.Current;
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+                m_Enumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                if (m_Self == null)
+                {
+                    return m_Enumerator.MoveNext();
+                }
+
+                while (m_Enumerator.MoveNext())
+                {
+                    Entity current = m_Enumerator.Current;
+
+                    if (current && current != m_Self)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            void IEnumerator.Reset()
+            {
+                (m_Enumerator as IEnumerator).Reset();
+            }
         }
     }
 }

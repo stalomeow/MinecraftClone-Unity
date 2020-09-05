@@ -1,14 +1,14 @@
 ﻿using Minecraft.AssetManagement;
 using Minecraft.BlocksData;
+using Minecraft.DebugUtils;
 using Minecraft.ItemsData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using XLua;
 using Object = UnityEngine.Object;
-using System.IO;
-using Minecraft.DebugUtils;
 
 namespace Minecraft
 {

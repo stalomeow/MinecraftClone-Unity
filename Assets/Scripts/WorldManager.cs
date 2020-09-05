@@ -21,7 +21,10 @@ namespace Minecraft
         [SerializeField] private InventoryManager m_InventoryManager;
 
         private Transform m_PlayerTransform;
+        private Transform m_CameraTransform;
         private Vector3 m_PlayerPositionRecorded;
+        private Quaternion m_PlayerBodyRotationRecorded;
+        private Quaternion m_PlayerCameraRotationRecorded;
 
 
         public bool Initialized { get; private set; }
@@ -53,6 +56,7 @@ namespace Minecraft
             Initialized = false;
             Active = this;
             m_PlayerTransform = m_Player.transform;
+            m_CameraTransform = m_MainCamera.transform;
 
             Initialize(settings);
 
@@ -68,7 +72,18 @@ namespace Minecraft
                 return;
 
             ChunkManager.SyncUpdateOnMainThread();
+
             m_PlayerPositionRecorded = m_PlayerTransform.localPosition;
+            m_PlayerBodyRotationRecorded = m_PlayerTransform.localRotation;
+            m_PlayerCameraRotationRecorded = m_CameraTransform.localRotation;
+        }
+
+        private void LateUpdate()
+        {
+            if (!Initialized)
+                return;
+
+            ChunkManager.SyncLateUpdateOnMainThread();
         }
 
         private void FixedUpdate()
@@ -87,6 +102,8 @@ namespace Minecraft
         {
             Active = null;
             Settings.Position = m_PlayerPositionRecorded;
+            Settings.BodyRotation = m_PlayerBodyRotationRecorded;
+            Settings.CameraRotation = m_PlayerCameraRotationRecorded;
 
             ChunkManager.Dispose();
             DataManager.Dispose();
@@ -108,6 +125,8 @@ namespace Minecraft
             EntityManager = new EntityManager(DataManager.BlockEntityMaterial, m_Player);
 
             m_PlayerTransform.position = (settings.Position.y < 0 || settings.Position.y >= WorldConsts.WorldHeight) ? new Vector3(0, WorldConsts.WorldHeight, 0) : settings.Position;
+            m_PlayerTransform.localRotation = settings.BodyRotation;
+            m_CameraTransform.localRotation = settings.CameraRotation;
 
             ChunkManager.OnChunksReadyWhenStartingUp += () =>
             {
@@ -146,10 +165,10 @@ namespace Minecraft
             InventoryManager.SetItem(index, type);
         }
 
-        public bool SetBlockType(int x, int y, int z, BlockType block, byte state = 0, bool lightBlocks = true, bool tickBlocks = true, bool updateNeighborChunks = true)
+        public bool SetBlockType(int x, int y, int z, BlockType block, byte state = 0, bool lightBlocks = true, bool tickBlocks = true, bool updateNeighborSections = true)
         {
             Chunk chunk = ChunkManager.GetChunk(x, z);
-            return chunk.SetBlockType(x, y, z, block, state, lightBlocks, tickBlocks, updateNeighborChunks);
+            return chunk.SetBlockType(x, y, z, block, state, lightBlocks, tickBlocks, updateNeighborSections);
         }
 
         public BlockType GetBlockType(int x, int y, int z)

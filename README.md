@@ -20,6 +20,7 @@
 * Sand affected by gravity
 * Saves world to files
 * Audios and Particle effects
+* Custom resource packages
 * Some bugs (〃'▽'〃)
 
 
@@ -32,27 +33,14 @@
 
 ![Screenshot](Screenshots/5.png)
 
+
+
+You can create a new block or item without writing any code! Some complex block logic only needs to be written in the corresponding event (using `Lua`).
+
+## Lua Codes
+
 ![Screenshot](Screenshots/6.png)
 
-You can create a new block or item without writing any code! Some complex block logic only needs to be written in the corresponding event.
-
-
-
-## Modify the settings of a world
-
-Enter the path `C:\Users\${your username}\AppData\LocalLow\JinYuhan\MinecraftClone\Worlds`, to open the folder named with the name of the world to be modified, and find `settings.json` , double click to open editing.
-
-| 字段                    | 类型                  | 用途                                                         |
-| ----------------------- | --------------------- | ------------------------------------------------------------ |
-| `Name`                  | `System.String`       | The name of the world                                        |
-| `Type`                  | `System.Int32`        | The type of world (temporarily reserved)                     |
-| `Mode`                  | `System.Byte`         | The play mode (temporarily reserved)                         |
-| `Seed`                  | `System.Int32`        | The seed of the world                                        |
-| `RenderChunkRadius`     | `System.Int32`        | Radius of the render chunks (chunks within the radius will be rendered) |
-| `HorizontalFOVInDEG`    | `System.Single`       | Horizontal viewing angle (degree)                            |
-| `MaxChunkCountInMemory` | `System.Int32`        | The maximum number of chunks reserved in memory. After this number is exceeded, some chunks will be unloaded |
-| `EnableDestroyEffect`   | `System.Boolean`      | Whether to show the effects of destroying blocks             |
-| `Position`              | `UnityEngine.Vector3` | The player's position at the end of last game                |
 
 
 ## References

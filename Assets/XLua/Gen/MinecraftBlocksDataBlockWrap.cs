@@ -21,8 +21,9 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Minecraft.BlocksData.Block);
-			Utils.BeginObjectRegister(type, L, translator, 0, 23, 10, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 24, 9, 0);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetExtraAsset", _m_GetExtraAsset);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnTick", _m_OnTick);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnRandomTick", _m_OnRandomTick);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnBlockDestroy", _m_OnBlockDestroy);
@@ -57,7 +58,6 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "LightValue", _g_get_LightValue);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "Hardness", _g_get_Hardness);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "DestoryEffectColor", _g_get_DestoryEffectColor);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExtraAssets", _g_get_ExtraAssets);
             
 			
 			
@@ -103,6 +103,35 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetExtraAsset(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Minecraft.BlocksData.Block gen_to_be_invoked = (Minecraft.BlocksData.Block)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int _index = LuaAPI.xlua_tointeger(L, 2);
+                    
+                        UnityEngine.Object gen_ret = gen_to_be_invoked.GetExtraAsset( _index );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_OnTick(RealStatePtr L)
@@ -819,20 +848,6 @@ namespace XLua.CSObjectWrap
 			
                 Minecraft.BlocksData.Block gen_to_be_invoked = (Minecraft.BlocksData.Block)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.DestoryEffectColor);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ExtraAssets(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                Minecraft.BlocksData.Block gen_to_be_invoked = (Minecraft.BlocksData.Block)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.ExtraAssets);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

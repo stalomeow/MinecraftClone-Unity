@@ -9,7 +9,7 @@ namespace Minecraft
 
         public string ChunkSavingDirectory { get; }
 
-        private WorldType m_WorldType;
+        private readonly WorldType m_WorldType;
 
         public ChunkLoader(int seed, string chunkSavingDirectory, WorldType worldType)
         {

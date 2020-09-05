@@ -26,9 +26,9 @@ namespace Minecraft
             m_Started = false;
             m_ShouldRenderBlock = true;
 
-            m_Fuse = Block.ExtraAssets[0] as AudioClip;
-            m_Explode = Block.ExtraAssets[1] as AudioClip;
-            m_Effect = Instantiate(Block.ExtraAssets[2]) as GameObject;
+            m_Fuse = Block.GetExtraAsset<AudioClip>(0);
+            m_Explode = Block.GetExtraAsset<AudioClip>(1);
+            m_Effect = Instantiate(Block.GetExtraAsset(2)) as GameObject;
 
             m_AudioSource.clip = m_Fuse;
             m_AudioSource.Play();
@@ -52,6 +52,8 @@ namespace Minecraft
 
         private IEnumerator Explode()
         {
+            Velocity = new Vector3(0, 4.5f, 0);
+
             float time = 0;
 
             while (time < 3)
@@ -95,7 +97,7 @@ namespace Minecraft
                 }
             }
 
-            var iterator = entityManager.EnumerateEntities();
+            EntityManager.EntityEnumerator iterator = entityManager.EnumerateOtherEntities(this);
 
             while (iterator.MoveNext())
             {

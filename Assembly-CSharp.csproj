@@ -76,6 +76,8 @@
     <Compile Include="Assets\Scripts\BlocksData\BlockType.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockVertexHelper.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockVertexType.cs" />
+    <Compile Include="Assets\Scripts\Chunk\Chunk.API.cs" />
+    <Compile Include="Assets\Scripts\Chunk\Chunk.Rendering.cs" />
     <Compile Include="Assets\Scripts\Chunk\Chunk.cs" />
     <Compile Include="Assets\Scripts\Chunk\ChunkLoader.cs" />
     <Compile Include="Assets\Scripts\Chunk\ChunkManager.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Assets\Scripts\Entities\GravityBlockEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\PlayerEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\TNTBlockEntity.cs" />
+    <Compile Include="Assets\Scripts\GlobalSettings.cs" />
     <Compile Include="Assets\Scripts\ItemsData\Item.cs" />
     <Compile Include="Assets\Scripts\ItemsData\ItemType.cs" />
     <Compile Include="Assets\Scripts\Noises\FastNoise.cs" />
@@ -111,8 +114,10 @@
     <Compile Include="Assets\Scripts\UI\MenuCamera.cs" />
     <Compile Include="Assets\Scripts\UI\MenuSubTitle.cs" />
     <Compile Include="Assets\Scripts\UI\NewWorldMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\OptionsMenu.cs" />
     <Compile Include="Assets\Scripts\UI\ResourcePackageSelector.cs" />
     <Compile Include="Assets\Scripts\UI\SelectWorldMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\SliderValueListener.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonOnClick.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\WorldConsts.cs" />

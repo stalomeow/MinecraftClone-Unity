@@ -2292,7 +2292,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1628493283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2898,21 +2898,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2378111720510952212, guid: 168db0e3e15880d4cbea8de4699d3042,
-        type: 3}
-      propertyPath: m_DestroyProgress
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2378111720510952212, guid: 168db0e3e15880d4cbea8de4699d3042,
-        type: 3}
-      propertyPath: m_HighlightObj
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2378111720510952212, guid: 168db0e3e15880d4cbea8de4699d3042,
-        type: 3}
-      propertyPath: m_DestroyBlockObj
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8174688378270880552, guid: 168db0e3e15880d4cbea8de4699d3042,
         type: 3}
       propertyPath: m_Name

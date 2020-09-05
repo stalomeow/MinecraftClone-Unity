@@ -5,30 +5,30 @@ namespace Minecraft
 {
     public readonly struct ExposedMaterialProperties
     {
-        private readonly MaterialPropertyBlock m_ChunkProperties;
+        private readonly MaterialPropertyBlock m_SolidProperties;
         private readonly MaterialPropertyBlock m_LiquidProperties;
 
-        public ExposedMaterialProperties(MaterialPropertyBlock chunkPropertyBlock, MaterialPropertyBlock liquidPropertyBlock)
+        public ExposedMaterialProperties(MaterialPropertyBlock solidPropertyBlock, MaterialPropertyBlock liquidPropertyBlock)
         {
-            m_ChunkProperties = chunkPropertyBlock ?? throw new ArgumentNullException(nameof(chunkPropertyBlock));
+            m_SolidProperties = solidPropertyBlock ?? throw new ArgumentNullException(nameof(solidPropertyBlock));
             m_LiquidProperties = liquidPropertyBlock ?? throw new ArgumentNullException(nameof(liquidPropertyBlock));
         }
 
         public void SetRenderRadius(int value)
         {
-            m_ChunkProperties.SetInt("_RenderRadius", value);
+            m_SolidProperties.SetInt("_RenderRadius", value);
             m_LiquidProperties.SetInt("_RenderRadius", value);
         }
 
         public void SetAmbientColor(Color value)
         {
-            m_ChunkProperties.SetColor("_AmbientColor", value);
+            m_SolidProperties.SetColor("_AmbientColor", value);
             m_LiquidProperties.SetColor("_AmbientColor", value);
         }
 
-        public MaterialPropertyBlock GetChunkPropertyBlock()
+        public MaterialPropertyBlock GetSolidPropertyBlock()
         {
-            return m_ChunkProperties;
+            return m_SolidProperties;
         }
 
         public MaterialPropertyBlock GetLiquidPropertyBlock()

@@ -1,9 +1,9 @@
 ﻿using Minecraft.BlocksData;
 using Minecraft.Collections;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -77,7 +77,7 @@ namespace Minecraft
         private readonly int m_SqrRenderRadius; // 渲染距离的平方
         private readonly float m_HorizontalFOVInDEG; // 水平视角大小（角度制）
         private readonly int m_MaxChunkCountInMemory;
-        private readonly Material m_SharedChunkMaterial;
+        private readonly Material m_SharedSolidMaterial;
         private readonly Material m_SharedLiquidMaterial;
         private readonly Camera m_MainCamera;
         private readonly Transform m_PlayerTransform;
@@ -103,7 +103,7 @@ namespace Minecraft
         }
 
 
-        public ChunkManager(WorldSettings settings, Camera mainCamera, Transform player, string chunkSavingDirectory, Material chunkMaterial, Material liquidMaterial)
+        public ChunkManager(WorldSettings settings, Camera mainCamera, Transform player, string chunkSavingDirectory, Material solidMaterial, Material liquidMaterial)
         {
             m_ChunkPositionComparer = new ChunkPositionComparer();
 
@@ -135,19 +135,19 @@ namespace Minecraft
             m_PlayerForwardZ = 0;
             m_ChunksUpdatingRequired = false;
 
-            m_RenderChunkRadius = settings.RenderChunkRadius;
+            m_RenderChunkRadius = GlobalSettings.Instance.RenderChunkRadius;
             m_SqrRenderRadius = m_RenderChunkRadius * m_RenderChunkRadius * ChunkWidth * ChunkWidth;
-            m_HorizontalFOVInDEG = settings.HorizontalFOVInDEG;
-            m_MaxChunkCountInMemory = settings.MaxChunkCountInMemory;
-            m_SharedChunkMaterial = chunkMaterial;
+            m_HorizontalFOVInDEG = GlobalSettings.Instance.HorizontalFOVInDEG;
+            m_MaxChunkCountInMemory = GlobalSettings.Instance.MaxChunkCountInMemory;
+            m_SharedSolidMaterial = solidMaterial;
             m_SharedLiquidMaterial = liquidMaterial;
             m_MainCamera = mainCamera;
-            m_MainCamera.farClipPlane = settings.RenderRadius;
+            m_MainCamera.farClipPlane = GlobalSettings.Instance.RenderRadius;
             m_PlayerTransform = player;
 
             MaterialProperties = new ExposedMaterialProperties(new MaterialPropertyBlock(), new MaterialPropertyBlock());
 
-            InitMaterialProperties(settings);
+            InitMaterialProperties();
 
             m_IsStartUp = true;
             m_Disposed = false;
@@ -163,17 +163,20 @@ namespace Minecraft
             if (m_IsStartUp)
                 return;
 
-            TickBlocksOnMainThread();
             LightBlocksOnMainThread();
         }
 
         public void SyncUpdateOnMainThread()
         {
-            RenderAndUpdateChunksOnMainThread();
-            UpdatePlayerPositionOnMainThread();
+            TickBlocksOnMainThread();
             RandomTickChunkOnMainThread();
         }
 
+        public void SyncLateUpdateOnMainThread()
+        {
+            RenderAndUpdateChunksOnMainThread();
+            UpdatePlayerPositionOnMainThread();
+        }
 
         public void StartChunksUpdatingThread()
         {
@@ -199,12 +202,12 @@ namespace Minecraft
         }
 
 
-        private void InitMaterialProperties(WorldSettings settings)
+        private void InitMaterialProperties()
         {
             ExposedMaterialProperties properties = MaterialProperties;
 
-            properties.SetRenderRadius(settings.RenderRadius);
-            properties.SetAmbientColor(settings.DefaultAmbientColor);
+            properties.SetRenderRadius(GlobalSettings.Instance.RenderRadius);
+            properties.SetAmbientColor(GlobalSettings.Instance.DefaultAmbientColor);
         }
 
         private void TickBlocksOnMainThread()
@@ -323,8 +326,9 @@ namespace Minecraft
         //render mesh, update mesh
         private void RenderAndUpdateChunksOnMainThread()
         {
-            MaterialPropertyBlock chunkProperty = MaterialProperties.GetChunkPropertyBlock();
-            MaterialPropertyBlock liquidProperty = MaterialProperties.GetChunkPropertyBlock();
+            MaterialPropertyBlock solidProperty = MaterialProperties.GetSolidPropertyBlock();
+            MaterialPropertyBlock liquidProperty = MaterialProperties.GetLiquidPropertyBlock();
+
             bool flag = true;
 
             lock (m_ChunksToRenderHashSetLock)
@@ -340,28 +344,11 @@ namespace Minecraft
 
                     if (chunk.ShouldUpdateMesh)
                     {
-                        chunk.StartBuildMesh(); // async
-                        //continue;
-                    }
-
-                    Vector3 pos = new Vector3(chunkPos.x, 0, chunkPos.y);
-                    Mesh mesh = chunk.SolidMesh;
-
-                    if (mesh != null)
-                    {
-                        Graphics.DrawMesh(mesh, pos, Quaternion.identity, m_SharedChunkMaterial, BlockLayer, m_MainCamera, 0, chunkProperty, false, false, false);
-                    }
-                    else
-                    {
                         flag = false;
+                        chunk.StartBuildMesh(); // async
                     }
 
-                    mesh = chunk.LiquidMesh;
-
-                    if (mesh != null)
-                    {
-                        Graphics.DrawMesh(mesh, pos, Quaternion.identity, m_SharedLiquidMaterial, BlockLayer, m_MainCamera, 0, liquidProperty, false, false, false);
-                    }
+                    chunk.RenderChunk(m_SharedSolidMaterial, m_SharedLiquidMaterial, m_MainCamera, solidProperty, liquidProperty);
                 }
 
                 iterator.Dispose();
@@ -393,7 +380,7 @@ namespace Minecraft
                 m_PlayerForwardX = forward.x;
                 m_PlayerForwardZ = forward.z;
 
-                m_ChunksUpdatingRequired = true; // 一定要在最后赋值
+                m_ChunksUpdatingRequired = true; // 最后赋值
             }
         }
 
@@ -472,12 +459,12 @@ namespace Minecraft
                         bool close = sqrDis < SqrMinChunkDistance;
                         bool inAngle = angle < m_HorizontalFOVInDEG;
 
-                        if (inAngle || close)
+                        if (m_IsStartUp || inAngle || close)
                         {
                             updateChunkQueue.Enqueue(new ChunkNeedsLoading
                             {
                                 ChunkPosition = chunkPos,
-                                PriorityFactor = (sqrDis / m_SqrRenderRadius) + (angle / m_HorizontalFOVInDEG)
+                                PriorityFactor = (sqrDis / m_SqrRenderRadius) * 4.25f + (angle / m_HorizontalFOVInDEG) * 5.75f
                             });
                         }
                     }

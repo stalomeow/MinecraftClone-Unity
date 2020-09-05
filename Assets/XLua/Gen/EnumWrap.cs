@@ -24,7 +24,7 @@ namespace XLua.CSObjectWrap
 		    Utils.BeginObjectRegister(typeof(Minecraft.ItemsData.ItemType), L, translator, 0, 0, 0, 0);
 			Utils.EndObjectRegister(typeof(Minecraft.ItemsData.ItemType), L, translator, null, null, null, null, null);
 			
-			Utils.BeginClassRegister(typeof(Minecraft.ItemsData.ItemType), L, null, 13, 0, 0);
+			Utils.BeginClassRegister(typeof(Minecraft.ItemsData.ItemType), L, null, 12, 0, 0);
 
             
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "None", Minecraft.ItemsData.ItemType.None);
@@ -48,8 +48,6 @@ namespace XLua.CSObjectWrap
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "DiamondBlock", Minecraft.ItemsData.ItemType.DiamondBlock);
             
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "Noteblock", Minecraft.ItemsData.ItemType.Noteblock);
-            
-            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "Bilibili_SanLian", Minecraft.ItemsData.ItemType.Bilibili_SanLian);
             
 
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "__CastFrom", __CastFrom);
@@ -113,10 +111,6 @@ namespace XLua.CSObjectWrap
 				else if (LuaAPI.xlua_is_eq_str(L, 1, "Noteblock"))
                 {
                     translator.PushMinecraftItemsDataItemType(L, Minecraft.ItemsData.ItemType.Noteblock);
-                }
-				else if (LuaAPI.xlua_is_eq_str(L, 1, "Bilibili_SanLian"))
-                {
-                    translator.PushMinecraftItemsDataItemType(L, Minecraft.ItemsData.ItemType.Bilibili_SanLian);
                 }
 				else
                 {
