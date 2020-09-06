@@ -3,6 +3,7 @@ using Minecraft.ItemsData;
 using System;
 using System.Collections;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 using XLua;
 
@@ -46,6 +47,8 @@ namespace Minecraft
 
         private IEnumerator Start()
         {
+            MinecraftSynchronizationContext.InitializeSynchronizationContext();
+
             WorldSettings settings = WorldSettings.Active;
             DataManager = new DataManager(settings.ResourcePackageName);
 
@@ -84,6 +87,12 @@ namespace Minecraft
                 return;
 
             ChunkManager.SyncLateUpdateOnMainThread();
+
+            MinecraftSynchronizationContext.ExecuteTasks();
+
+#if UNITY_EDITOR
+            Debug.Assert(SynchronizationContext.Current is MinecraftSynchronizationContext);
+#endif
         }
 
         private void FixedUpdate()

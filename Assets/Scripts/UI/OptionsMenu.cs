@@ -12,6 +12,7 @@ namespace Minecraft
         [SerializeField] private Slider m_RenderRadius;
         [SerializeField] private Slider m_HorizontalFOV;
         [SerializeField] private Slider m_MaxChunkCountInMemory;
+        [SerializeField] private Slider m_MaxTaskCountPerFrame;
         [SerializeField] private Toggle m_EnableDestroyEffects;
 
         private void OnEnable()
@@ -19,6 +20,7 @@ namespace Minecraft
             m_RenderRadius.value = GlobalSettings.Instance.RenderChunkRadius;
             m_HorizontalFOV.value = GlobalSettings.Instance.HorizontalFOVInDEG;
             m_MaxChunkCountInMemory.value = GlobalSettings.Instance.MaxChunkCountInMemory;
+            m_MaxTaskCountPerFrame.value = GlobalSettings.Instance.MaxTaskCountPerFrame;
             m_EnableDestroyEffects.isOn = GlobalSettings.Instance.EnableDestroyEffect;   
         }
 
@@ -27,6 +29,7 @@ namespace Minecraft
             GlobalSettings.Instance.RenderChunkRadius = (int)m_RenderRadius.value;
             GlobalSettings.Instance.HorizontalFOVInDEG = m_HorizontalFOV.value;
             GlobalSettings.Instance.MaxChunkCountInMemory = (int)m_MaxChunkCountInMemory.value;
+            GlobalSettings.Instance.MaxTaskCountPerFrame = (int)m_MaxTaskCountPerFrame.value;
             GlobalSettings.Instance.EnableDestroyEffect = m_EnableDestroyEffects.isOn;
             GlobalSettings.SaveSettings();
 

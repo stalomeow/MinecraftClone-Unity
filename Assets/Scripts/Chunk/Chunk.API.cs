@@ -13,7 +13,7 @@ namespace Minecraft
         private int GetHighestNonAirYPrivate(int localX, int localZ) => m_HeightMap[(localX << 4) | localZ];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetHighestNonAirY(int localX, int localZ, byte value) => m_HeightMap[(localX << 4) | localZ] = value;
+        private void SetHighestNonAirYWithoutLock(int localX, int localZ, byte value) => m_HeightMap[(localX << 4) | localZ] = value;
 
         public byte GetFinalLightLevel(int worldX, int y, int worldZ) => GetFinalLightLevelPrivate(worldX - PositionX, y, worldZ - PositionZ);
 
@@ -47,9 +47,6 @@ namespace Minecraft
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private byte GetSkyLightPrivate(int localX, int y, int localZ) => y >= WorldHeight || y < 0 ? MaxLight : m_SkyLights[(localX << 12) | (y << 4) | localZ];
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetSkyLight(int localX, int y, int localZ, byte value) => m_SkyLights[(localX << 12) | (y << 4) | localZ] = value;
-
         public byte GetBlockLight(int worldX, int y, int worldZ) => GetBlockLightPrivate(worldX - PositionX, y, worldZ - PositionZ);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -62,17 +59,12 @@ namespace Minecraft
             if (y >= WorldHeight || y < 0)
                 return;
 
-            BlockType type = GetBlockTypePrivateUnchecked(localX, y, localZ);
-            Block block = WorldManager.Active.DataManager.GetBlockByType(type);
-
-            // 液体的mesh不计算环境光照
-            MeshDirtyFlags flags = block.HasAnyFlag(BlockFlags.Liquid) ? MeshDirtyFlags.Both : MeshDirtyFlags.SolidMesh;
             int sectionIndex = Mathf.FloorToInt(y * OverChunkWidth);
 
             lock (m_SyncLock)
             {
                 m_BlockLights[(localX << 12) | (y << 4) | localZ] = value;
-                SetMeshDirtyWithoutLock(flags, sectionIndex);
+                SetMeshDirtyWithoutLock(MeshDirtyFlags.Both, sectionIndex);
             }
         }
 
@@ -127,11 +119,14 @@ namespace Minecraft
                     {
                         if (GetBlockTypePrivateUnchecked(localX, i, localZ) != BlockType.Air)
                         {
-                            SetHighestNonAirY(localX, localZ, (byte)i); // 至少会有一个非空方块，比如基岩
+                            SetHighestNonAirYWithoutLock(localX, localZ, (byte)i); // 至少会有一个非空方块，比如基岩
+                            height = i;
                             break;
                         }
                     }
                 }
+
+                UpdateSkyLightData(localX, localZ, height);
 
                 if (updateNeighborSections)
                 {

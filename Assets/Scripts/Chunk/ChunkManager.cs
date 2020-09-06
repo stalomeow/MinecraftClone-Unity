@@ -68,6 +68,7 @@ namespace Minecraft
         private float m_TickChunkDeltaTime;
 
         private volatile float m_PlayerPositionX;
+        private volatile float m_PlayerPositionY;
         private volatile float m_PlayerPositionZ;
         private volatile float m_PlayerForwardX;
         private volatile float m_PlayerForwardZ;
@@ -130,6 +131,7 @@ namespace Minecraft
             m_TickChunkDeltaTime = 0;
 
             m_PlayerPositionX = 0;
+            m_PlayerPositionY = 0;
             m_PlayerPositionZ = 0;
             m_PlayerForwardX = 0;
             m_PlayerForwardZ = 0;
@@ -164,18 +166,18 @@ namespace Minecraft
                 return;
 
             LightBlocksOnMainThread();
+            TickBlocksOnMainThread();
         }
 
         public void SyncUpdateOnMainThread()
         {
-            TickBlocksOnMainThread();
+            UpdatePlayerPositionOnMainThread();
             RandomTickChunkOnMainThread();
         }
 
         public void SyncLateUpdateOnMainThread()
         {
             RenderAndUpdateChunksOnMainThread();
-            UpdatePlayerPositionOnMainThread();
         }
 
         public void StartChunksUpdatingThread()
@@ -344,11 +346,15 @@ namespace Minecraft
 
                     if (chunk.ShouldUpdateMesh)
                     {
-                        flag = false;
-                        chunk.StartBuildMesh(); // async
+                        chunk.BuildMeshAsync();
                     }
 
-                    chunk.RenderChunk(m_SharedSolidMaterial, m_SharedLiquidMaterial, m_MainCamera, solidProperty, liquidProperty);
+                    flag &= !chunk.IsBuildingMesh;
+
+                    if (chunk.HasBuildedSolidMesh)
+                    { 
+                        chunk.RenderChunk(m_SharedSolidMaterial, m_SharedLiquidMaterial, m_MainCamera, solidProperty, liquidProperty);
+                    }
                 }
 
                 iterator.Dispose();
@@ -371,6 +377,8 @@ namespace Minecraft
 
             Vector2Int lastChunkPos = Chunk.NormalizeToChunkPosition(m_PlayerPositionX, m_PlayerPositionZ);
             Vector2Int chunkPos = Chunk.NormalizeToChunkPosition(pos.x, pos.z);
+
+            m_PlayerPositionY = pos.y;
 
             if (lastChunkPos != chunkPos || forward.x != m_PlayerForwardX || forward.z != m_PlayerForwardZ)
             {
@@ -406,7 +414,7 @@ namespace Minecraft
 
             if (m_Chunks.TryGetValue(chunkPos, out Chunk chunk))
             {
-                chunk.RandomTick(m_TickChunkRandom);
+                chunk.RandomTick(m_TickChunkRandom, m_PlayerPositionY);
             }
         }
 
@@ -464,7 +472,7 @@ namespace Minecraft
                             updateChunkQueue.Enqueue(new ChunkNeedsLoading
                             {
                                 ChunkPosition = chunkPos,
-                                PriorityFactor = (sqrDis / m_SqrRenderRadius) * 4.25f + (angle / m_HorizontalFOVInDEG) * 5.75f
+                                PriorityFactor = sqrDis / m_SqrRenderRadius + angle / m_HorizontalFOVInDEG
                             });
                         }
                     }
@@ -497,7 +505,7 @@ namespace Minecraft
                     Parallel.ForEach(m_Chunks, pair =>
                     {
                         Vector2 playerPos = new Vector2(m_PlayerPositionX, m_PlayerPositionZ);
-                        pair.Value.MarkAsStartUp();
+                        pair.Value.ShouldWaitForNeighborChunksLoaded();
 
                         if ((pair.Key - playerPos).sqrMagnitude > 4 * m_SqrRenderRadius)
                         {

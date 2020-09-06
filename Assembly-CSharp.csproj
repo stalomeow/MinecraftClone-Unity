@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\GlobalSettings.cs" />
     <Compile Include="Assets\Scripts\ItemsData\Item.cs" />
     <Compile Include="Assets\Scripts\ItemsData\ItemType.cs" />
+    <Compile Include="Assets\Scripts\MinecraftSynchronizationContext.cs" />
     <Compile Include="Assets\Scripts\Noises\FastNoise.cs" />
     <Compile Include="Assets\Scripts\Noises\INoise.cs" />
     <Compile Include="Assets\Scripts\Noises\PerlinNoise.cs" />

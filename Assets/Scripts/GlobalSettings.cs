@@ -10,6 +10,7 @@ namespace Minecraft
         public int RenderChunkRadius;
         public float HorizontalFOVInDEG;
         public int MaxChunkCountInMemory;
+        public int MaxTaskCountPerFrame;
         public bool EnableDestroyEffect;
 
         public int RenderRadius => RenderChunkRadius * WorldConsts.ChunkWidth;
@@ -35,6 +36,7 @@ namespace Minecraft
                     RenderChunkRadius = 6,
                     HorizontalFOVInDEG = 90,
                     MaxChunkCountInMemory = 700,
+                    MaxTaskCountPerFrame = 10,
                     EnableDestroyEffect = true
                 };
 

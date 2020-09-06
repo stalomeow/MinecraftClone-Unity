@@ -1,4 +1,5 @@
 ﻿using Minecraft.BlocksData;
+using Minecraft.DebugUtils;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -26,7 +27,9 @@ namespace Minecraft
 
         private sealed class MeshDataBuffer
         {
-            public int SectionIndex { get; private set; }
+            private volatile int m_SectionIndex;
+
+            public int SectionIndex => m_SectionIndex;
 
             public List<VertexData> VertexBuffer { get; }
 
@@ -34,14 +37,14 @@ namespace Minecraft
 
             public MeshDataBuffer()
             {
-                SectionIndex = 0;
+                m_SectionIndex = 0;
                 VertexBuffer = new List<VertexData>();
                 TriangleBuffer = new List<int>();
             }
 
             public void Reset(int sectionIndex)
             {
-                SectionIndex = sectionIndex;
+                m_SectionIndex = sectionIndex;
 
                 VertexBuffer.Clear();
                 TriangleBuffer.Clear();
@@ -57,10 +60,10 @@ namespace Minecraft
 
         public void RenderChunk(Material solidMaterial, Material liquidMaterial, Camera camera, MaterialPropertyBlock solidProp, MaterialPropertyBlock liquidProp)
         {
+            Vector3 pos = new Vector3(PositionX, 0, PositionZ);
+
             for (int i = 0; i < SectionCountInChunk; i++)
             {
-                Vector3 pos = new Vector3(PositionX, i * SectionHeight, PositionZ);
-
                 Mesh mesh = m_SolidMeshes[i];
 
                 if (mesh)
@@ -74,41 +77,51 @@ namespace Minecraft
                 {
                     Graphics.DrawMesh(mesh, pos, Quaternion.identity, liquidMaterial, BlockLayer, camera, 0, liquidProp, false, false, false);
                 }
+
+                pos.y += SectionHeight;
             }
         }
 
-        public async void StartBuildMesh()
+        public async void BuildMeshAsync()
         {
-            if (m_IsBuildingMesh || !ShouldUpdateMesh)
+            if (m_IsBuildingMesh)
                 return;
 
             m_IsBuildingMesh = true;
 
-            MeshDirtyFlags updateFlags = m_MeshDirtyFlags;
-            m_MeshDirtyFlags = MeshDirtyFlags.Neither;
+            ushort dirtyIndexes;
+            bool updateSolid = false;
+            bool updateLiquid = false;
 
-            ushort dirtyIndexes = m_DirtyMeshIndexes;
-            m_DirtyMeshIndexes = ushort.MinValue;
-
-            try
+            lock (m_SyncLock)
             {
-                Monitor.Enter(m_SyncLock);
+                dirtyIndexes = m_DirtyMeshIndexes;
+                m_DirtyMeshIndexes = ushort.MinValue;
 
                 if (dirtyIndexes > ushort.MinValue)
                 {
-                    bool updateSolid = (updateFlags & MeshDirtyFlags.SolidMesh) == MeshDirtyFlags.SolidMesh;
-                    bool updateLiquid = (updateFlags & MeshDirtyFlags.LiquidMesh) == MeshDirtyFlags.LiquidMesh;
+                    MeshDirtyFlags updateFlags = m_MeshDirtyFlags;
+                    m_MeshDirtyFlags = MeshDirtyFlags.Neither;
 
-                    if (m_IsStartUp)
+                    updateSolid = (updateFlags & MeshDirtyFlags.SolidMesh) == MeshDirtyFlags.SolidMesh;
+                    updateLiquid = (updateFlags & MeshDirtyFlags.LiquidMesh) == MeshDirtyFlags.LiquidMesh;
+                }
+            }
+
+            try
+            {
+                if (updateSolid || updateLiquid)
+                {
+                    if (m_ShouldWaitForNeighborChunksLoaded)
                     {
-                        m_IsStartUp = false;
+                        m_ShouldWaitForNeighborChunksLoaded = false;
 
                         await WorldManager.Active.ChunkManager.WaitForAllNeighborChunksLoaded(this);
                     }
 
-                    await Task.Factory.StartNew(GenerateSkyLightData);
+                    //await Task.Factory.StartNew(GenerateSkyLightData);
 
-                    for (int i = 0; i < SectionCountInChunk; i++)
+                    for (int i = SectionCountInChunk - 1; i > -1; i--)
                     {
                         if ((dirtyIndexes & (1 << i)) == 0)
                             continue;
@@ -131,6 +144,8 @@ namespace Minecraft
                             SetMeshData(m_MeshDataBuffer, ref m_LiquidMeshes[i]);
                         }
                     }
+
+                    HasBuildedSolidMesh = true;
                 }
             }
 #if !UNITY_EDITOR
@@ -140,7 +155,6 @@ namespace Minecraft
 #endif
             finally
             {
-                Monitor.Exit(m_SyncLock);
                 m_IsBuildingMesh = false;
             }
         }
@@ -157,6 +171,8 @@ namespace Minecraft
 
             try
             {
+                Monitor.Enter(m_SyncLock);
+
                 if (m_SolidCounts[buffer.SectionIndex] <= 0)
                     return;
 
@@ -280,6 +296,7 @@ namespace Minecraft
 #endif
             finally
             {
+                Monitor.Exit(m_SyncLock);
                 Profiler.EndSample();
             }
         }
@@ -296,6 +313,8 @@ namespace Minecraft
 
             try
             {
+                Monitor.Enter(m_SyncLock);
+
                 if (m_LiquidCounts[buffer.SectionIndex] <= 0)
                     return;
 
@@ -375,6 +394,7 @@ namespace Minecraft
 #endif
             finally
             {
+                Monitor.Exit(m_SyncLock);
                 Profiler.EndSample();
             }
         }

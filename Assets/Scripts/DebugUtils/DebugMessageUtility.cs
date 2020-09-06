@@ -7,7 +7,17 @@ namespace Minecraft.DebugUtils
     public static class DebugMessageUtility
     {
         private const string Condition = "UNITY_EDITOR";
-        
+
+        public static void DisableLog(this IDebugMessageSender sender)
+        {
+            sender.DisableLog = true;
+        }
+
+        public static void EnsableLog(this IDebugMessageSender sender)
+        {
+            sender.DisableLog = false;
+        }
+
         [Conditional(Condition)]
         public static void Log(this IDebugMessageSender sender, params object[] messages)
         {

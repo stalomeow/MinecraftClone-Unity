@@ -21,7 +21,11 @@ namespace Minecraft
 
         public bool DisableLog { get; set; }
 
+        public bool HasBuildedSolidMesh { get; private set; }
+
         public bool ShouldUpdateMesh => m_MeshDirtyFlags != MeshDirtyFlags.Neither;
+
+        public bool IsBuildingMesh => m_IsBuildingMesh;
 
 
         private byte[] m_Blocks; // 所有方块信息
@@ -33,10 +37,10 @@ namespace Minecraft
         private NibbleArray m_SkyLights; // 每一个方块受到的天空光照值，不公开
         private NibbleArray m_BlockLights; // 每一个方块受到的由其他方块引起的光照值
 
-        private MeshDirtyFlags m_MeshDirtyFlags;
-        private bool m_IsStartUp; // 有chunk被卸载后会重新赋值
+        private volatile MeshDirtyFlags m_MeshDirtyFlags;
+        private volatile bool m_ShouldWaitForNeighborChunksLoaded; // 有chunk被卸载后会重新赋值
+        private volatile ushort m_DirtyMeshIndexes; //16位标识
         private bool m_IsBuildingMesh;
-        private ushort m_DirtyMeshIndexes; //16位标识
         
         private Mesh[] m_SolidMeshes;
         private Mesh[] m_LiquidMeshes;
@@ -68,11 +72,13 @@ namespace Minecraft
             PositionX = 0;
             PositionZ = 0;
             IsModified = false;
-         
+            DisableLog = false;
+            HasBuildedSolidMesh = false;
+
             m_MeshDirtyFlags = MeshDirtyFlags.Both;
             m_DirtyMeshIndexes = ushort.MaxValue;
 
-            m_IsStartUp = true;
+            m_ShouldWaitForNeighborChunksLoaded = true;
             m_IsBuildingMesh = false;
         }
 
@@ -117,9 +123,9 @@ namespace Minecraft
         }
 
 
-        public void MarkAsStartUp()
+        public void ShouldWaitForNeighborChunksLoaded()
         {
-            m_IsStartUp = true;
+            m_ShouldWaitForNeighborChunksLoaded = true;
         }
 
 
@@ -578,29 +584,36 @@ namespace Minecraft
                         }
                     }
 
-                    SetHighestNonAirY(x, z, (byte)height);
+                    SetHighestNonAirYWithoutLock(x, z, (byte)height);
                 }
             }
         }
 
 
-        public void RandomTick(Random random)
+        public void RandomTick(Random random, float playerY)
         {
-            WorldManager world = WorldManager.Active;
+            DataManager mgr = WorldManager.Active.DataManager;
+            int sectionIndex = Mathf.FloorToInt(playerY * OverSectionHeight);
 
-            for (int i = 0; i < SectionCountInChunk; i++)
+            for (int i = -1; i < 2; i++)
             {
-                if (m_TickRefCounts[i] > 0)
-                {
-                    int x = random.Next(0, ChunkWidth);
-                    int z = random.Next(0, ChunkWidth);
-                    int j = random.Next(0, SectionHeight);
-                    int y = i * SectionHeight + j;
-                    
-                    // 其实基本就tick不到重要的方块...
+                int k = sectionIndex + i;
 
-                    BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
-                    world.DataManager.GetBlockByType(type).OnRandomTick(x + PositionX, y, z + PositionZ);
+                if (k < 0 || k >= SectionCountInChunk)
+                    continue;
+
+                if (m_TickRefCounts[k] > 0)
+                {
+                    for (int c = 0; c < 3; c++)
+                    {
+                        int x = random.Next(0, ChunkWidth);
+                        int z = random.Next(0, ChunkWidth);
+                        int j = random.Next(0, SectionHeight);
+                        int y = k * SectionHeight + j;
+
+                        BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
+                        mgr.GetBlockByType(type).OnRandomTick(x + PositionX, y, z + PositionZ);
+                    }
                 }
             }
         }
@@ -620,8 +633,12 @@ namespace Minecraft
         private void UpdateSkyLightData(int localX, int localZ)
         {
             int height = m_HeightMap[(localX << 4) | localZ];
+            UpdateSkyLightData(localX, localZ, height);
+        }
 
-            for (int y = height + 1; y < WorldHeight; y++)
+        private void UpdateSkyLightData(int localX, int localZ, int topNonAirBlockY)
+        {
+            for (int y = topNonAirBlockY + 1; y < WorldHeight; y++)
             {
                 m_SkyLights[(localX << 12) | (y << 4) | localZ] = SkyLight;
             }
@@ -631,15 +648,15 @@ namespace Minecraft
 
             do
             {
-                BlockType type = GetBlockTypePrivateUnchecked(localX, height, localZ);
+                BlockType type = GetBlockTypePrivateUnchecked(localX, topNonAirBlockY, localZ);
                 Block block = WorldManager.Active.DataManager.GetBlockByType(type);
 
                 light = Mathf.Clamp(light - opacity, 0, MaxNonAirBlockSkyLightValue);
-                m_SkyLights[(localX << 12) | (height << 4) | localZ] = (byte)light;
+                m_SkyLights[(localX << 12) | (topNonAirBlockY << 4) | localZ] = (byte)light;
 
                 opacity = block.LightOpacity;
 
-            } while (--height > -1);
+            } while (--topNonAirBlockY > -1);
         }
 
         internal void GetRawBlockData(out byte[] blocks, out byte[] states)
@@ -654,6 +671,7 @@ namespace Minecraft
 
             IsModified = false;
         }
+
 
         public static ulong GetUniqueIdByPosition(int x, int z)
         {
