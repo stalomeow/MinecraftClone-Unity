@@ -1,8 +1,6 @@
 ﻿using Minecraft.DebugUtils;
-using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
-using UnityEngine;
 using UnityEngine.Profiling;
 
 namespace Minecraft
@@ -13,9 +11,9 @@ namespace Minecraft
         {
             private readonly SendOrPostCallback m_Callback;
             private readonly object m_State;
-            private readonly ManualResetEventSlim m_WaitHandle;
+            private readonly ManualResetEvent m_WaitHandle;
 
-            public WorkRequest(SendOrPostCallback callback, object state, ManualResetEventSlim waitHandle)
+            public WorkRequest(SendOrPostCallback callback, object state, ManualResetEvent waitHandle)
             {
                 m_Callback = callback;
                 m_State = state;
@@ -28,20 +26,15 @@ namespace Minecraft
                 {
                     m_Callback(m_State);
                 }
-                catch (Exception exception)
+                finally
                 {
-                    Debug.LogException(exception);
+                    m_WaitHandle?.Set();
                 }
-
-                m_WaitHandle?.Set();
             }
         }
 
 
-        private const int InitialCapacity = 20;
-
-        private readonly Queue<WorkRequest> m_AsyncWorkQueue;
-        private readonly List<WorkRequest> m_CurrentFrameWork;
+        private readonly ConcurrentQueue<WorkRequest> m_AsyncWorkQueue;
         private readonly int m_MainThreadID;
 
 #if UNITY_EDITOR
@@ -54,12 +47,11 @@ namespace Minecraft
         public bool DisableLog { get; set; }
 
 
-        private MinecraftSynchronizationContext(int mainThreadID) : this(new Queue<WorkRequest>(InitialCapacity), mainThreadID) { }
+        private MinecraftSynchronizationContext(int mainThreadID) : this(new ConcurrentQueue<WorkRequest>(), mainThreadID) { }
 
-        private MinecraftSynchronizationContext(Queue<WorkRequest> asyncWorkQueue, int mainThreadID)
+        private MinecraftSynchronizationContext(ConcurrentQueue<WorkRequest> asyncWorkQueue, int mainThreadID)
         {
             m_AsyncWorkQueue = asyncWorkQueue;
-            m_CurrentFrameWork = new List<WorkRequest>(InitialCapacity);
             m_MainThreadID = mainThreadID;
         }
 
@@ -71,26 +63,20 @@ namespace Minecraft
             }
             else
             {
-                using (ManualResetEventSlim manualResetEvent = new ManualResetEventSlim(false))
+                using (ManualResetEvent manualResetEvent = new ManualResetEvent(false))
                 {
-                    lock (m_AsyncWorkQueue)
-                    {
-                        WorkRequest work = new WorkRequest(callback, state, manualResetEvent);
-                        m_AsyncWorkQueue.Enqueue(work);
-                    }
+                    WorkRequest work = new WorkRequest(callback, state, manualResetEvent);
+                    m_AsyncWorkQueue.Enqueue(work);
 
-                    manualResetEvent.Wait();
+                    manualResetEvent.WaitOne();
                 }
             }
         }
 
         public override void Post(SendOrPostCallback callback, object state)
         {
-            lock (m_AsyncWorkQueue)
-            {
-                WorkRequest work = new WorkRequest(callback, state, null);
-                m_AsyncWorkQueue.Enqueue(work);
-            }
+            WorkRequest work = new WorkRequest(callback, state, null);
+            m_AsyncWorkQueue.Enqueue(work);
         }
 
         public override SynchronizationContext CreateCopy()
@@ -102,36 +88,28 @@ namespace Minecraft
         {
 #if UNITY_EDITOR
             m_Stopwatch.Restart();
+            int executedCount = 0;
 #endif
 
             int count = GlobalSettings.Instance.MaxTaskCountPerFrame;
 
-            lock (m_AsyncWorkQueue)
+            while (count-- > 0 && m_AsyncWorkQueue.TryDequeue(out WorkRequest work))
             {
-                while (count-- > 0)
-                {
-                    if (m_AsyncWorkQueue.Count == 0)
-                    {
-                        break;
-                    }
+                work.Invoke();
 
-                    WorkRequest work = m_AsyncWorkQueue.Dequeue();
-                    m_CurrentFrameWork.Add(work);
-                }
+#if UNITY_EDITOR
+                executedCount++;
+#endif
             }
-
-            foreach (WorkRequest current in m_CurrentFrameWork)
-            {
-                current.Invoke();
-            }
-
+            
 #if UNITY_EDITOR
             m_Stopwatch.Stop();
 
-            this.Log("执行", m_CurrentFrameWork.Count.ToString(), "个任务，共计", m_Stopwatch.ElapsedMilliseconds.ToString(),"毫秒");
-#endif
-
-            m_CurrentFrameWork.Clear();            
+            if (executedCount > 0)
+            {
+                this.Log("执行", executedCount.ToString(), "个任务，共计", m_Stopwatch.ElapsedMilliseconds.ToString(), "毫秒");
+            }
+#endif   
         }
 
         public static void InitializeSynchronizationContext()
@@ -145,23 +123,14 @@ namespace Minecraft
 
         public static void ExecuteTasks()
         {
-            try
-            {
-                Profiler.BeginSample("Execute Tasks");
+            Profiler.BeginSample("MinecraftSynchronizationContext.ExecuteTasks");
 
-                if (Current is MinecraftSynchronizationContext unitySynchronizationContext)
-                {
-                    unitySynchronizationContext.Execute();
-                }
-            }
-            catch (Exception e)
+            if (Current is MinecraftSynchronizationContext context)
             {
-                Debug.LogException(e);
+                context.Execute();
             }
-            finally
-            {
-                Profiler.EndSample();
-            }
+
+            Profiler.EndSample();
         }
     }
 }

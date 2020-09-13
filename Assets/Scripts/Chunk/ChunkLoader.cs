@@ -20,7 +20,7 @@ namespace Minecraft
             Directory.CreateDirectory(chunkSavingDirectory);//不存在，则创建
         }
 
-        public Chunk LoadChunk(Chunk chunk, int x, int z)
+        public void LoadChunk(Chunk chunk, int x, int z)
         {
             string filePath = GetChunkFilePath(x, z);
 
@@ -32,8 +32,6 @@ namespace Minecraft
             {
                 chunk.Init(x, z, Seed, m_WorldType);
             }
-
-            return chunk;
         }
 
         public void SaveChunk(Chunk chunk, bool checkModified = true)
@@ -67,7 +65,7 @@ namespace Minecraft
                 fs.WriteByte((byte)(chunk.PositionZ >> 16));
                 fs.WriteByte((byte)(chunk.PositionZ >> 24));
 
-                chunk.GetRawBlockData(out byte[] blocks, out byte[] states);
+                chunk.GetRawData(out byte[] blocks, out byte[] states);
 
                 fs.Write(blocks, 0, BlockCountInChunk);
                 fs.Write(states, 0, BlockCountInChunk);
@@ -92,7 +90,7 @@ namespace Minecraft
 
                 int posZ = z_b0 | (z_b1 << 8) | (z_b2 << 16) | (z_b3 << 24);
 
-                chunk.GetRawBlockData(out byte[] blocks, out byte[] states);
+                chunk.GetRawData(out byte[] blocks, out byte[] states);
 
                 int count = 0;
 

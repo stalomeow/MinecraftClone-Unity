@@ -1,7 +1,6 @@
 ﻿using Minecraft.BlocksData;
-using System.Collections.Generic;
+using Minecraft.Buffers;
 using UnityEngine;
-using static Minecraft.BlocksData.BlockVertexHelper;
 using static Minecraft.WorldConsts;
 
 #pragma warning disable CS0649
@@ -18,8 +17,7 @@ namespace Minecraft
         private Vector3 m_Velocity;
 
         private Mesh m_Mesh;
-        private List<VertexData> m_VertexBuffer;
-        private List<int> m_TrianglesBuffer;
+        private MeshDataBuffer m_MeshBuffer;
 
         private float m_TimeCounter;
 
@@ -113,10 +111,7 @@ namespace Minecraft
             m_MoveDir = Vector3.zero;
             Initialized = false;
 
-            m_Mesh = new Mesh();
-            m_Mesh.MarkDynamic();
-            m_VertexBuffer = new List<VertexData>();
-            m_TrianglesBuffer = new List<int>();
+            m_MeshBuffer = new MeshDataBuffer();
 
             m_TimeCounter = 0;
 
@@ -126,86 +121,53 @@ namespace Minecraft
             GravityMultiplier = gravityMultiplier;
             Block = block;
 
-            switch (block.VertexType)
-            {
-                case BlockVertexType.Cube:
-                    {
-                        float light = block.LightValue * OverMaxLight;
-                        float lb, rb, rt, lt;
-
-                        lb = (world.GetFinalLightLevel(x + 1, y, z) + world.GetFinalLightLevel(x + 1, y - 1, z) + world.GetFinalLightLevel(x + 1, y, z - 1) + world.GetFinalLightLevel(x + 1, y - 1, z - 1)) * 0.25f * OverMaxLight;
-                        rb = (world.GetFinalLightLevel(x + 1, y, z) + world.GetFinalLightLevel(x + 1, y - 1, z) + world.GetFinalLightLevel(x + 1, y, z + 1) + world.GetFinalLightLevel(x + 1, y - 1, z + 1)) * 0.25f * OverMaxLight;
-                        rt = (world.GetFinalLightLevel(x + 1, y, z) + world.GetFinalLightLevel(x + 1, y + 1, z) + world.GetFinalLightLevel(x + 1, y, z + 1) + world.GetFinalLightLevel(x + 1, y + 1, z + 1)) * 0.25f * OverMaxLight;
-                        lt = (world.GetFinalLightLevel(x + 1, y, z) + world.GetFinalLightLevel(x + 1, y + 1, z) + world.GetFinalLightLevel(x + 1, y, z - 1) + world.GetFinalLightLevel(x + 1, y + 1, z - 1)) * 0.25f * OverMaxLight;
-
-                        AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddCubeVertexDataPX(0, 0, 0, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-
-                        lb = (world.GetFinalLightLevel(x - 1, y, z) + world.GetFinalLightLevel(x - 1, y - 1, z) + world.GetFinalLightLevel(x - 1, y, z + 1) + world.GetFinalLightLevel(x - 1, y - 1, z + 1)) * 0.25f * OverMaxLight;
-                        rb = (world.GetFinalLightLevel(x - 1, y, z) + world.GetFinalLightLevel(x - 1, y - 1, z) + world.GetFinalLightLevel(x - 1, y, z - 1) + world.GetFinalLightLevel(x - 1, y - 1, z - 1)) * 0.25f * OverMaxLight;
-                        rt = (world.GetFinalLightLevel(x - 1, y, z) + world.GetFinalLightLevel(x - 1, y + 1, z) + world.GetFinalLightLevel(x - 1, y, z - 1) + world.GetFinalLightLevel(x - 1, y + 1, z - 1)) * 0.25f * OverMaxLight;
-                        lt = (world.GetFinalLightLevel(x - 1, y, z) + world.GetFinalLightLevel(x - 1, y + 1, z) + world.GetFinalLightLevel(x - 1, y, z + 1) + world.GetFinalLightLevel(x - 1, y + 1, z + 1)) * 0.25f * OverMaxLight;
-
-                        AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddCubeVertexDataNX(0, 0, 0, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-
-                        lb = (world.GetFinalLightLevel(x, y + 1, z) + world.GetFinalLightLevel(x, y + 1, z - 1) + world.GetFinalLightLevel(x - 1, y + 1, z) + world.GetFinalLightLevel(x - 1, y + 1, z - 1)) * 0.25f * OverMaxLight;
-                        rb = (world.GetFinalLightLevel(x, y + 1, z) + world.GetFinalLightLevel(x, y + 1, z - 1) + world.GetFinalLightLevel(x + 1, y + 1, z) + world.GetFinalLightLevel(x + 1, y + 1, z - 1)) * 0.25f * OverMaxLight;
-                        rt = (world.GetFinalLightLevel(x, y + 1, z) + world.GetFinalLightLevel(x, y + 1, z + 1) + world.GetFinalLightLevel(x + 1, y + 1, z) + world.GetFinalLightLevel(x + 1, y + 1, z + 1)) * 0.25f * OverMaxLight;
-                        lt = (world.GetFinalLightLevel(x, y + 1, z) + world.GetFinalLightLevel(x, y + 1, z + 1) + world.GetFinalLightLevel(x - 1, y + 1, z) + world.GetFinalLightLevel(x - 1, y + 1, z + 1)) * 0.25f * OverMaxLight;
-
-                        AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddCubeVertexDataPY(0, 0, 0, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-
-                        lb = (world.GetFinalLightLevel(x, y - 1, z) + world.GetFinalLightLevel(x, y - 1, z - 1) + world.GetFinalLightLevel(x + 1, y - 1, z) + world.GetFinalLightLevel(x + 1, y - 1, z - 1)) * 0.25f * OverMaxLight;
-                        rb = (world.GetFinalLightLevel(x, y - 1, z) + world.GetFinalLightLevel(x, y - 1, z - 1) + world.GetFinalLightLevel(x - 1, y - 1, z) + world.GetFinalLightLevel(x - 1, y - 1, z - 1)) * 0.25f * OverMaxLight;
-                        rt = (world.GetFinalLightLevel(x, y - 1, z) + world.GetFinalLightLevel(x, y - 1, z + 1) + world.GetFinalLightLevel(x - 1, y - 1, z) + world.GetFinalLightLevel(x - 1, y - 1, z + 1)) * 0.25f * OverMaxLight;
-                        lt = (world.GetFinalLightLevel(x, y - 1, z) + world.GetFinalLightLevel(x, y - 1, z + 1) + world.GetFinalLightLevel(x + 1, y - 1, z) + world.GetFinalLightLevel(x + 1, y - 1, z + 1)) * 0.25f * OverMaxLight;
-
-                        AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddCubeVertexDataNY(0, 0, 0, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-
-                        lb = (world.GetFinalLightLevel(x, y, z + 1) + world.GetFinalLightLevel(x, y - 1, z + 1) + world.GetFinalLightLevel(x + 1, y, z + 1) + world.GetFinalLightLevel(x + 1, y - 1, z + 1)) * 0.25f * OverMaxLight;
-                        rb = (world.GetFinalLightLevel(x, y, z + 1) + world.GetFinalLightLevel(x, y - 1, z + 1) + world.GetFinalLightLevel(x - 1, y, z + 1) + world.GetFinalLightLevel(x - 1, y - 1, z + 1)) * 0.25f * OverMaxLight;
-                        rt = (world.GetFinalLightLevel(x, y, z + 1) + world.GetFinalLightLevel(x, y + 1, z + 1) + world.GetFinalLightLevel(x - 1, y, z + 1) + world.GetFinalLightLevel(x - 1, y + 1, z + 1)) * 0.25f * OverMaxLight;
-                        lt = (world.GetFinalLightLevel(x, y, z + 1) + world.GetFinalLightLevel(x, y + 1, z + 1) + world.GetFinalLightLevel(x + 1, y, z + 1) + world.GetFinalLightLevel(x + 1, y + 1, z + 1)) * 0.25f * OverMaxLight;
-
-                        AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddCubeVertexDataPZ(0, 0, 0, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-
-                        lb = (world.GetFinalLightLevel(x, y, z - 1) + world.GetFinalLightLevel(x, y - 1, z - 1) + world.GetFinalLightLevel(x - 1, y, z - 1) + world.GetFinalLightLevel(x - 1, y - 1, z - 1)) * 0.25f * OverMaxLight;
-                        rb = (world.GetFinalLightLevel(x, y, z - 1) + world.GetFinalLightLevel(x, y - 1, z - 1) + world.GetFinalLightLevel(x + 1, y, z - 1) + world.GetFinalLightLevel(x + 1, y - 1, z - 1)) * 0.25f * OverMaxLight;
-                        rt = (world.GetFinalLightLevel(x, y, z - 1) + world.GetFinalLightLevel(x, y + 1, z - 1) + world.GetFinalLightLevel(x + 1, y, z - 1) + world.GetFinalLightLevel(x + 1, y + 1, z - 1)) * 0.25f * OverMaxLight;
-                        lt = (world.GetFinalLightLevel(x, y, z - 1) + world.GetFinalLightLevel(x, y + 1, z - 1) + world.GetFinalLightLevel(x - 1, y, z - 1) + world.GetFinalLightLevel(x - 1, y + 1, z - 1)) * 0.25f * OverMaxLight;
-
-                        AddCubeVertexTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddCubeVertexDataNZ(0, 0, 0, Mathf.Max(lb, light), Mathf.Max(rb, light), Mathf.Max(rt, light), Mathf.Max(lt, light), block, m_VertexBuffer);
-                    }
-                    break;
-                case BlockVertexType.PerpendicularQuads:
-                    {
-                        float light = world.GetFinalLightLevel(x, y, z) * OverMaxLight;
-
-                        AddPerpendicularQuadsTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddPerpendicularQuadsVertexDataFirstQuad(0, 0, 0, light, block, m_VertexBuffer);
-
-                        AddPerpendicularQuadsTriangles(m_TrianglesBuffer, m_VertexBuffer.Count);
-                        AddPerpendicularQuadsVertexDataSecondQuad(0, 0, 0, light, block, m_VertexBuffer);
-                    }
-                    break;
-            }
-
-            if (m_VertexBuffer.Count > 0 && m_TrianglesBuffer.Count > 0)
-            {
-                m_Mesh.SetVertexBufferParams(m_VertexBuffer.Count, VertexLayout);
-                m_Mesh.SetVertexBufferData(m_VertexBuffer, 0, 0, m_VertexBuffer.Count);
-                m_Mesh.SetTriangles(m_TrianglesBuffer, 0);
-                m_Mesh.UploadMeshData(false);
-            }
+            float light = world.GetFinalLightLevel(x, y, z) * OverMaxLight;
+            CreateMesh(block, light);
 
             OnInitialize();
 
             Initialized = true;
+        }
+
+        private void CreateMesh(Block block, float light)
+        {
+            m_MeshBuffer.BeginRewriting();
+
+            switch (block.VertexType)
+            {
+                case BlockVertexType.Cube:
+                    {
+                        m_MeshBuffer.AddCubeTriangles();
+                        m_MeshBuffer.AddCubeVertexPX(0, 0, 0, light, light, light, light, block);
+
+                        m_MeshBuffer.AddCubeTriangles();
+                        m_MeshBuffer.AddCubeVertexNX(0, 0, 0, light, light, light, light, block);
+
+                        m_MeshBuffer.AddCubeTriangles();
+                        m_MeshBuffer.AddCubeVertexPY(0, 0, 0, light, light, light, light, block);
+
+                        m_MeshBuffer.AddCubeTriangles();
+                        m_MeshBuffer.AddCubeVertexNY(0, 0, 0, light, light, light, light, block);
+
+                        m_MeshBuffer.AddCubeTriangles();
+                        m_MeshBuffer.AddCubeVertexPZ(0, 0, 0, light, light, light, light, block);
+
+                        m_MeshBuffer.AddCubeTriangles();
+                        m_MeshBuffer.AddCubeVertexNZ(0, 0, 0, light, light, light, light, block);
+                    }
+                    break;
+                case BlockVertexType.PerpendicularQuads:
+                    {
+                        m_MeshBuffer.AddPerpendicularQuadsTriangles();
+                        m_MeshBuffer.AddPerpendicularQuadsVertexFirst(0, 0, 0, light, block);
+
+                        m_MeshBuffer.AddPerpendicularQuadsTriangles();
+                        m_MeshBuffer.AddPerpendicularQuadsVertexSecond(0, 0, 0, light, block);
+                    }
+                    break;
+            }
+
+            m_MeshBuffer.ApplyToMesh(ref m_Mesh);
         }
 
 

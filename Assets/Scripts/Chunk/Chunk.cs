@@ -1,8 +1,10 @@
 ﻿using Minecraft.BlocksData;
+using Minecraft.Buffers;
 using Minecraft.Collections;
 using Minecraft.DebugUtils;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using static Minecraft.WorldConsts;
 using Random = System.Random;
@@ -11,73 +13,63 @@ namespace Minecraft
 {
     public sealed partial class Chunk : IReusableObject, IDebugMessageSender
     {
+        [Flags]
+        private enum MeshDirtyFlags : byte
+        {
+            Neither = 0,
+
+            SolidMesh = 1 << 0,
+            LiquidMesh = 1 << 1,
+
+            Both = SolidMesh | LiquidMesh
+        }
+
+
         string IDebugMessageSender.DisplayName => $"Chunk({PositionX.ToString()},{PositionZ.ToString()})";
 
         public int PositionX { get; private set; }
 
         public int PositionZ { get; private set; }
 
-        public bool IsModified { get; private set; }
-
         public bool DisableLog { get; set; }
 
-        public bool HasBuildedSolidMesh { get; private set; }
-
-        public bool ShouldUpdateMesh => m_MeshDirtyFlags != MeshDirtyFlags.Neither;
+        public bool IsModified => m_IsModified;
 
         public bool IsBuildingMesh => m_IsBuildingMesh;
 
+        public bool ShouldUpdateMesh => ((m_DirtyData >> 8) & 0xFFFF) > ushort.MinValue;
 
-        private byte[] m_Blocks; // 所有方块信息
-        private byte[] m_BlockStates; // 所有方块的状态
-        private byte[] m_HeightMap; // chunk 的高度图, 第一个非空方块的y
-        private int[] m_TickRefCounts; // 每一个section（高度16）需要tick的数量
-        private int[] m_SolidCounts; // 每一个section（高度16）可以被绘制的固体的数量
-        private int[] m_LiquidCounts; // 每一个section（高度16）可以被绘制的流体的数量
-        private NibbleArray m_SkyLights; // 每一个方块受到的天空光照值，不公开
-        private NibbleArray m_BlockLights; // 每一个方块受到的由其他方块引起的光照值
 
-        private volatile MeshDirtyFlags m_MeshDirtyFlags;
+        private readonly ChunkData m_Data;
+        private readonly Mesh[] m_SolidMeshes;
+        private readonly Mesh[] m_LiquidMeshes;
+        private readonly ChunkMeshDataBuffer m_MeshDataBuffer;
+
+        private volatile int m_DirtyData;
+        private volatile bool m_IsModified;
+        private volatile bool m_HasBuildedMesh;
         private volatile bool m_ShouldWaitForNeighborChunksLoaded; // 有chunk被卸载后会重新赋值
-        private volatile ushort m_DirtyMeshIndexes; //16位标识
-        private bool m_IsBuildingMesh;
-        
-        private Mesh[] m_SolidMeshes;
-        private Mesh[] m_LiquidMeshes;
-        private MeshDataBuffer m_MeshDataBuffer;
-
-        private object m_SyncLock;
+        private volatile bool m_IsBuildingMesh;
 
 
         public Chunk()
         {
-            m_Blocks = new byte[BlockCountInChunk];
-            m_BlockStates = new byte[BlockCountInChunk];
-            m_HeightMap = new byte[ChunkWidth * ChunkWidth];
-            m_TickRefCounts = new int[SectionCountInChunk];
-            m_SolidCounts = new int[SectionCountInChunk];
-            m_LiquidCounts = new int[SectionCountInChunk];
-            m_SkyLights = new NibbleArray(BlockCountInChunk);
-            m_BlockLights = new NibbleArray(BlockCountInChunk);
-
+            m_Data = new ChunkData();
             m_SolidMeshes = new Mesh[SectionCountInChunk];
             m_LiquidMeshes = new Mesh[SectionCountInChunk];
-            m_MeshDataBuffer = new MeshDataBuffer();
-
-            m_SyncLock = new object();
+            m_MeshDataBuffer = new ChunkMeshDataBuffer();
         }
 
         void IReusableObject.OnAllocated()
         {
             PositionX = 0;
             PositionZ = 0;
-            IsModified = false;
             DisableLog = false;
-            HasBuildedSolidMesh = false;
 
-            m_MeshDirtyFlags = MeshDirtyFlags.Both;
-            m_DirtyMeshIndexes = ushort.MaxValue;
+            SetDirtyData(ushort.MaxValue, MeshDirtyFlags.Both);
 
+            m_IsModified = false;
+            m_HasBuildedMesh = false;
             m_ShouldWaitForNeighborChunksLoaded = true;
             m_IsBuildingMesh = false;
         }
@@ -86,44 +78,17 @@ namespace Minecraft
         {
             if (destroy)
             {
-                m_Blocks = null;
-                m_BlockStates = null;
-                m_HeightMap = null;
-                m_TickRefCounts = null;
-                m_SolidCounts = null;
-                m_LiquidCounts = null;
-                m_SkyLights = null;
-                m_BlockLights = null;
-
-                m_SolidMeshes = null;
-                m_LiquidMeshes = null;
-                m_MeshDataBuffer = null;
-
-                m_SyncLock = null;
+                m_Data.Dispose();
+                m_MeshDataBuffer.Dispose();            
             }
             else
             {
-                Array.Clear(m_Blocks, 0, m_Blocks.Length);
-                Array.Clear(m_BlockStates, 0, m_BlockStates.Length);
-                Array.Clear(m_HeightMap, 0, m_HeightMap.Length);
-                Array.Clear(m_TickRefCounts, 0, m_TickRefCounts.Length);
-                Array.Clear(m_SolidCounts, 0, m_SolidCounts.Length);
-                Array.Clear(m_LiquidCounts, 0, m_LiquidCounts.Length);
-
-                m_SkyLights.Clear();
-                m_BlockLights.Clear();
-
-                //避免再次创建 mesh，这里循环使用
-                //Array.Clear(m_SolidMeshes, 0, m_SolidMeshes.Length);
-                //Array.Clear(m_LiquidMeshes, 0, m_LiquidMeshes.Length);
-
-                //build mesh 前会重置
-                //m_MeshDataBuffer.Reset(0);
+                m_Data.Clear();
             }
         }
 
 
-        public void ShouldWaitForNeighborChunksLoaded()
+        public void MarkAsStartUp()
         {
             m_ShouldWaitForNeighborChunksLoaded = true;
         }
@@ -174,19 +139,19 @@ namespace Minecraft
                                     {
                                         if (y < waterLevel)
                                         {
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Water);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Water);
                                         }
                                         else
                                         {
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Air);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Air);
 
-                                            if (y == hillHeight + 1 && GetBlockTypePrivateUnchecked(dx, y - 1, dz) == BlockType.Grass)
+                                            if (y == hillHeight + 1 && m_Data.GetBlockType(dx, y - 1, dz) == BlockType.Grass)
                                             {
                                                 int r = random.Next(0, 50);
 
                                                 if (r == 1)
                                                 {
-                                                    SetBlockTypePrivate(dx, y, dz, BlockType.Plant_Grass);
+                                                    m_Data.SetBlockType(dx, y, dz, BlockType.Plant_Grass);
                                                 }
                                                 else
                                                 {
@@ -194,7 +159,7 @@ namespace Minecraft
 
                                                     if (r == 1)
                                                     {
-                                                        SetBlockTypePrivate(dx, y, dz, BlockType.Flower_Rose_Blue);
+                                                        m_Data.SetBlockType(dx, y, dz, BlockType.Flower_Rose_Blue);
                                                     }
                                                 }
                                             }
@@ -204,7 +169,7 @@ namespace Minecraft
 
                                     if (y < bedrockHeight)
                                     {
-                                        SetBlockTypePrivate(dx, y, dz, BlockType.Bedrock);
+                                        m_Data.SetBlockType(dx, y, dz, BlockType.Bedrock);
                                         continue;
                                     }
 
@@ -221,21 +186,21 @@ namespace Minecraft
 
                                                 if (r == 1)
                                                 {
-                                                    SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                                    m_Data.SetBlockType(dx, y, dz, BlockType.Dirt);
                                                 }
                                                 else
                                                 {
-                                                    SetBlockTypePrivate(dx, y, dz, BlockType.Sand);
+                                                    m_Data.SetBlockType(dx, y, dz, BlockType.Sand);
                                                 }
                                             }
                                             else
                                             {
-                                                SetBlockTypePrivate(dx, y, dz, BlockType.Grass);
+                                                m_Data.SetBlockType(dx, y, dz, BlockType.Grass);
                                             }
                                         }
                                         else
                                         {
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Dirt);
                                         }
 
                                         continue;
@@ -247,7 +212,7 @@ namespace Minecraft
 
                                         if (GenerateOres(dx, y, dz, noise)) continue;
 
-                                        SetBlockTypePrivate(dx, y, dz, BlockType.Stone);
+                                        m_Data.SetBlockType(dx, y, dz, BlockType.Stone);
                                         continue;
                                     }
                                 }
@@ -260,17 +225,17 @@ namespace Minecraft
                                     switch (y)
                                     {
                                         case 0:
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Bedrock);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Bedrock);
                                             break;
                                         case 1:
                                         case 2:
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Dirt);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Dirt);
                                             break;
                                         case 3:
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Grass);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Grass);
                                             break;
                                         default:
-                                            SetBlockTypePrivate(dx, y, dz, BlockType.Air);
+                                            m_Data.SetBlockType(dx, y, dz, BlockType.Air);
                                             break;
                                     }
                                 }
@@ -291,7 +256,7 @@ namespace Minecraft
 
                     while (h-- > 0)
                     {
-                        if (GetBlockTypePrivateUnchecked(8, h, 8) != BlockType.Air)
+                        if (m_Data.GetBlockType(8, h, 8) != BlockType.Air)
                         {
                             Queue<Vector3Int> path = new Queue<Vector3Int>();
                             int depth = random.Next(5, 11);
@@ -341,7 +306,7 @@ namespace Minecraft
                                                 if (ry < 0 || ry > ChunkWidth - 1)
                                                     continue;
 
-                                                SetBlockTypePrivate(b.x, ry, b.z, BlockType.Air);
+                                                m_Data.SetBlockType(b.x, ry, b.z, BlockType.Air);
                                             }
                                         }
                                     }
@@ -367,16 +332,16 @@ namespace Minecraft
 
                                 while (h-- > 0)
                                 {
-                                    if (GetBlockTypePrivateUnchecked(x, h, y) == BlockType.Grass)
+                                    if (m_Data.GetBlockType(x, h, y) == BlockType.Grass)
                                     {
                                         Vector3Int p = new Vector3Int(x, h + 1, y);
 
-                                        SetBlockTypePrivate(p.x, p.y - 1, p.z, BlockType.Dirt);
+                                        m_Data.SetBlockType(p.x, p.y - 1, p.z, BlockType.Dirt);
                                         bool cutOff = random.Next(100) == 0;
 
                                         if (cutOff)
                                         {
-                                            SetBlockTypePrivate(p.x, p.y, p.z, BlockType.Log_Oak);
+                                            m_Data.SetBlockType(p.x, p.y, p.z, BlockType.Log_Oak);
                                             goto End;
                                         }
 
@@ -386,50 +351,50 @@ namespace Minecraft
 
                                         for (int i = 0; i < height; ++i)
                                         {
-                                            SetBlockTypePrivate(p.x, p.y + i, p.z, BlockType.Log_Oak);
+                                            m_Data.SetBlockType(p.x, p.y + i, p.z, BlockType.Log_Oak);
                                         }
-                                        SetBlockTypePrivate(p.x, p.y + height, p.z, BlockType.Leaves_Oak);
+                                        m_Data.SetBlockType(p.x, p.y + height, p.z, BlockType.Leaves_Oak);
 
                                         for (int i = 0; i < 4; ++i)
                                         {
-                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 1, p.y + height - i, p.z, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
                                         }
 
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
-                                        if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x + 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x - 1, p.y + height - 1, p.z + 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x + 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
+                                        if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x - 1, p.y + height - 1, p.z - 1, BlockType.Leaves_Oak);
 
                                         for (int i = 2; i < 4; ++i)
                                         {
-                                            SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
 
-                                            SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 2, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 2, p.y + height - i, p.z + 0, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 2, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
 
-                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 0, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 0, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 1, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
 
-                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 0, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 0, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 1, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
 
-                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x + 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
-                                            SetBlockTypePrivate(p.x - 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 1, p.y + height - i, p.z + 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x + 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
+                                            m_Data.SetBlockType(p.x - 1, p.y + height - i, p.z - 1, BlockType.Leaves_Oak);
 
-                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
-                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x + 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
-                                            if (random.Next(0, 2) == 0) SetBlockTypePrivate(p.x - 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x + 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x - 2, p.y + height - i, p.z + 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x + 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
+                                            if (random.Next(0, 2) == 0) m_Data.SetBlockType(p.x - 2, p.y + height - i, p.z - 2, BlockType.Leaves_Oak);
 
                                         }
                                         break;
@@ -456,7 +421,7 @@ namespace Minecraft
 
             if (cave > threshold)
             {
-                m_Blocks[(x << 12) | (y << 4) | z] = (byte)BlockType.Air;
+                m_Data.SetBlockType(x, y, z, BlockType.Air);
                 return true;
             }
             return false;
@@ -473,18 +438,18 @@ namespace Minecraft
 
             if (ore1 > 0.3 && ore2 > 0.4)
             {
-                SetBlockTypePrivate(x, y, z, BlockType.Diorite);
+                m_Data.SetBlockType(x, y, z, BlockType.Diorite);
                 return true;
             }
             if (ore1 < -0.3 && ore2 < -0.4)
             {
-                SetBlockTypePrivate(x, y, z, BlockType.Granite);
+                m_Data.SetBlockType(x, y, z, BlockType.Granite);
                 return true;
             }
 
             if (ore1 > 0.3 && ore2 < -0.4)
             {
-                SetBlockTypePrivate(x, y, z, BlockType.Dirt);
+                m_Data.SetBlockType(x, y, z, BlockType.Dirt);
                 return true;
             }
 
@@ -493,7 +458,7 @@ namespace Minecraft
 
             if (ore1 < -0.3 && ore3 > 0.4)
             {
-                SetBlockTypePrivate(x, y, z, BlockType.Coal);
+                m_Data.SetBlockType(x, y, z, BlockType.Coal);
                 return true;
             }
 
@@ -501,7 +466,7 @@ namespace Minecraft
 
             if (ore4 > 0.6)
             {
-                SetBlockTypePrivate(x, y, z, BlockType.Iron);
+                m_Data.SetBlockType(x, y, z, BlockType.Iron);
                 return true;
             }
 
@@ -511,14 +476,14 @@ namespace Minecraft
 
                 if (ore5 > 0.7)
                 {
-                    SetBlockTypePrivate(x, y, z, BlockType.Gold);
+                    m_Data.SetBlockType(x, y, z, BlockType.Gold);
                     return true;
                 }
                 if (y < 16)
                 {
                     if (ore5 < -0.7)
                     {
-                        SetBlockTypePrivate(x, y, z, BlockType.Diamond);
+                        m_Data.SetBlockType(x, y, z, BlockType.Diamond);
                         return true;
                     }
                 }
@@ -552,7 +517,7 @@ namespace Minecraft
 
                     for (int y = WorldHeight - 1; y >= 0; y--)
                     {
-                        BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
+                        BlockType type = m_Data.GetBlockType(x, y, z);
                         Block block = world.DataManager.GetBlockByType(type);
                         int sectionIndex = Mathf.FloorToInt(y * OverSectionHeight);
 
@@ -563,18 +528,18 @@ namespace Minecraft
 
                         if (block.HasAnyFlag(BlockFlags.NeedsRandomTick))
                         {
-                            m_TickRefCounts[sectionIndex]++;
+                            m_Data.IncreaseTickRefCount(sectionIndex);
                         }
 
                         if (block.VertexType != BlockVertexType.None)
                         {
                             if (block.HasAnyFlag(BlockFlags.Liquid))
                             {
-                                m_LiquidCounts[sectionIndex]++;
+                                m_Data.IncreaseRenderableLiquidCount(sectionIndex);
                             }
                             else
                             {
-                                m_SolidCounts[sectionIndex]++;
+                                m_Data.IncreaseRenderableSolidCount(sectionIndex);
                             }
                         }
 
@@ -584,7 +549,7 @@ namespace Minecraft
                         }
                     }
 
-                    SetHighestNonAirYWithoutLock(x, z, (byte)height);
+                    m_Data.SetTopNonAirIndex(x, z, (byte)height);
                 }
             }
         }
@@ -602,7 +567,7 @@ namespace Minecraft
                 if (k < 0 || k >= SectionCountInChunk)
                     continue;
 
-                if (m_TickRefCounts[k] > 0)
+                if (m_Data.GetTickRefCount(k) > 0)
                 {
                     for (int c = 0; c < 3; c++)
                     {
@@ -611,7 +576,7 @@ namespace Minecraft
                         int j = random.Next(0, SectionHeight);
                         int y = k * SectionHeight + j;
 
-                        BlockType type = GetBlockTypePrivateUnchecked(x, y, z);
+                        BlockType type = m_Data.GetBlockType(x, y, z);
                         mgr.GetBlockByType(type).OnRandomTick(x + PositionX, y, z + PositionZ);
                     }
                 }
@@ -632,15 +597,14 @@ namespace Minecraft
 
         private void UpdateSkyLightData(int localX, int localZ)
         {
-            int height = m_HeightMap[(localX << 4) | localZ];
-            UpdateSkyLightData(localX, localZ, height);
+            UpdateSkyLightData(localX, localZ, m_Data.GetTopNonAirIndex(localX, localZ));
         }
 
         private void UpdateSkyLightData(int localX, int localZ, int topNonAirBlockY)
         {
             for (int y = topNonAirBlockY + 1; y < WorldHeight; y++)
             {
-                m_SkyLights[(localX << 12) | (y << 4) | localZ] = SkyLight;
+                m_Data.SetSkyLight(localX, y, localZ, SkyLight);
             }
 
             int light = SkyLight;
@@ -648,28 +612,46 @@ namespace Minecraft
 
             do
             {
-                BlockType type = GetBlockTypePrivateUnchecked(localX, topNonAirBlockY, localZ);
+                BlockType type = m_Data.GetBlockType(localX, topNonAirBlockY, localZ);
                 Block block = WorldManager.Active.DataManager.GetBlockByType(type);
 
                 light = Mathf.Clamp(light - opacity, 0, MaxNonAirBlockSkyLightValue);
-                m_SkyLights[(localX << 12) | (topNonAirBlockY << 4) | localZ] = (byte)light;
+                m_Data.SetSkyLight(localX, topNonAirBlockY, localZ, (byte)light);
 
                 opacity = block.LightOpacity;
 
             } while (--topNonAirBlockY > -1);
         }
 
-        internal void GetRawBlockData(out byte[] blocks, out byte[] states)
+
+        private void SetDirtyData(ushort dirtySectionIndices, MeshDirtyFlags flags)
         {
-            blocks = m_Blocks;
-            states = m_BlockStates;
+            Interlocked.Exchange(ref m_DirtyData, (dirtySectionIndices << 8) | (int)flags);
+        }
+
+        private void SetMeshDirty(int dirtySectionIndex, MeshDirtyFlags flags)
+        {
+            int data = m_DirtyData;
+
+            ushort indices = (ushort)((data >> 8) & 0xFFFF);
+            indices |= (ushort)(1 << dirtySectionIndex);
+
+            MeshDirtyFlags oldFlags = (MeshDirtyFlags)(data & 0xFF);
+            flags |= oldFlags;
+
+            Interlocked.Exchange(ref m_DirtyData, (indices << 8) | (int)flags);
+        }
+
+        public void GetRawData(out byte[] blocks, out byte[] states)
+        {
+            m_Data.GetRawBlockData(out blocks, out states);
         }
 
         public void OnSaved()
         {
             this.Log("Saved!");
 
-            IsModified = false;
+            m_IsModified = false;
         }
 
 

@@ -74,11 +74,14 @@
     <Compile Include="Assets\Scripts\BlocksData\BlockEventAction.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockFlags.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockType.cs" />
-    <Compile Include="Assets\Scripts\BlocksData\BlockVertexHelper.cs" />
     <Compile Include="Assets\Scripts\BlocksData\BlockVertexType.cs" />
+    <Compile Include="Assets\Scripts\Buffers\ChunkMeshDataBuffer.cs" />
+    <Compile Include="Assets\Scripts\Buffers\MeshDataBuffer.cs" />
+    <Compile Include="Assets\Scripts\Buffers\MeshDataBufferUtility.cs" />
     <Compile Include="Assets\Scripts\Chunk\Chunk.API.cs" />
     <Compile Include="Assets\Scripts\Chunk\Chunk.Rendering.cs" />
     <Compile Include="Assets\Scripts\Chunk\Chunk.cs" />
+    <Compile Include="Assets\Scripts\Chunk\ChunkData.cs" />
     <Compile Include="Assets\Scripts\Chunk\ChunkLoader.cs" />
     <Compile Include="Assets\Scripts\Chunk\ChunkManager.cs" />
     <Compile Include="Assets\Scripts\Chunk\ExposedMaterialProperties.cs" />

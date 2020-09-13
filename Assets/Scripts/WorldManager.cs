@@ -27,6 +27,12 @@ namespace Minecraft
         private Quaternion m_PlayerBodyRotationRecorded;
         private Quaternion m_PlayerCameraRotationRecorded;
 
+#if UNITY_EDITOR
+        private int m_Fps = 60;
+        private int m_FramesAccumulated = 0;
+        private float m_TimeAccumulated = 0;
+#endif
+
 
         public bool Initialized { get; private set; }
 
@@ -40,14 +46,18 @@ namespace Minecraft
 
         public EntityManager EntityManager { get; private set; }
 
+        public SynchronizationContext SyncContext { get; private set; }
+
         public Camera MainCamera => m_MainCamera;
 
         public InventoryManager InventoryManager => m_InventoryManager;
 
 
+
         private IEnumerator Start()
         {
             MinecraftSynchronizationContext.InitializeSynchronizationContext();
+            SyncContext = SynchronizationContext.Current;
 
             WorldSettings settings = WorldSettings.Active;
             DataManager = new DataManager(settings.ResourcePackageName);
@@ -79,6 +89,18 @@ namespace Minecraft
             m_PlayerPositionRecorded = m_PlayerTransform.localPosition;
             m_PlayerBodyRotationRecorded = m_PlayerTransform.localRotation;
             m_PlayerCameraRotationRecorded = m_CameraTransform.localRotation;
+
+#if UNITY_EDITOR
+            m_FramesAccumulated++;
+            m_TimeAccumulated += Time.deltaTime;
+
+            if (m_TimeAccumulated >= 1)
+            {
+                m_Fps = m_FramesAccumulated;
+                m_FramesAccumulated = 0;
+                m_TimeAccumulated = 0;
+            }
+#endif
         }
 
         private void LateUpdate()
@@ -124,12 +146,21 @@ namespace Minecraft
             //ScreenCapture.CaptureScreenshot(WorldSettingsSavingPath + "/" + Settings.Name + "/Thumbnail.png");
         }
 
+
+#if UNITY_EDITOR
+        private void OnGUI()
+        {
+            GUI.Label(new Rect(0, 0, 500, 300), m_Fps.ToString(), UnityEditor.EditorStyles.whiteLargeLabel);
+        }
+#endif
+
+
         private void Initialize(WorldSettings settings)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
             WorldSettingsSavingPath = Application.persistentDataPath + "/Worlds";
 
-            string chunkSavingDirectory = WorldSettingsSavingPath + $"/{settings.Name}/Chunks"; 
+            string chunkSavingDirectory = WorldSettingsSavingPath + $"/{settings.Name}/Chunks";
             ChunkManager = new ChunkManager(settings, MainCamera, m_PlayerTransform, chunkSavingDirectory, DataManager.ChunkMaterial, DataManager.LiquidMaterial);
             EntityManager = new EntityManager(DataManager.BlockEntityMaterial, m_Player);
 
@@ -144,7 +175,7 @@ namespace Minecraft
                 if (Settings.Position.y < 0 || Settings.Position.y >= WorldConsts.WorldHeight)
                 {
                     Chunk chunk = ChunkManager.GetChunkByNormalizedPosition(0, 0);
-                    m_PlayerTransform.position = new Vector3(0, chunk.GetHighestNonAirY(0, 0) + 5, 0);
+                    m_PlayerTransform.position = new Vector3(0, chunk.GetTopNonAirIndex(0, 0) + 5, 0);
                 }
 
                 m_Player.enabled = true;

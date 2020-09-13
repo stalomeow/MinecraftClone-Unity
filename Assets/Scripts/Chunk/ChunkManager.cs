@@ -53,7 +53,6 @@ namespace Minecraft
         private readonly Thread m_BuildAndUnloadChunksThread; // 构建/销毁 chunks
 
         private readonly HashSet<Vector2Int> m_ChunksToRender; // 主线程遍历，渲染，update线程添加
-        private readonly object m_ChunksToRenderHashSetLock;
 
         private readonly Thread m_UpdateChunksThread; // 计算需要加载/更新/渲染的chunks队列
 
@@ -83,8 +82,8 @@ namespace Minecraft
         private readonly Camera m_MainCamera;
         private readonly Transform m_PlayerTransform;
 
-        private bool m_IsStartUp;
-        private bool m_Disposed;
+        private volatile bool m_IsStartUp;
+        private volatile bool m_Disposed;
 
         public event Action OnChunksReadyWhenStartingUp;
 
@@ -96,7 +95,7 @@ namespace Minecraft
         {
             get
             {
-                lock (m_ChunksToRenderHashSetLock)
+                lock (m_ChunksToRender)
                 {
                     return m_ChunksToRender.Count;
                 }
@@ -116,7 +115,6 @@ namespace Minecraft
             m_BuildAndUnloadChunksThread = new Thread(BuildAndUnloadChunksThreadMethod) { IsBackground = true };
 
             m_ChunksToRender = new HashSet<Vector2Int>(m_ChunkPositionComparer);
-            m_ChunksToRenderHashSetLock = new object();
 
             m_UpdateChunksThread = new Thread(UpdateChunksThreadMethod) { IsBackground = true };
 
@@ -195,8 +193,6 @@ namespace Minecraft
             if (!m_Disposed)
             {
                 m_Disposed = true;
-                //m_UpdateChunksThread.Abort();
-                //m_BuildAndUnloadChunksThread.Abort();
 
                 // 保存chunks
                 Parallel.ForEach(m_Chunks.Values, chunk => m_ChunkLoader.SaveChunk(chunk));
@@ -333,7 +329,7 @@ namespace Minecraft
 
             bool flag = true;
 
-            lock (m_ChunksToRenderHashSetLock)
+            lock (m_ChunksToRender)
             {
                 HashSet<Vector2Int>.Enumerator iterator = m_ChunksToRender.GetEnumerator();
 
@@ -344,17 +340,14 @@ namespace Minecraft
                     if (!m_Chunks.TryGetValue(chunkPos, out Chunk chunk)) // 未加载完成
                         continue;
 
-                    if (chunk.ShouldUpdateMesh)
+                    if (chunk.ShouldUpdateMesh && !chunk.IsBuildingMesh)
                     {
-                        chunk.BuildMeshAsync();
+                        chunk.TryBuildingMeshAsync();
                     }
 
                     flag &= !chunk.IsBuildingMesh;
 
-                    if (chunk.HasBuildedSolidMesh)
-                    { 
-                        chunk.RenderChunk(m_SharedSolidMaterial, m_SharedLiquidMaterial, m_MainCamera, solidProperty, liquidProperty);
-                    }
+                    chunk.RenderChunk(m_SharedSolidMaterial, m_SharedLiquidMaterial, m_MainCamera, solidProperty, liquidProperty);
                 }
 
                 iterator.Dispose();
@@ -378,17 +371,17 @@ namespace Minecraft
             Vector2Int lastChunkPos = Chunk.NormalizeToChunkPosition(m_PlayerPositionX, m_PlayerPositionZ);
             Vector2Int chunkPos = Chunk.NormalizeToChunkPosition(pos.x, pos.z);
 
-            m_PlayerPositionY = pos.y;
+            Interlocked.Exchange(ref m_PlayerPositionY, pos.y);
 
             if (lastChunkPos != chunkPos || forward.x != m_PlayerForwardX || forward.z != m_PlayerForwardZ)
             {
-                m_PlayerPositionX = pos.x;
-                m_PlayerPositionZ = pos.z;
+                Interlocked.Exchange(ref m_PlayerPositionX, pos.x);
+                Interlocked.Exchange(ref m_PlayerPositionZ, pos.z);
 
-                m_PlayerForwardX = forward.x;
-                m_PlayerForwardZ = forward.z;
+                Interlocked.Exchange(ref m_PlayerForwardX, forward.x);
+                Interlocked.Exchange(ref m_PlayerForwardZ, forward.z);
 
-                m_ChunksUpdatingRequired = true; // 最后赋值
+                m_ChunksUpdatingRequired = true;
             }
         }
 
@@ -452,7 +445,7 @@ namespace Minecraft
 
                         inRangeChunks.Add(chunkPos);
 
-                        lock (m_ChunksToRenderHashSetLock)
+                        lock (m_ChunksToRender)
                         {
                             if (m_ChunksToRender.Contains(chunkPos)) // 已经在渲染队列
                                 continue;
@@ -478,7 +471,7 @@ namespace Minecraft
                     }
                 }
                 
-                lock (m_ChunksToRenderHashSetLock)
+                lock (m_ChunksToRender)
                 {
                     m_ChunksToRender.IntersectWith(inRangeChunks);
                 }
@@ -487,7 +480,7 @@ namespace Minecraft
                 {
                     Vector2Int chunk = updateChunkQueue.Dequeue().ChunkPosition;
 
-                    lock (m_ChunksToRenderHashSetLock)
+                    lock (m_ChunksToRender)
                     {
                         m_ChunksToRender.Add(chunk);
                     }
@@ -505,7 +498,7 @@ namespace Minecraft
                     Parallel.ForEach(m_Chunks, pair =>
                     {
                         Vector2 playerPos = new Vector2(m_PlayerPositionX, m_PlayerPositionZ);
-                        pair.Value.ShouldWaitForNeighborChunksLoaded();
+                        pair.Value.MarkAsStartUp();
 
                         if ((pair.Key - playerPos).sqrMagnitude > 4 * m_SqrRenderRadius)
                         {
@@ -529,11 +522,7 @@ namespace Minecraft
 
                 if (m_ChunksToUnload.TryDequeue(out Vector2Int chunkPos) && m_Chunks.TryRemove(chunkPos, out Chunk chunk))
                 {
-                    if (chunk.IsModified)
-                    {
-                        m_ChunkLoader.SaveChunk(chunk, false);
-                    }
-
+                    m_ChunkLoader.SaveChunk(chunk);
                     chunkPool.Free(chunk);
                 }
 
@@ -551,24 +540,19 @@ namespace Minecraft
 
                 chunk = chunkPool.Allocate();
                 m_ChunkLoader.LoadChunk(chunk, chunkPos.x, chunkPos.y);
-                while (!m_Chunks.TryAdd(chunkPos, chunk)) ;
+                while (!m_Chunks.TryAdd(chunkPos, chunk) && !m_Chunks.ContainsKey(chunkPos)) { }
             }
         }
 
-        public Task WaitForAllNeighborChunksLoaded(Chunk chunk)
+        public void WaitForAllNeighborChunksLoaded(Chunk chunk)
         {
-            return Task.Factory.StartNew(c =>
-            {
-                Chunk ch = c as Chunk;
+            int x = chunk.PositionX;
+            int z = chunk.PositionZ;
 
-                int x = ch.PositionX;
-                int z = ch.PositionZ;
-
-                WaitForChunkLoaded(new Vector2Int(x + ChunkWidth, z));
-                WaitForChunkLoaded(new Vector2Int(x - ChunkWidth, z));
-                WaitForChunkLoaded(new Vector2Int(x, z + ChunkWidth));
-                WaitForChunkLoaded(new Vector2Int(x, z - ChunkWidth));
-            }, chunk);
+            WaitForChunkLoaded(new Vector2Int(x + ChunkWidth, z));
+            WaitForChunkLoaded(new Vector2Int(x - ChunkWidth, z));
+            WaitForChunkLoaded(new Vector2Int(x, z + ChunkWidth));
+            WaitForChunkLoaded(new Vector2Int(x, z - ChunkWidth));
         }
 
         private void WaitForChunkLoaded(Vector2Int pos)
