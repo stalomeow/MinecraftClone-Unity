@@ -45,7 +45,7 @@ namespace Minecraft.AssetManagement
                     return;
                 }
 
-                AssetBundleBuilder.Build(m_OutputPath + "/" + m_Name, m_BuildTarget, m_Icon);
+                //AssetBundleBuilder.Build(m_OutputPath + "/" + m_Name, m_BuildTarget, m_Icon);
             }
         }
     }

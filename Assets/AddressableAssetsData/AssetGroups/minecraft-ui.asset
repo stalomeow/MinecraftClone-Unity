@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: minecraft-ui
+  m_EditorClassIdentifier: 
+  m_GroupName: minecraft-ui
+  m_Data:
+    m_SerializedData: []
+  m_GUID: f03d22f07ae39984a8af88b4eab2c8da
+  m_SerializeEntries:
+  - m_GUID: 344c5fe2abeb90745acaf5438b2bd861
+    m_Address: New World Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 56295b994bbe2c14b8e023a612260914
+    m_Address: Select World Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5a6cb8db03159c54093e3c261f1e6e5f
+    m_Address: Loading Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 7389430358912361682, guid: 5a6cb8db03159c54093e3c261f1e6e5f,
+      type: 3}
+    m_TargetAsset: {fileID: 7389430358912361682, guid: 5a6cb8db03159c54093e3c261f1e6e5f,
+      type: 3}
+  - m_GUID: 70af0a7a7c2904049859e1b4a94a6d65
+    m_Address: Settings Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c9da56c23b59ec143ba39d3d70a3a921
+    m_Address: Main Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c9e66379ff309ca49a7007bbbe176207, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6a6bfbd58cac49e4e81db79fde943ce5, type: 2}
+    - {fileID: 11400000, guid: facd98f4f3d5b744794b4cc01e1bc880, type: 2}

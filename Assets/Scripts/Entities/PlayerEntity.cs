@@ -1,13 +1,13 @@
-﻿using Minecraft.BlocksData;
-using Minecraft.ItemsData;
-using System;
+﻿using System;
+using Minecraft.XPhysics;
+using Minecraft.Rendering;
 using System.Collections;
 using UnityEngine;
 using static Minecraft.WorldConsts;
 
 #pragma warning disable CS0649
 
-namespace Minecraft
+namespace Minecraft.Entities
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(AudioSource))]
@@ -63,7 +63,7 @@ namespace Minecraft
         private MeshRenderer m_DestroyBlockObjRenderer;
         private MaterialPropertyBlock m_DestroyBlockObjProperty;
 
-        private WorldManager m_Manager;
+        private World m_World;
 
         private Vector3 m_OriginalCameraPosition;
         private bool m_IsWalking;
@@ -79,8 +79,8 @@ namespace Minecraft
 
         private bool m_IsInWater;
         private Vector3 m_Velocity = Vector3.zero;
-        private BlockType m_LastBlockAtHead = BlockType.Air;
-        private BlockType m_LastBlockAtFeet = BlockType.Air;
+        private byte m_LastBlockAtHead = Block.AirId;
+        private byte m_LastBlockAtFeet = Block.AirId;
         private bool m_IsDigging;
         private Vector3Int m_ClickedPos = Vector3Int.down;
         private float m_ClickTime = 0;
@@ -127,7 +127,7 @@ namespace Minecraft
             m_MouseLook.Init(m_Transform, m_CameraTransform);
             m_HeadBob.Setup(m_CameraTransform, m_StepInterval);
 
-            m_Manager = WorldManager.Active;
+            m_World = World.Active;
 
             m_OriginalCameraPosition = m_CameraTransform.localPosition;
             m_StepCycle = 0f;
@@ -201,12 +201,12 @@ namespace Minecraft
 
                     if (m_Jump)
                     {
-                        m_MoveDir += Physics.gravity * m_GravityMultiplierWhenJumpingInWater * Time.fixedDeltaTime;
+                        m_MoveDir += UnityEngine.Physics.gravity * m_GravityMultiplierWhenJumpingInWater * Time.fixedDeltaTime;
                         m_Jump = false;
                     }
                     else if (!isGrounded)
                     {
-                        m_MoveDir += Physics.gravity * m_GravityMultiplierWhenStayingInWater * Time.fixedDeltaTime;
+                        m_MoveDir += UnityEngine.Physics.gravity * m_GravityMultiplierWhenStayingInWater * Time.fixedDeltaTime;
                     }
                 }
                 else if (isGrounded)
@@ -223,7 +223,7 @@ namespace Minecraft
                 }
                 else
                 {
-                    m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+                    m_MoveDir += UnityEngine.Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
                 }
 
                 Move(m_MoveDir * Time.fixedDeltaTime, Time.fixedDeltaTime);
@@ -238,59 +238,60 @@ namespace Minecraft
         {
             if (!m_IsDigging && Input.GetMouseButton(0))
             {
-                if (RaycastBlock(false, out Vector3Int hit, out _, b => b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast)))
+                Ray ray = m_Camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+                if (XPhysics.Physics.RaycastBlock(ray, 8, m_World, b => (!b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast) && !b.IsFluid), out BlockRaycastHit hit))
                 {
-                    Block block = m_Manager.GetBlock(hit.x, hit.y, hit.z);
-                    StartCoroutine(DigBlock(block, hit, false));
+                    Block block = m_World.GetBlock(hit.Position.x, hit.Position.y, hit.Position.z);
+                    StartCoroutine(DigBlock(block, hit.Position, false));
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        m_ClickedPos = hit;
+                        m_ClickedPos = hit.Position;
                         m_ClickTime = Time.time;
                     }
                 }
             }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                Item item = WorldManager.Active.GetCurrentItem();
+            //else if (Input.GetMouseButtonDown(1))
+            //{
+            //    //Item item = WorldManager.Active.GetCurrentItem();
 
-                if (item.MappedBlockType != BlockType.Air)
-                {
-                    if (RaycastBlock(false, out Vector3Int hit, out Vector3Int normal, b => b.HasAnyFlag(BlockFlags.IgnorePlaceBlockRaycast)))
-                    {
-                        Vector3Int pos = hit + normal;
+            //    //if (item.MappedBlockType != BlockType.Air)
+            //    {
+            //        if (RaycastBlock(false, out Vector3Int hit, out Vector3Int normal, b => b.HasAnyFlag(BlockFlags.IgnorePlaceBlockRaycast)))
+            //        {
+            //            Vector3Int pos = hit + normal;
 
-                        Vector3 min = new Vector3(pos.x + 0.01f, pos.y + 0.01f, pos.z + 0.01f);
-                        Vector3 max = new Vector3(pos.x - 0.01f + 1, pos.y - 0.01f + 1, pos.z - 0.01f + 1);
-                        AABB blockAABB = new AABB(min, max);
+            //            Vector3 min = new Vector3(pos.x + 0.01f, pos.y + 0.01f, pos.z + 0.01f);
+            //            Vector3 max = new Vector3(pos.x - 0.01f + 1, pos.y - 0.01f + 1, pos.z - 0.01f + 1);
+            //            AABB blockAABB = new AABB(min, max);
 
-                        if (!BoundingBox.Intersects(blockAABB))
-                        {
-                            m_Manager.SetBlockType(pos.x, pos.y, pos.z, item.MappedBlockType);
+            //            if (!BoundingBox.Intersects(blockAABB))
+            //            {
+            //                m_World.SetBlockType(pos.x, pos.y, pos.z, item.MappedBlockType);
 
-                            Block block = m_Manager.DataManager.GetBlockByType(item.MappedBlockType);
-                            block.OnBlockPlace(pos.x, pos.y, pos.z);
-                            block.PlayPlaceAudio(m_AudioSource);
-                        }
-                    }
-                }
-            }
+            //                Block block = m_World.AssetManager.GetBlockByType(item.MappedBlockType);
+            //                block.OnBlockPlace(pos.x, pos.y, pos.z);
+            //                block.PlayPlaceAudio(m_AudioSource);
+            //            }
+            //        }
+            //    }
+            //}
 
-            if (Input.GetMouseButtonUp(0))
-            {
-                if (RaycastBlock(false, out Vector3Int hit, out _, b => b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast)))
-                {
-                    Block block = m_Manager.GetBlock(hit.x, hit.y, hit.z);
+            //if (Input.GetMouseButtonUp(0))
+            //{
+            //    if (RaycastBlock(false, out Vector3Int hit, out _, b => b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast)))
+            //    {
+            //        Block block = m_World.GetBlock(hit.x, hit.y, hit.z);
 
-                    if ((hit == m_ClickedPos) && (Time.time - m_ClickTime < 1))
-                    {
-                        block.OnClick(hit.x, hit.y, hit.z);
-                    }
+            //        if ((hit == m_ClickedPos) && (Time.time - m_ClickTime < 1))
+            //        {
+            //            block.OnClick(hit.x, hit.y, hit.z);
+            //        }
 
-                    m_ClickedPos = Vector3Int.down;
-                    m_ClickTime = 0;
-                }
-            }
+            //        m_ClickedPos = Vector3Int.down;
+            //        m_ClickTime = 0;
+            //    }
+            //}
         }
 
         private IEnumerator DigBlock(Block block, Vector3Int firstHitPos, bool raycastLiquid)
@@ -307,14 +308,19 @@ namespace Minecraft
             {
                 if (Input.GetMouseButton(0))
                 {
-                    if (RaycastBlock(raycastLiquid, out Vector3Int hit, out _, b => b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast)) && hit == firstHitPos)
+                    Ray ray = m_Camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+
+                    if (XPhysics.Physics.RaycastBlock(ray, 8, m_World, b => (!b.HasAnyFlag(BlockFlags.IgnoreDestroyBlockRaycast) && !b.IsFluid), out BlockRaycastHit hit))
                     {
-                        damage += Time.deltaTime * 5;
+                        if (hit.Position == firstHitPos)
+                        {
+                            damage += Time.deltaTime * 5;
 
-                        SetDigProgress(block.VertexType == BlockVertexType.Cube ? (damage / hardness) : 0);
+                            SetDigProgress(block.MeshWriter is CubeMeshWriter ? (damage / hardness) : 0);
 
-                        yield return null;
-                        continue;
+                            yield return null;
+                            continue;
+                        }
                     }
                 }
 
@@ -323,9 +329,9 @@ namespace Minecraft
                 yield break;
             }
 
-            m_Manager.SetBlockType(firstHitPos.x, firstHitPos.y, firstHitPos.z, BlockType.Air);
-            block.OnBlockDestroy(firstHitPos.x, firstHitPos.y, firstHitPos.z);
-            block.PlayDigAudio(m_AudioSource);
+            m_World.SetBlock(firstHitPos.x, firstHitPos.y, firstHitPos.z, Block.AirId);
+            //block.Logics.OnBlockDestroy(firstHitPos.x, firstHitPos.y, firstHitPos.z);
+            //block.PlayDigAudio(m_AudioSource);
 
             if (GlobalSettings.Instance.EnableDestroyEffect)
             {
@@ -344,175 +350,9 @@ namespace Minecraft
             m_DestroyBlockObjRenderer.SetPropertyBlock(m_DestroyBlockObjProperty);
         }
 
-        /// <summary>
-        /// 从屏幕中心发出射线检测方块，(start, end]
-        /// </summary>
-        /// <param name="raycastLiquid"></param>
-        /// <param name="hit">击中的方块的坐标</param>
-        /// <param name="hitNormal">法线</param>
-        /// <param name="ignoreBlock"></param>
-        /// <returns></returns>
-        /// <remarks>https://blog.csdn.net/xfgryujk/article/details/52948543</remarks>
-        private bool RaycastBlock(bool raycastLiquid, out Vector3Int hit, out Vector3Int hitNormal, Func<Block, bool> ignoreBlock)
-        {
-            Ray ray = m_Camera.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f));
-
-            Vector3 start = ray.origin;
-            Vector3 end = ray.origin + ray.direction * m_BlockRaycastDistance;
-
-            return RaycastBlock(start, end, raycastLiquid, out hit, out hitNormal, ignoreBlock);
-        }
-
-        private bool RaycastBlock(Vector3 start, Vector3 end, bool raycastLiquid, out Vector3Int hit, out Vector3Int hitNormal, Func<Block, bool> ignoreBlock)
-        {
-            int startX = Mathf.FloorToInt(start.x);
-            int startY = Mathf.FloorToInt(start.y);
-            int startZ = Mathf.FloorToInt(start.z);
-
-            int endX = Mathf.FloorToInt(end.x);
-            int endY = Mathf.FloorToInt(end.y);
-            int endZ = Mathf.FloorToInt(end.z);
-
-            int count = 200; // 上限200个方块，防止死循环
-
-            while ((startX != endX || startY != endY || startZ != endZ) && (count-- > 0))
-            {
-                float newX = startX;
-                float newY = startY;
-                float newZ = startZ;
-
-                if (endX > startX)
-                {
-                    newX += 1;
-                }
-
-                if (endY > startY)
-                {
-                    newY += 1;
-                }
-
-                if (endZ > startZ)
-                {
-                    newZ += 1;
-                }
-
-                float xt = float.PositiveInfinity;
-                float yt = float.PositiveInfinity;
-                float zt = float.PositiveInfinity;
-
-                float dx = end.x - start.x;
-                float dy = end.y - start.y;
-                float dz = end.z - start.z;
-
-                // 向X方向选了候选方块
-                if (endX != startX)
-                {
-                    xt = (newX - start.x) / dx;
-                }
-
-                if (endY != startY)
-                {
-                    yt = (newY - start.y) / dy;
-                }
-
-                if (endZ != startZ)
-                {
-                    zt = (newZ - start.z) / dz;
-                }
-
-                // 最终选了哪个方向的候选方块
-                Direction direction;
-
-                // 选出候选方块中离起点(当前)最近的，更新起点、要检测的方块坐标
-                if (xt < yt && xt < zt)
-                {
-                    start.x = newX;
-                    start.y += dy * xt;
-                    start.z += dz * xt;
-
-                    direction = endX > startX ? Direction.PositiveX : Direction.NegativeX;
-                }
-                else if (yt < zt)
-                {
-                    start.x += dx * yt;
-                    start.y = newY;
-                    start.z += dz * yt;
-
-                    direction = endY > startY ? Direction.PositiveY : Direction.NegativeY;
-                }
-                else
-                {
-                    start.x += dx * zt;
-                    start.y += dy * zt;
-                    start.z = newZ;
-
-                    direction = endZ > startZ ? Direction.PositiveZ : Direction.NegativeZ;
-                }
-
-                startX = Mathf.FloorToInt(start.x);
-                startY = Mathf.FloorToInt(start.y);
-                startZ = Mathf.FloorToInt(start.z);
-
-                if (direction == Direction.NegativeX)
-                {
-                    startX--; // 以方块内各轴最小坐标为方块坐标，这里得到的是X上最大坐标所以要-1
-                }
-
-                if (direction == Direction.NegativeY)
-                {
-                    startY--;
-                }
-
-                if (direction == Direction.NegativeZ)
-                {
-                    startZ--;
-                }
-
-                // 检测新起点方块
-                Block block = m_Manager.GetBlock(startX, startY, startZ);
-
-                if ((!raycastLiquid && block.HasAnyFlag(BlockFlags.Liquid)) || ignoreBlock(block))
-                    continue;
-
-                hit = new Vector3Int(startX, startY, startZ);
-
-                switch (direction)
-                {
-                    case Direction.PositiveX:
-                        hitNormal = new Vector3Int(-1, 0, 0);
-                        break;
-                    case Direction.NegativeX:
-                        hitNormal = new Vector3Int(1, 0, 0);
-                        break;
-                    case Direction.PositiveY:
-                        hitNormal = new Vector3Int(0, -1, 0);
-                        break;
-                    case Direction.NegativeY:
-                        hitNormal = new Vector3Int(0, 1, 0);
-                        break;
-                    case Direction.PositiveZ:
-                        hitNormal = new Vector3Int(0, 0, -1);
-                        break;
-                    case Direction.NegativeZ:
-                        hitNormal = new Vector3Int(0, 0, 1);
-                        break;
-                    default:
-                        hitNormal = default;
-                        break;
-                }
-
-                return true;
-            }
-
-            hit = default;
-            hitNormal = default;
-            return false;
-        }
-
         private bool CheckIsGrounded(out Block blockUnderFeet)
         {
             AABB aabb = BoundingBox;
-            WorldManager world = WorldManager.Active;
 
             int y = Mathf.FloorToInt(aabb.Min.y) - 1;
 
@@ -531,11 +371,16 @@ namespace Minecraft
             {
                 for (int z = startZ; z <= endZ; z++)
                 {
-                    blockUnderFeet = world.GetBlock(x, y, z);
+                    blockUnderFeet = m_World.GetBlock(x, y, z);
+
+                    if (blockUnderFeet == null)
+                    {
+                        continue;
+                    }
 
                     if (!blockUnderFeet.HasAllFlags(BlockFlags.IgnoreCollisions))
                     {
-                        AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                        AABB blockAABB = blockUnderFeet.GetBoundingBox(x, y, z);
 
                         if (aabb.Intersects(blockAABB))
                         {
@@ -551,68 +396,67 @@ namespace Minecraft
 
         private void CheckIsInWater()
         {
-            AABB aabb = BoundingBox;
-            Vector3 center = aabb.Center;
-            WorldManager world = WorldManager.Active;
+            //AABB aabb = BoundingBox;
+            //Vector3 center = aabb.Center;
 
-            int x = Mathf.FloorToInt(center.x);
-            int z = Mathf.FloorToInt(center.z);
-            int y1 = Mathf.FloorToInt(aabb.Min.y);
+            //int x = Mathf.FloorToInt(center.x);
+            //int z = Mathf.FloorToInt(center.z);
+            //int y1 = Mathf.FloorToInt(aabb.Min.y);
 
-            bool result = false;
+            //bool result = false;
 
-            if (y1 > -1 || y1 < WorldHeight)
-            {
-                BlockType type = world.GetBlockType(x, y1, z);
-                result |= (type == BlockType.Water);
+            //if (y1 > -1 || y1 < WorldHeight)
+            //{
+            //    BlockType type = world.GetBlockType(x, y1, z);
+            //    result |= (type == BlockType.Water);
 
-                if (m_LastBlockAtFeet != BlockType.Water && type == BlockType.Water)
-                {
-                    OnEnterWater();
-                }
-                else if (m_LastBlockAtFeet == BlockType.Water && type != BlockType.Water)
-                {
-                    OnExitWater();
-                }
+            //    if (m_LastBlockAtFeet != BlockType.Water && type == BlockType.Water)
+            //    {
+            //        OnEnterWater();
+            //    }
+            //    else if (m_LastBlockAtFeet == BlockType.Water && type != BlockType.Water)
+            //    {
+            //        OnExitWater();
+            //    }
 
-                m_LastBlockAtFeet = type;
-            }
+            //    m_LastBlockAtFeet = type;
+            //}
 
-            int y2 = Mathf.FloorToInt(center.y + 0.5f);
+            //int y2 = Mathf.FloorToInt(center.y + 0.5f);
 
-            if (y2 > -1 || y2 < WorldHeight)
-            {
-                BlockType type = world.GetBlockType(x, y2, z);
+            //if (y2 > -1 || y2 < WorldHeight)
+            //{
+            //    BlockType type = world.GetBlockType(x, y2, z);
 
-                result |= (type == BlockType.Water);
+            //    result |= (type == BlockType.Water);
 
-                if (m_LastBlockAtHead != BlockType.Water && type == BlockType.Water)
-                {
-                    OnHeadEnterWater();
-                }
-                else if (m_LastBlockAtHead == BlockType.Water && type != BlockType.Water)
-                {
-                    OnHeadExitWater();
-                }
+            //    if (m_LastBlockAtHead != BlockType.Water && type == BlockType.Water)
+            //    {
+            //        OnHeadEnterWater();
+            //    }
+            //    else if (m_LastBlockAtHead == BlockType.Water && type != BlockType.Water)
+            //    {
+            //        OnHeadExitWater();
+            //    }
 
-                m_LastBlockAtHead = type;
-            }
+            //    m_LastBlockAtHead = type;
+            //}
 
-            m_IsInWater = result;
+            //m_IsInWater = result;
         }
 
         private void OnHeadEnterWater()
         {
             m_UseHeadBob = false;
-            m_Manager.ChunkManager.MaterialProperties.SetRenderRadius(m_ViewDistanceUnderWater);
-            m_Manager.ChunkManager.MaterialProperties.SetAmbientColor(m_WaterAmbientColor);
+            //m_World.ChunkManager.MaterialProperties.RenderRadius = m_ViewDistanceUnderWater;
+            //m_World.ChunkManager.MaterialProperties.AmbientColor = m_WaterAmbientColor;
         }
 
         private void OnHeadExitWater()
         {
             m_UseHeadBob = true;
-            m_Manager.ChunkManager.MaterialProperties.SetRenderRadius(GlobalSettings.Instance.RenderRadius);
-            m_Manager.ChunkManager.MaterialProperties.SetAmbientColor(GlobalSettings.Instance.DefaultAmbientColor);
+            //m_World.ChunkManager.MaterialProperties.RenderRadius = GlobalSettings.Instance.RenderRadius;
+            //m_World.ChunkManager.MaterialProperties.AmbientColor = GlobalSettings.Instance.DefaultAmbientColor;
         }
 
         private void OnEnterWater()
@@ -620,7 +464,7 @@ namespace Minecraft
             if (m_AudioSource.isPlaying)
                 return;
 
-            m_Manager.DataManager.GetBlockByType(BlockType.Water).PlayPlaceAudio(m_AudioSource);
+            //m_World.AssetManager.GetBlockByType(BlockType.Water).PlayPlaceAudio(m_AudioSource);
         }
 
         private void OnExitWater()
@@ -628,7 +472,7 @@ namespace Minecraft
             if (m_AudioSource.isPlaying)
                 return;
 
-            m_Manager.DataManager.GetBlockByType(BlockType.Water).PlayDigAudio(m_AudioSource);
+            //m_World.AssetManager.GetBlockByType(BlockType.Water).PlayDigAudio(m_AudioSource);
         }
 
 
@@ -644,8 +488,6 @@ namespace Minecraft
 
         private void CheckCollisions(AABB aabb, ref float moveX, ref float moveY, ref float moveZ)
         {
-            WorldManager world = WorldManager.Active;
-
             if (moveY > 0)
             {
                 int startX = Mathf.FloorToInt(aabb.Min.x);
@@ -661,11 +503,11 @@ namespace Minecraft
                     {
                         for (int y = startY; y <= endY; y++)
                         {
-                            Block block = world.GetBlock(x, y, z);
+                            Block block = m_World.GetBlock(x, y, z);
 
                             if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
                             {
-                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                                AABB blockAABB = block.GetBoundingBox(x, y, z);
                                 moveY = Mathf.Min(moveY, aabb.Intersects(blockAABB) ? 0 : (blockAABB.Min.y - aabb.Max.y));
                                 break;
                             }
@@ -688,11 +530,11 @@ namespace Minecraft
                     {
                         for (int y = startY; y >= endY; y--)
                         {
-                            Block block = world.GetBlock(x, y, z);
+                            Block block = m_World.GetBlock(x, y, z);
 
                             if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
                             {
-                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                                AABB blockAABB = block.GetBoundingBox(x, y, z);
                                 moveY = Mathf.Max(moveY, aabb.Intersects(blockAABB) ? 0 : (blockAABB.Max.y - aabb.Min.y));
                                 break;
                             }
@@ -718,11 +560,11 @@ namespace Minecraft
                     {
                         for (int x = startX; x <= endX; x++)
                         {
-                            Block block = world.GetBlock(x, y, z);
+                            Block block = m_World.GetBlock(x, y, z);
 
                             if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
                             {
-                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                                AABB blockAABB = block.GetBoundingBox(x, y, z);
                                 moveX = Mathf.Min(moveX, aabb.Intersects(blockAABB) ? 0 : (blockAABB.Min.x - aabb.Max.x));
                                 break;
                             }
@@ -745,11 +587,11 @@ namespace Minecraft
                     {
                         for (int x = startX; x >= endX; x--)
                         {
-                            Block block = world.GetBlock(x, y, z);
+                            Block block = m_World.GetBlock(x, y, z);
 
                             if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
                             {
-                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                                AABB blockAABB = block.GetBoundingBox(x, y, z);
                                 moveX = Mathf.Max(moveX, aabb.Intersects(blockAABB) ? 0 : (blockAABB.Max.x - aabb.Min.x));
                                 break;
                             }
@@ -775,11 +617,11 @@ namespace Minecraft
                     {
                         for (int z = startZ; z <= endZ; z++)
                         {
-                            Block block = world.GetBlock(x, y, z);
+                            Block block = m_World.GetBlock(x, y, z);
 
                             if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
                             {
-                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                                AABB blockAABB = block.GetBoundingBox(x, y, z);
                                 moveZ = Mathf.Min(moveZ, aabb.Intersects(blockAABB) ? 0 : (blockAABB.Min.z - aabb.Max.z));
                                 break;
                             }
@@ -802,11 +644,11 @@ namespace Minecraft
                     {
                         for (int z = startZ; z >= endZ; z--)
                         {
-                            Block block = world.GetBlock(x, y, z);
+                            Block block = m_World.GetBlock(x, y, z);
 
                             if (!block.HasAllFlags(BlockFlags.IgnoreCollisions))
                             {
-                                AABB blockAABB = AABB.CreateBlockAABB(x, y, z);
+                                AABB blockAABB = block.GetBoundingBox(x, y, z);
                                 moveZ = Mathf.Max(moveZ, aabb.Intersects(blockAABB) ? 0 : (blockAABB.Max.z - aabb.Min.z));
                                 break;
                             }
@@ -881,7 +723,7 @@ namespace Minecraft
 
         private void PlayBlockStepSound(Block block)
         {
-            block.PlayStepAutio(m_AudioSource);
+            //block.PlayStepAutio(m_AudioSource);
         }
     }
 }

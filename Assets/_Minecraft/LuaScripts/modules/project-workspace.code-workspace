@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "arduino_data_collection",
+			"path": "arduino_data_collection"
+		},
+		{
+			"name": "arduino_data_reception",
+			"path": "arduino_data_reception"
+		}
+	],
+	"settings": {}
+}

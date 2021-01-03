@@ -44,6 +44,8 @@ namespace Minecraft
             }
         }
 
+        public static void Init() { }
+
         public static string GetSettingsSavingPath()
         {
             return Application.persistentDataPath + "/global_settings.json";

@@ -1,5 +1,4 @@
-﻿using Minecraft.ItemsData;
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,15 +17,15 @@ namespace Minecraft
         [SerializeField] private Transform m_Selected;
         [SerializeField] private TextMeshProUGUI m_ItemText;
         [SerializeField] private Image[] m_Items;
-        private ItemType[] m_ItemTypes;
+        //private ItemType[] m_ItemTypes;
         private int m_CurrentIndex;
 
-        public ItemType CurrentItem => m_ItemTypes[m_CurrentIndex];
+        //public ItemType CurrentItem => m_ItemTypes[m_CurrentIndex];
 
         private void OnEnable()
         {
             m_ItemText.text = string.Empty;
-            m_ItemTypes = new ItemType[m_Items.Length];
+            //m_ItemTypes = new ItemType[m_Items.Length];
             m_CurrentIndex = 0;
         }
 
@@ -56,21 +55,21 @@ namespace Minecraft
 
         private IEnumerator ShowItemText()
         {
-            m_ItemText.text = WorldManager.Active.GetCurrentItem().ItemName;
+            //m_ItemText.text = WorldManager.Active.GetCurrentItem().ItemName;
 
             yield return m_Wait;
 
             m_ItemText.text = string.Empty;
         }
 
-        public void SetItem(int index, ItemType type)
-        {
-            if (m_ItemTypes[index] == type)
-                return;
+        //public void SetItem(int index, ItemType type)
+        //{
+        //    if (m_ItemTypes[index] == type)
+        //        return;
 
-            m_ItemTypes[index] = type;
-            Item item = WorldManager.Active.DataManager.GetItemByType(type);
-            m_Items[index].sprite = item.Icon;
-        }
+        //    m_ItemTypes[index] = type;
+        //    Item item = WorldManager.Active.AssetManager.GetItemByType(type);
+        //    m_Items[index].sprite = item.Icon;
+        //}
     }
 }

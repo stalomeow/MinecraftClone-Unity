@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Minecraft.XPhysics;
+using UnityEngine;
 using XLua;
 
-namespace Minecraft
+namespace Minecraft.Entities
 {
     [LuaCallCSharp]
     [DisallowMultipleComponent]
