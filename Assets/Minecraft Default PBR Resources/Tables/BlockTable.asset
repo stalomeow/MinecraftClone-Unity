@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eb1287f40113344696386b205d67572, type: 3}
+  m_Name: BlockTable
+  m_EditorClassIdentifier: 
+  m_BlockTableJson:
+    AssetGUID: 1dc044f6b76d59843bc70cc3dd0aa98c
+  m_BlockMeshTableJson:
+    AssetGUID: 4f46f5ab2b61e374b94493c605972941
+  m_BlockTextureTableJson:
+    AssetGUID: 3718a3e0e1524d24db625132fed8131a
+  m_BlockMaterialTableJson:
+    AssetGUID: 039d266e557ef2a42becca97e484209e

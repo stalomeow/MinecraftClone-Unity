@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 1a6a92d6ca8f32544a111cdbc2aa3f8f
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: lua/minecraft
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 3b8b241bab4a4ac9a22fcce9c64f1242, type: 3}

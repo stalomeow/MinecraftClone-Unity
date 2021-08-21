@@ -1,9 +1,14 @@
-﻿namespace Minecraft.Noises
-{
-    public interface INoise
-    {
-        float Get(float x, float y, int octave, float persistence);
+﻿using Minecraft.Lua;
+using UnityEngine;
 
-        float Get(float x, float y, float z, int octave, float persistence);
+namespace Minecraft.Noises
+{
+    public interface INoise : ILuaCallCSharp
+    {
+        float Noise(float x, float y, float z);
+
+        void Noise(float[,,] noise, Vector3 offset, Vector3 scale);
+
+        void Noise(float[,,] noise, Vector3 offset, Vector3 scale, float noiseScale, bool add);
     }
 }

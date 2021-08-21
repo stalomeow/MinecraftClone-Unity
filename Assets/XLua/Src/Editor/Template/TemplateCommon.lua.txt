@@ -107,7 +107,6 @@ local fixPush = {
 	["System.UInt16"] = "LuaAPI.xlua_pushinteger",
 	["System.UInt32"] = "LuaAPI.xlua_pushuint",
 	["System.UInt64"] = "LuaAPI.lua_pushuint64",
-    ["System.Single"] = "LuaAPI.lua_pushnumber",
     ["System.Double"] = "LuaAPI.lua_pushnumber",
     ["System.String"] = "LuaAPI.lua_pushstring",
 	["System.Byte[]"] = "LuaAPI.lua_pushstring",
@@ -210,8 +209,14 @@ local function _CsFullTypeName(t)
 end
 
 function CsFullTypeName(t)
-    local name = _CsFullTypeName(t)
-	return xLuaClasses[name] and ("global::" .. name) or name
+    if t.DeclaringType then
+        local name = _CsFullTypeName(t)
+        local declaringTypeName = _CsFullTypeName(t.DeclaringType);
+        return xLuaClasses[declaringTypeName] and ("global::" .. name) or name
+    else
+        local name = _CsFullTypeName(t)
+        return xLuaClasses[name] and ("global::" .. name) or name
+    end
 end
 
 function CSVariableName(t)

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245776c10bd38644ea788d12fc9ec3d3, type: 3}
+  m_Name: TerrainGenerator
+  m_EditorClassIdentifier: 
+  AirBlock: air
+  StoneBlock: stone
+  WaterBlock: water
+  GravelBlock: gravel
+  BedrockBlock: bedrock
+  SeaLevel: 63
+  CoordinateScale: 0.05
+  HeightScale: 0.05
+  BiomeDepthOffSet: 0
+  BiomeDepthWeight: 1
+  BiomeScaleOffset: 0
+  BiomeScaleWeight: 1
+  BaseSize: 8.5
+  StretchY: 12
+  LowerLimitScale: 512
+  UpperLimitScale: 512
+  BiomeSize: 4
+  RiverSize: 4
+  DepthNoiseScale: {x: 200, y: 200, z: 200}
+  MainNoiseScale: {x: 0.0125, y: 0.00625, z: 0.0125}

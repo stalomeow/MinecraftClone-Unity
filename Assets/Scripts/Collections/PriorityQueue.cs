@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Minecraft.Lua;
 
 namespace Minecraft.Collections
 {
@@ -8,7 +9,7 @@ namespace Minecraft.Collections
     /// 表示根据对象优先级排列的队列
     /// </summary>
     /// <typeparam name="T">元素对象的类型</typeparam>
-    public class PriorityQueue<T> : IEnumerable<T>, IReadOnlyCollection<T>
+    public class PriorityQueue<T> : IReadOnlyCollection<T>, ILuaCallCSharp
     {
         private const int DefaultCapacity = 4;
         private const int MinGrow = 4;
@@ -36,7 +37,7 @@ namespace Minecraft.Collections
             {
                 throw new ArgumentOutOfRangeException(nameof(capacity));
             }
-            
+
             m_Array = capacity == 0 ? Array.Empty<T>() : new T[capacity];
             m_Size = 0;
             m_Version = 0;

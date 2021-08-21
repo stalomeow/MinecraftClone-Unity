@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3884e3f366370c84abb8f8f984950de4, type: 3}
+  m_Name: cube_normal
+  m_EditorClassIdentifier: 
+  Faces:
+  - Face: 0
+    NeverClip: 0
+    Vertices:
+    - Position: {x: 1, y: 0, z: 0}
+      Normal: {x: 1, y: 0, z: 0}
+      UV: {x: 0, y: 0}
+      CornerInFace: 0
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 0, z: 1}
+      Normal: {x: 1, y: 0, z: 0}
+      UV: {x: 1, y: 0}
+      CornerInFace: 1
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 1, z: 1}
+      Normal: {x: 1, y: 0, z: 0}
+      UV: {x: 1, y: 1}
+      CornerInFace: 3
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 1, z: 0}
+      Normal: {x: 1, y: 0, z: 0}
+      UV: {x: 0, y: 1}
+      CornerInFace: 2
+      EnableAmbientLightBlending: 1
+    Indices: 000000000300000002000000020000000100000000000000
+  - Face: 1
+    NeverClip: 0
+    Vertices:
+    - Position: {x: 0, y: 1, z: 0}
+      Normal: {x: 0, y: 1, z: 0}
+      UV: {x: 0, y: 0}
+      CornerInFace: 0
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 1, z: 0}
+      Normal: {x: 0, y: 1, z: 0}
+      UV: {x: 1, y: 0}
+      CornerInFace: 1
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 1, z: 1}
+      Normal: {x: 0, y: 1, z: 0}
+      UV: {x: 1, y: 1}
+      CornerInFace: 3
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 1, z: 1}
+      Normal: {x: 0, y: 1, z: 0}
+      UV: {x: 0, y: 1}
+      CornerInFace: 2
+      EnableAmbientLightBlending: 1
+    Indices: 000000000300000002000000020000000100000000000000
+  - Face: 2
+    NeverClip: 0
+    Vertices:
+    - Position: {x: 1, y: 0, z: 1}
+      Normal: {x: 0, y: 0, z: 1}
+      UV: {x: 0, y: 0}
+      CornerInFace: 0
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 0, z: 1}
+      Normal: {x: 0, y: 0, z: 1}
+      UV: {x: 1, y: 0}
+      CornerInFace: 1
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 1, z: 1}
+      Normal: {x: 0, y: 0, z: 1}
+      UV: {x: 1, y: 1}
+      CornerInFace: 3
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 1, z: 1}
+      Normal: {x: 0, y: 0, z: 1}
+      UV: {x: 0, y: 1}
+      CornerInFace: 2
+      EnableAmbientLightBlending: 1
+    Indices: 000000000300000002000000020000000100000000000000
+  - Face: 3
+    NeverClip: 0
+    Vertices:
+    - Position: {x: 0, y: 0, z: 1}
+      Normal: {x: -1, y: 0, z: 0}
+      UV: {x: 0, y: 0}
+      CornerInFace: 0
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 0, z: 0}
+      Normal: {x: -1, y: 0, z: 0}
+      UV: {x: 1, y: 0}
+      CornerInFace: 1
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 1, z: 0}
+      Normal: {x: -1, y: 0, z: 0}
+      UV: {x: 1, y: 1}
+      CornerInFace: 3
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 1, z: 1}
+      Normal: {x: -1, y: 0, z: 0}
+      UV: {x: 0, y: 1}
+      CornerInFace: 2
+      EnableAmbientLightBlending: 1
+    Indices: 000000000300000002000000020000000100000000000000
+  - Face: 4
+    NeverClip: 0
+    Vertices:
+    - Position: {x: 1, y: 0, z: 0}
+      Normal: {x: 0, y: -1, z: 0}
+      UV: {x: 0, y: 0}
+      CornerInFace: 0
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 0, z: 0}
+      Normal: {x: 0, y: -1, z: 0}
+      UV: {x: 1, y: 0}
+      CornerInFace: 1
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 0, z: 1}
+      Normal: {x: 0, y: -1, z: 0}
+      UV: {x: 1, y: 1}
+      CornerInFace: 3
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 0, z: 1}
+      Normal: {x: 0, y: -1, z: 0}
+      UV: {x: 0, y: 1}
+      CornerInFace: 2
+      EnableAmbientLightBlending: 1
+    Indices: 000000000300000002000000020000000100000000000000
+  - Face: 5
+    NeverClip: 0
+    Vertices:
+    - Position: {x: 0, y: 0, z: 0}
+      Normal: {x: 0, y: 0, z: -1}
+      UV: {x: 0, y: 0}
+      CornerInFace: 0
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 0, z: 0}
+      Normal: {x: 0, y: 0, z: -1}
+      UV: {x: 1, y: 0}
+      CornerInFace: 1
+      EnableAmbientLightBlending: 1
+    - Position: {x: 1, y: 1, z: 0}
+      Normal: {x: 0, y: 0, z: -1}
+      UV: {x: 1, y: 1}
+      CornerInFace: 3
+      EnableAmbientLightBlending: 1
+    - Position: {x: 0, y: 1, z: 0}
+      Normal: {x: 0, y: 0, z: -1}
+      UV: {x: 0, y: 1}
+      CornerInFace: 2
+      EnableAmbientLightBlending: 1
+    Indices: 000000000300000002000000020000000100000000000000

@@ -1,0 +1,1 @@
+[{"ID":0,"InternalName":"empty","Icon":{"AssetGUID":""},"Block":"air","Attack":5,"Rarity":1,"MaxStackCount":1,"Description":"占位用的物品，正如其名，拥有这个物品就和没有物品一样。","Usage":"暂无。","ObtainApproach":"空手获得。"},{"ID":1,"InternalName":"test_item","Icon":{"AssetGUID":""},"Block":null,"Attack":5,"Rarity":6,"MaxStackCount":64,"Description":"测试用的物品。","Usage":"仅用于测试。","ObtainApproach":"..."}]

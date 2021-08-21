@@ -527,6 +527,14 @@ namespace CSObjectWrapEditor
             if (mb is FieldInfo && (mb as FieldInfo).FieldType.IsPointer) return true;
             if (mb is PropertyInfo && (mb as PropertyInfo).PropertyType.IsPointer) return true;
 
+            foreach(var filter in memberFilters)
+            {
+                if (filter(mb))
+                {
+                    return true;
+                }
+            }
+
             foreach (var exclude in BlackList)
             {
                 if (mb.DeclaringType.ToString() == exclude[0] && mb.Name == exclude[1])
@@ -544,7 +552,15 @@ namespace CSObjectWrapEditor
 
             //指针目前不支持，先过滤
             if (mb.GetParameters().Any(pInfo => pInfo.ParameterType.IsPointer)) return true;
-            if (mb is MethodInfo && (mb as MethodInfo).ReturnType.IsPointer) return false;
+            if (mb is MethodInfo && (mb as MethodInfo).ReturnType.IsPointer) return true;
+
+            foreach (var filter in memberFilters)
+            {
+                if (filter(mb))
+                {
+                    return true;
+                }
+            }
 
             foreach (var exclude in BlackList)
             {
@@ -628,14 +644,18 @@ namespace CSObjectWrapEditor
             textWriter.Close();
         }
 
+        static string NonmalizeName(string name)
+        {
+            return name.Replace("+", "_").Replace(".", "_").Replace("`", "_").Replace("&", "_").Replace("[", "_").Replace("]", "_").Replace(",", "_");
+        }
+
         static void GenInterfaceBridge(IEnumerable<Type> types, string save_path)
         {
             foreach (var wrap_type in types)
             {
                 if (!wrap_type.IsInterface) continue;
 
-                string filePath = save_path + wrap_type.ToString().Replace("+", "").Replace(".", "")
-                    .Replace("`", "").Replace("&", "").Replace("[", "").Replace("]", "").Replace(",", "") + "Bridge.cs";
+                string filePath = save_path + NonmalizeName(wrap_type.ToString()) + "Bridge.cs";
                 StreamWriter textWriter = new StreamWriter(filePath, false, Encoding.UTF8);
                 GenOne(wrap_type, (type, type_info) =>
                 {
@@ -920,6 +940,8 @@ namespace CSObjectWrapEditor
                     .Where(method => !ignoreCompilerGenerated || !isDefined(method, typeof(CompilerGeneratedAttribute)))
                     .Where(method => !ignoreNotPublic || method.IsPublic)
                     .Where(method => !ignoreProperty || !method.IsSpecialName || (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_")))
+                    .Where(method => !method.GetParameters().Any(pInfo => pInfo.ParameterType.IsPointer))
+                    .Where(method => !method.ReturnType.IsPointer)
                     .Cast<MethodBase>()
                     .Concat(kv.Key.GetConstructors(bindingAttrOfConstructor).Cast<MethodBase>())
                     .Where(method => !injectByGeneric(method, kv.Value))
@@ -932,6 +954,7 @@ namespace CSObjectWrapEditor
             }
 
             var delegates_groups = types.Select(delegate_type => makeMethodInfoSimulation(delegate_type.GetMethod("Invoke")))
+                .Where(d => d.DeclaringType.FullName != null)
                 .Concat(hotfxDelegates)
                 .GroupBy(d => d, comparer).Select((group) => new { Key = group.Key, Value = group.ToList()});
             GenOne(typeof(DelegateBridge), (type, type_info) =>
@@ -978,8 +1001,7 @@ namespace CSObjectWrapEditor
 
             foreach (var wrap_type in types)
             {
-                string filePath = save_path + wrap_type.ToString().Replace("+", "").Replace(".", "")
-                    .Replace("`", "").Replace("&", "").Replace("[", "").Replace("]", "").Replace(",", "") + "Wrap.cs";
+                string filePath = save_path + NonmalizeName(wrap_type.ToString()) + "Wrap.cs";
                 StreamWriter textWriter = new StreamWriter(filePath, false, Encoding.UTF8);
                 if (wrap_type.IsEnum)
                 {
@@ -1101,7 +1123,7 @@ namespace CSObjectWrapEditor
             var extension_methods_from_lcs = (from t in LuaCallCSharp
                                     where isDefined(t, typeof(ExtensionAttribute))
                                     from method in t.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                                    where isDefined(method, typeof(ExtensionAttribute))
+                                    where isDefined(method, typeof(ExtensionAttribute)) && !isObsolete(method)
                                     where !method.ContainsGenericParameters || isSupportedGenericMethod(method)
                                     select makeGenericMethodIfNeeded(method))
                                     .Where(method => !lookup.ContainsKey(method.GetParameters()[0].ParameterType));
@@ -1109,7 +1131,7 @@ namespace CSObjectWrapEditor
             var extension_methods = (from t in ReflectionUse
                                      where isDefined(t, typeof(ExtensionAttribute))
                                      from method in t.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                                     where isDefined(method, typeof(ExtensionAttribute))
+                                     where isDefined(method, typeof(ExtensionAttribute)) && !isObsolete(method)
                                      where !method.ContainsGenericParameters || isSupportedGenericMethod(method)
                                      select makeGenericMethodIfNeeded(method)).Concat(extension_methods_from_lcs);
             GenOne(typeof(DelegateBridgeBase), (type, type_info) =>
@@ -1269,6 +1291,8 @@ namespace CSObjectWrapEditor
 
         public static List<string> assemblyList = null;
 
+        public static List<Func<MemberInfo, bool>> memberFilters = null;
+
         static void AddToList(List<Type> list, Func<object> get, object attr)
         {
             object obj = get();
@@ -1381,6 +1405,10 @@ namespace CSObjectWrapEditor
             {
                 BlackList.AddRange(get_cfg() as List<List<string>>);
             }
+            if (isDefined(test, typeof(BlackListAttribute)) && typeof(Func<MemberInfo, bool>).IsAssignableFrom(cfg_type))
+            {
+                memberFilters.Add(get_cfg() as Func<MemberInfo, bool>);
+            }
 
             if (isDefined(test, typeof(AdditionalPropertiesAttribute))
                         && (typeof(Dictionary<Type, List<string>>)).IsAssignableFrom(cfg_type))
@@ -1455,6 +1483,8 @@ namespace CSObjectWrapEditor
 #else
             assemblyList = new List<string>();
 #endif
+            memberFilters = new List<Func<MemberInfo, bool>>();
+
             foreach (var t in check_types)
             {
                 MergeCfg(t, null, () => t);
@@ -1706,27 +1736,6 @@ namespace CSObjectWrapEditor
         {
             clear(GeneratorConfig.common_path);
         }
-
-#if UNITY_2018
-        [MenuItem("XLua/Generate Minimize Code", false, 3)]
-        public static void GenMini()
-        {
-            var start = DateTime.Now;
-            Directory.CreateDirectory(GeneratorConfig.common_path);
-            GetGenConfig(XLua.Utils.GetAllTypes());
-            luaenv.DoString("require 'TemplateCommon'");
-            var gen_push_types_setter = luaenv.Global.Get<LuaFunction>("SetGenPushAndUpdateTypes");
-            gen_push_types_setter.Call(GCOptimizeList.Where(t => !t.IsPrimitive && SizeOf(t) != -1).Distinct().ToList());
-            var xlua_classes_setter = luaenv.Global.Get<LuaFunction>("SetXLuaClasses");
-            xlua_classes_setter.Call(XLua.Utils.GetAllTypes().Where(t => t.Namespace == "XLua").ToList());
-            GenDelegateBridges(XLua.Utils.GetAllTypes(false));
-            GenCodeForClass(true);
-            GenLuaRegister(true);
-            callCustomGen();
-            Debug.Log("finished! use " + (DateTime.Now - start).TotalMilliseconds + " ms");
-            AssetDatabase.Refresh();
-        }
-#endif
 
         public delegate IEnumerable<CustomGenTask> GetTasks(LuaEnv lua_env, UserConfig user_cfg);
 

@@ -1,50 +1,247 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using Minecraft.Configurations;
 using UnityEngine;
-using System.Runtime.CompilerServices;
 
 namespace Minecraft.Rendering
 {
+    [XLua.LuaCallCSharp]
     public static class LightingUtility
     {
-        public const byte MaxLight = 15;
-        public const byte SkyLight = MaxLight;
+        public const int MaxLight = 15;
+        public const int SkyLight = MaxLight - 1; // *避免第一个实际接受到天空光照的方块过亮
 
-        private const byte SkyLightSubtracted = 2; // temp
-        private const float OverMaxLight = 1f / MaxLight;
+        public const int MaxBlockFaceCount = 6;
+        public const int MaxBlockFaceCornerCount = 4;
+        public const int AmbientLightSampleCount = 4;
 
-        /// <summary>
-        /// 方块光照传播时的最小阻挡值
-        /// </summary>
-        private const int MinBlockLightOpacity = 1;
-
-        /// <summary>
-        /// 非空气方块受到的最大的天空光照值
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// 方块光照最高也只能到14级（固体方块光源的发光等级是15，但仅仅是光源本身所在位置是这个等级）
-        /// https://minecraft-zh.gamepedia.com/%E4%BA%AE%E5%BA%A6
-        /// </remarks>
-        private const int MaxNonAirBlockSkyLightValue = MaxLight - 1;
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float GetLightInShaders(byte light)
+        public static readonly Vector3Int[,,] AmbientLightSampleDirections = new Vector3Int[MaxBlockFaceCount, MaxBlockFaceCornerCount, AmbientLightSampleCount]
         {
-            return Mathf.Clamp01(light * OverMaxLight);
+            // BlockFace.PositiveX
+            {
+                // BlockFaceCorner.LeftBottom
+                {
+                    new Vector3Int(1, 0, 0),
+                    new Vector3Int(1, -1, 0),
+                    new Vector3Int(1, 0, -1),
+                    new Vector3Int(1, -1, -1)
+                },
+                // BlockFaceCorner.RightBottom
+                {
+                    new Vector3Int(1, 0, 0),
+                    new Vector3Int(1, -1, 0),
+                    new Vector3Int(1, 0, 1),
+                    new Vector3Int(1, -1, 1)
+                },
+                // BlockFaceCorner.LeftTop
+                {
+                    new Vector3Int(1, 0, 0),
+                    new Vector3Int(1, 1, 0),
+                    new Vector3Int(1, 0, -1),
+                    new Vector3Int(1, 1, -1)
+                },
+                // BlockFaceCorner.RightTop
+                {
+                    new Vector3Int(1, 0, 0),
+                    new Vector3Int(1, 1, 0),
+                    new Vector3Int(1, 0, 1),
+                    new Vector3Int(1, 1, 1)
+                }
+            },
+            // BlockFace.PositiveY
+            {
+                // BlockFaceCorner.LeftBottom
+                {
+                    new Vector3Int(0, 1, 0),
+                    new Vector3Int(0, 1, -1),
+                    new Vector3Int(-1, 1, 0),
+                    new Vector3Int(-1, 1, -1)
+                },
+                // BlockFaceCorner.RightBottom
+                {
+                    new Vector3Int(0, 1, 0),
+                    new Vector3Int(0, 1, -1),
+                    new Vector3Int(1, 1, 0),
+                    new Vector3Int(1, 1, -1)
+                },
+                // BlockFaceCorner.LeftTop
+                {
+                    new Vector3Int(0, 1, 0),
+                    new Vector3Int(0, 1, 1),
+                    new Vector3Int(-1, 1, 0),
+                    new Vector3Int(-1, 1, 1)
+                },
+                // BlockFaceCorner.RightTop
+                {
+                    new Vector3Int(0, 1, 0),
+                    new Vector3Int(0, 1, 1),
+                    new Vector3Int(1, 1, 0),
+                    new Vector3Int(1, 1, 1)
+                }
+            },
+            // BlockFace.PositiveZ
+            {
+                // BlockFaceCorner.LeftBottom
+                {
+                    new Vector3Int(0, 0, 1),
+                    new Vector3Int(0, -1, 1),
+                    new Vector3Int(1, 0, 1),
+                    new Vector3Int(1, -1, 1)
+                },
+                // BlockFaceCorner.RightBottom
+                {
+                    new Vector3Int(0, 0, 1),
+                    new Vector3Int(0, -1, 1),
+                    new Vector3Int(-1, 0, 1),
+                    new Vector3Int(-1, -1, 1)
+                },
+                // BlockFaceCorner.LeftTop
+                {
+                    new Vector3Int(0, 0, 1),
+                    new Vector3Int(0, 1, 1),
+                    new Vector3Int(1, 0, 1),
+                    new Vector3Int(1, 1, 1)
+                },
+                // BlockFaceCorner.RightTop
+                {
+                    new Vector3Int(0, 0, 1),
+                    new Vector3Int(0, 1, 1),
+                    new Vector3Int(-1, 0, 1),
+                    new Vector3Int(-1, 1, 1)
+                }
+            },
+            // BlockFace.NegativeX
+            {
+                // BlockFaceCorner.LeftBottom
+                {
+                    new Vector3Int(-1, 0, 0),
+                    new Vector3Int(-1, -1, 0),
+                    new Vector3Int(-1, 0, 1),
+                    new Vector3Int(-1, -1, 1)
+                },
+                // BlockFaceCorner.RightBottom
+                {
+                    new Vector3Int(-1, 0, 0),
+                    new Vector3Int(-1, -1, 0),
+                    new Vector3Int(-1, 0, -1),
+                    new Vector3Int(-1, -1, -1)
+                },
+                // BlockFaceCorner.LeftTop
+                {
+                    new Vector3Int(-1, 0, 0),
+                    new Vector3Int(-1, 1, 0),
+                    new Vector3Int(-1, 0, 1),
+                    new Vector3Int(-1, 1, 1)
+                },
+                // BlockFaceCorner.RightTop
+                {
+                    new Vector3Int(-1, 0, 0),
+                    new Vector3Int(-1, 1, 0),
+                    new Vector3Int(-1, 0, -1),
+                    new Vector3Int(-1, 1, -1)
+                }
+            },
+            // BlockFace.NegativeY
+            {
+                // BlockFaceCorner.LeftBottom
+                {
+                    new Vector3Int(0, -1, 0),
+                    new Vector3Int(0, -1, -1),
+                    new Vector3Int(1, -1, 0),
+                    new Vector3Int(1, -1, -1)
+                },
+                // BlockFaceCorner.RightBottom
+                {
+                    new Vector3Int(0, -1, 0),
+                    new Vector3Int(0, -1, -1),
+                    new Vector3Int(-1, -1, 0),
+                    new Vector3Int(-1, -1, -1)
+                },
+                // BlockFaceCorner.LeftTop
+                {
+                    new Vector3Int(0, -1, 0),
+                    new Vector3Int(0, -1, 1),
+                    new Vector3Int(1, -1, 0),
+                    new Vector3Int(1, -1, 1)
+                },
+                // BlockFaceCorner.RightTop
+                {
+                    new Vector3Int(0, -1, 0),
+                    new Vector3Int(0, -1, 1),
+                    new Vector3Int(-1, -1, 0),
+                    new Vector3Int(-1, -1, 1)
+                }
+            },
+            // BlockFace.NegativeZ
+            {
+                // BlockFaceCorner.LeftBottom
+                {
+                    new Vector3Int(0, 0, -1),
+                    new Vector3Int(0, -1, -1),
+                    new Vector3Int(-1, 0, -1),
+                    new Vector3Int(-1, -1, -1)
+                },
+                // BlockFaceCorner.RightBottom
+                {
+                    new Vector3Int(0, 0, -1),
+                    new Vector3Int(0, -1, -1),
+                    new Vector3Int(1, 0, -1),
+                    new Vector3Int(1, -1, -1)
+                },
+                // BlockFaceCorner.LeftTop
+                {
+                    new Vector3Int(0, 0, -1),
+                    new Vector3Int(0, 1, -1),
+                    new Vector3Int(-1, 0, -1),
+                    new Vector3Int(-1, 1, -1)
+                },
+                // BlockFaceCorner.RightTop
+                {
+                    new Vector3Int(0, 0, -1),
+                    new Vector3Int(0, 1, -1),
+                    new Vector3Int(1, 0, -1),
+                    new Vector3Int(1, 1, -1)
+                }
+            },
+        };
+
+        public static bool IsOpaqueBlock(this BlockData block)
+        {
+            return block.LightOpacity == MaxLight;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int ClampBlockLight(int light)
+        public static float MapLight01(float light)
         {
-            return Mathf.Clamp(light, 0, MaxNonAirBlockSkyLightValue);
+            return Mathf.Clamp01(light / MaxLight);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int ClampSkyLight(int light)
+        public static Vector2 MapLight01(Vector2 light)
         {
-            return Mathf.Clamp(light - SkyLightSubtracted, 0, MaxLight);
+            return new Vector2(MapLight01(light.x), MapLight01(light.y));
+        }
+
+        public static float GetEmissionValue(this BlockData block)
+        {
+            return MapLight01(block.LightValue);
+        }
+
+        public static int GetBlockedLight(int light, BlockData block)
+        {
+            return Mathf.Clamp(light - block.LightOpacity, 0, MaxLight);
+        }
+
+        public static Vector2 AmbientOcclusion(int x, int y, int z, BlockFace face, BlockFaceCorner corner, IWorldRAccessor accessor)
+        {
+            int faceIndex = (int)face;
+            int cornerIndex = (int)corner;
+            Vector2 lights = Vector2Int.zero;
+
+            for (int i = 0; i < AmbientLightSampleCount; i++)
+            {
+                Vector3Int dir = AmbientLightSampleDirections[faceIndex, cornerIndex, i];
+                lights.x += accessor.GetSkyLight(x + dir.x, y + dir.y, z + dir.z);
+                lights.y += accessor.GetAmbientLight(x + dir.x, y + dir.y, z + dir.z);
+            }
+
+            return MapLight01(lights / AmbientLightSampleCount);
         }
     }
 }

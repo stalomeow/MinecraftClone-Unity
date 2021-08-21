@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a50cf7a51ac893143aa939b4aa389a1a, type: 3}
+  m_Name: WorldGenPipeline
+  m_EditorClassIdentifier: 
+  GenerateStructure: 1
+  UseCaves: 1
+  UseRavines: 1
+  UseMineShafts: 1
+  UseVillages: 1
+  UseStrongholds: 1
+  UseTemples: 1
+  UseMonuments: 1
+  UseMansions: 1
+  m_TerrainGenerator: {fileID: 11400000, guid: 1c21e005504b6cb4b9b10f48c86cd162, type: 2}
+  m_CaveGenerator: {fileID: 11400000, guid: e2d28c7175d960a42b68065130be5e73, type: 2}
+  m_ExtraGenerators:
+  - {fileID: 11400000, guid: bb5254910b8d3a0489e8ce165d3445df, type: 2}
+  - {fileID: 11400000, guid: 118556182120ae4428a195427a7c365d, type: 2}
+  - {fileID: 11400000, guid: 152aee5e28dc4c94fbd57d144baf8b8c, type: 2}
+  - {fileID: 11400000, guid: 220d6c36f371ae94099d9d56b244db81, type: 2}
+  - {fileID: 11400000, guid: 53acd96f84f68d94f837c62c9fab1331, type: 2}
+  - {fileID: 11400000, guid: a0aa7f2d8c997c04ebacf9dd9a2e47fb, type: 2}
+  - {fileID: 11400000, guid: a6cebefdc6a225e40847c7c479749065, type: 2}
+  - {fileID: 11400000, guid: dc3c13882f5ac1c4c843c0c913099bf1, type: 2}
+  - {fileID: 11400000, guid: 7fc9edb5551488a4dac8677576a6c11a, type: 2}
+  - {fileID: 11400000, guid: 638318ba1510f154e8faa192176174d9, type: 2}
+  - {fileID: 11400000, guid: 5168f00203464164884587c31937bbcb, type: 2}
+  - {fileID: 11400000, guid: 56d62ad1ee54a434daa44d4c69611c5c, type: 2}
+  - {fileID: 11400000, guid: fdf704466c41c7346b787ce1c3144bc6, type: 2}

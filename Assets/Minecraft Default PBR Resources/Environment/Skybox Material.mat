@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Skybox Material
+  m_Shader: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: _MAPPING_LATITUDE_LONGITUDE_LAYOUT _SUNDISK_HIGH_QUALITY
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MoonTex:
+        m_Texture: {fileID: 18700000, guid: aea85e22cb6276a44ab45049c55f2f43, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SunTex:
+        m_Texture: {fileID: 2800000, guid: 518a0b8ee3865e8448bd0106cc3d221d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AtmosphereThickness: 0.6
+    - _AuroraColorSeed: 1
+    - _AuroraIntensity: 0
+    - _AuroraSpeed: 0
+    - _CloudAmount: 0.2
+    - _CloudDensity: 0.2
+    - _CloudIntensity: 0
+    - _CloudSpeed: 0
+    - _Exponent1: 1
+    - _Exponent2: 1
+    - _Exposure: 1.2
+    - _HorizonHeight: 0
+    - _ImageType: 0
+    - _Intensity: 1
+    - _Latitude: 30
+    - _Layout: 0
+    - _LowerHeight: 1
+    - _Mapping: 1
+    - _MirrorOnBack: 0
+    - _MoonRad: 0.3
+    - _MountainFactor: 0
+    - _MountainHeight: 2
+    - _Rotation: 0
+    - _StarDensity: 0.5
+    - _StarIntensity: 0.3
+    - _StarRotateSpeed: 1
+    - _StarSpeed: 0.1
+    - _SunDisk: 2
+    - _SunSize: 0.05
+    - _SunSizeConvergence: 5
+    - _SurAuroraColFactor: 1
+    - _UpperHeight: 1
+    m_Colors:
+    - _AuroraColor: {r: 1, g: 1, b: 1, a: 0}
+    - _CloudColor: {r: 2, g: 0, b: 0, a: 1}
+    - _Color1: {r: 0.078431375, g: 0.08235294, b: 0.08627451, a: 1}
+    - _Color2: {r: 0.078431375, g: 0.08235294, b: 0.08627451, a: 1}
+    - _Color3: {r: 0, g: 0, b: 0, a: 1}
+    - _DayBottomColor: {r: 0.3632075, g: 0.6424405, b: 1, a: 1}
+    - _DayTopColor: {r: 0, g: 0.588235, b: 1, a: 1}
+    - _GroundColor: {r: 0.3647059, g: 0.6431373, b: 1, a: 1}
+    - _MountainColor: {r: 0, g: 0, b: 0, a: 0}
+    - _NightBottomColor: {r: 0, g: 0, b: 0.2, a: 1}
+    - _NightTopColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SkyColorHorizon: {r: 0.3632075, g: 0.6424405, b: 1, a: 1}
+    - _SkyColorTop: {r: 0, g: 0.588235, b: 1, a: 1}
+    - _SkyTint: {r: 1, g: 1, b: 1, a: 1}
+    - _StarColor: {r: 0.08923277, g: 0, b: 0.4665165, a: 1}
+    - _Tint: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+  m_BuildTextureStacks: []

@@ -1,174 +1,179 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
 using UnityEngine;
 
 namespace Minecraft.Noises
 {
-    public sealed class PerlinNoise : INoise
+    /// <summary>
+    /// Implementation for Improved Perlin Noise (http://mrl.nyu.edu/~perlin/noise/).
+    /// </summary>
+    public class PerlinNoise : INoise
     {
-        private static readonly int[] s_Perm =
+        /// <summary>
+        /// Permutation.
+        /// </summary>
+        private readonly byte[] m_Permutation = new byte[512];
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerlinNoise"/> class.
+        /// </summary>
+        /// <param name="seed">Seed for generating permutation.</param>
+        public PerlinNoise(int seed)
         {
-            151, 160, 137, 91, 90, 15, 131, 13, 201 ,95, 96, 53, 194, 233, 7, 225, 140, 36,
-            103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0,
-            26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56,
-            87, 174, 20, 125, 136, 171, 168,  68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 
-            77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55,
-            46, 245, 40, 244, 102, 143, 54,  65, 25, 63, 161,  1, 216, 80, 73, 209, 76, 132,
-            187, 208,  89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198,
-            173, 186,  3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82,
-            85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213,
-            119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22,
-            39, 253,  19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104, 218, 246, 97,
-            228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235,
-            249, 14, 239, 107, 49, 192, 214,  31, 181, 199, 106, 157, 184, 84, 204, 176, 115,
-            121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243,
-            141, 128, 195, 78, 66, 215, 61, 156, 180, 151
-        };
+            var random = new UniformRNG((ulong)seed);
 
-        public PerlinNoise() { }
-
-        public float Get(float x, float y, int octave, float persistence)
-        {
-            float total = 0;
-            float frequency = 1;
-            float amplitude = 1;
-            //用于将结果归一化
-
-            float maxValue = 0;
-
-            for (int i = 0; i < octave; i++)
+            for (int i = 0; i < 256; i++)
             {
-                total += amplitude * Perlin(x * frequency, y * frequency);
-                maxValue += amplitude;
-                frequency *= 2;
-                amplitude *= persistence;
-            }
-
-            return total / maxValue;
-        }
-
-        public float Get(float x, float y, float z, int octave, float persistence)
-        {
-            float total = 0;
-            float frequency = 1;
-            float amplitude = 1;
-            //用于将结果归一化
-
-            float maxValue = 0;
-
-            for (int i = 0; i < octave; i++)
-            {
-                total += amplitude * Perlin(x * frequency, y * frequency, z * frequency);
-                maxValue += amplitude;
-                frequency *= 2;
-                amplitude *= persistence;
-            }
-
-            return total / maxValue;
-        }
-
-        private float Perlin(float x, float y)
-        {
-            float fx = Mathf.Floor(x);
-            float fy = Mathf.Floor(y);
-
-            int flooredX = (int)fx & 0xff;
-            int flooredY = (int)fy & 0xff;
-
-            //立方体中的位置(0,1)。
-            x -= fx;
-            y -= fy;
-
-            //hash
-            int a = s_Perm[flooredX] & 0xff;
-            int b = s_Perm[flooredX + 1] & 0xff;
-            int aa = (s_Perm[a] + flooredY) & 0xff;
-            int ba = (s_Perm[b] + flooredY) & 0xff;
-
-            int aaa = s_Perm[aa];
-            int baa = s_Perm[ba];
-            int aab = s_Perm[aa + 1];
-            int bab = s_Perm[ba + 1];
-
-            //fade
-            float u = x * x * x * (x * (x * 6 - 15) + 10);
-            float v = y * y * y * (y * (y * 6 - 15) + 10);
-
-            float x1, x2;
-
-            x1 = Mathf.Lerp(Grad(aaa, x, y), Grad(baa, x - 1, y), u);
-            x2 = Mathf.Lerp(Grad(aab, x, y - 1), Grad(bab, x - 1, y - 1), u);
-
-            //为了方便起见，我们将结果范围设为0~1(理论上之前的min/max是[-1，1])。
-            return (Mathf.Lerp(x1, x2, v) + 1) * 0.5f;
-        }
-
-        private float Perlin(float x, float y, float z)
-        {
-            float fx = Mathf.Floor(x);
-            float fy = Mathf.Floor(y);
-            float fz = Mathf.Floor(z);
-
-            int flooredX = (int)fx & 0xff;
-            int flooredY = (int)fy & 0xff;
-            int flooredZ = (int)fz & 0xff;
-
-            //立方体中的位置(0,1)。
-            x -= fx;
-            y -= fy;
-            z -= fz;
-
-            //hash
-            int a = (s_Perm[flooredX] + flooredY) & 0xff;
-            int b = (s_Perm[flooredX + 1] + flooredY) & 0xff;
-            int aa = (s_Perm[a] + flooredZ) & 0xff;
-            int ba = (s_Perm[b] + flooredZ) & 0xff;
-            int ab = (s_Perm[a + 1] + flooredZ) & 0xff;
-            int bb = (s_Perm[b + 1] + flooredZ) & 0xff;
-
-            int aaa = s_Perm[aa];
-            int baa = s_Perm[ba];
-            int aba = s_Perm[ab];
-            int bba = s_Perm[bb];
-            int aab = s_Perm[aa + 1];
-            int bab = s_Perm[ba + 1];
-            int abb = s_Perm[ab + 1];
-            int bbb = s_Perm[bb + 1];
-
-            //fade
-            float u = x * x * x * (x * (x * 6 - 15) + 10);
-            float v = y * y * y * (y * (y * 6 - 15) + 10);
-            float w = z * z * z * (z * (z * 6 - 15) + 10);
-
-            float x1, x2, y1, y2;
-
-            x1 = Mathf.Lerp(Grad(aaa, x, y, z), Grad(baa, x - 1, y, z), u);
-            x2 = Mathf.Lerp(Grad(aba, x, y - 1, z), Grad(bba, x - 1, y - 1, z), u);
-            y1 = Mathf.Lerp(x1, x2, v);
-
-            x1 = Mathf.Lerp(Grad(aab, x, y, z - 1), Grad(bab, x - 1, y, z - 1), u);
-            x2 = Mathf.Lerp(Grad(abb, x, y - 1, z - 1), Grad(bbb, x - 1, y - 1, z - 1), u);
-            y2 = Mathf.Lerp(x1, x2, v);
-
-            //为了方便起见，我们将结果范围设为0~1(理论上之前的min/max是[-1，1])。
-            return (Mathf.Lerp(y1, y2, w) + 1) * 0.5f;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private float Grad(int hash, float x, float y)
-        {
-            switch (hash & 0x3)
-            {
-                case 0x0: return x + y;
-                case 0x1: return -x + y;
-                case 0x2: return x - y;
-                case 0x3: return -x - y;
-                default: return 0; // never happens
+                m_Permutation[i + 256] = m_Permutation[i] = (byte)(random.NextUInt32() % 256);
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private float Grad(int hash, float x, float y, float z)
+        public float Noise(float x, float y, float z)
         {
+            var xCoords = Split(x);
+            var yCoords = Split(y);
+            var zCoords = Split(z);
+
+            var u = Fade(xCoords.remainder);
+            var v = Fade(yCoords.remainder);
+            var w = Fade(zCoords.remainder);
+
+            int a = m_Permutation[xCoords.integer];
+            int b = m_Permutation[xCoords.integer + 1];
+            int aa = m_Permutation[a + yCoords.integer];
+            int ab = m_Permutation[a + yCoords.integer + 1];
+            int ba = m_Permutation[b + yCoords.integer];
+            int bb = m_Permutation[b + yCoords.integer + 1];
+
+            int aaa = m_Permutation[aa + zCoords.integer];
+            int aba = m_Permutation[ab + zCoords.integer];
+            int aab = m_Permutation[aa + zCoords.integer + 1];
+            int abb = m_Permutation[ab + zCoords.integer + 1];
+            int baa = m_Permutation[ba + zCoords.integer];
+            int bba = m_Permutation[bb + zCoords.integer];
+            int bab = m_Permutation[ba + zCoords.integer + 1];
+            int bbb = m_Permutation[bb + zCoords.integer + 1];
+
+            var xa = new Vector4(
+                Grad(aaa, xCoords.remainder, yCoords.remainder, zCoords.remainder),
+                Grad(aba, xCoords.remainder, yCoords.remainder - 1, zCoords.remainder),
+                Grad(aab, xCoords.remainder, yCoords.remainder, zCoords.remainder - 1),
+                Grad(abb, xCoords.remainder, yCoords.remainder - 1, zCoords.remainder - 1)
+            );
+            var xb = new Vector4(
+                Grad(baa, xCoords.remainder - 1, yCoords.remainder, zCoords.remainder),
+                Grad(bba, xCoords.remainder - 1, yCoords.remainder - 1, zCoords.remainder),
+                Grad(bab, xCoords.remainder - 1, yCoords.remainder, zCoords.remainder - 1),
+                Grad(bbb, xCoords.remainder - 1, yCoords.remainder - 1, zCoords.remainder - 1)
+            );
+            var xl = Vector4.Lerp(xa, xb, u);
+            var ya = new Vector2(xl.x, xl.z);
+            var yb = new Vector2(xl.y, xl.w);
+            var yl = Vector2.Lerp(ya, yb, v);
+
+            return (Mathf.Lerp(yl.x, yl.y, w) + 1) * 0.5f;
+        }
+
+        public void Noise(float[,,] noise, Vector3 offset, Vector3 scale)
+        {
+            Noise(noise, offset, scale, 1, false);
+        }
+
+        public void Noise(float[,,] noise, Vector3 offset, Vector3 scale, float noiseScale, bool add)
+        {
+            var xLength = noise.GetLength(0);
+            var yLength = noise.GetLength(1);
+            var zLength = noise.GetLength(2);
+
+            for (int x = 0; x < xLength; x++)
+            {
+                var xOffset = offset.x + x * scale.x;
+                var xCoords = Split(xOffset);
+                var u = Fade(xCoords.remainder);
+
+                int a = m_Permutation[xCoords.integer];
+                int b = m_Permutation[xCoords.integer + 1];
+
+                for (int y = 0; y < yLength; y++)
+                {
+                    var yOffset = offset.y + y * scale.y;
+                    var yCoords = Split(yOffset);
+                    var v = Fade(yCoords.remainder);
+
+                    int aa = m_Permutation[a + yCoords.integer];
+                    int ab = m_Permutation[a + yCoords.integer + 1];
+                    int ba = m_Permutation[b + yCoords.integer];
+                    int bb = m_Permutation[b + yCoords.integer + 1];
+
+                    for (int z = 0; z < zLength; z++)
+                    {
+                        var zOffset = offset.z + z * scale.z;
+                        var zCoords = Split(zOffset);
+                        var w = Fade(zCoords.remainder);
+
+                        int aaa = m_Permutation[aa + zCoords.integer];
+                        int aba = m_Permutation[ab + zCoords.integer];
+                        int aab = m_Permutation[aa + zCoords.integer + 1];
+                        int abb = m_Permutation[ab + zCoords.integer + 1];
+                        int baa = m_Permutation[ba + zCoords.integer];
+                        int bba = m_Permutation[bb + zCoords.integer];
+                        int bab = m_Permutation[ba + zCoords.integer + 1];
+                        int bbb = m_Permutation[bb + zCoords.integer + 1];
+
+                        var xa = new Vector4(
+                            Grad(aaa, xCoords.remainder, yCoords.remainder, zCoords.remainder),
+                            Grad(aba, xCoords.remainder, yCoords.remainder - 1, zCoords.remainder),
+                            Grad(aab, xCoords.remainder, yCoords.remainder, zCoords.remainder - 1),
+                            Grad(abb, xCoords.remainder, yCoords.remainder - 1, zCoords.remainder - 1)
+                        );
+                        var xb = new Vector4(
+                            Grad(baa, xCoords.remainder - 1, yCoords.remainder, zCoords.remainder),
+                            Grad(bba, xCoords.remainder - 1, yCoords.remainder - 1, zCoords.remainder),
+                            Grad(bab, xCoords.remainder - 1, yCoords.remainder, zCoords.remainder - 1),
+                            Grad(bbb, xCoords.remainder - 1, yCoords.remainder - 1, zCoords.remainder - 1)
+                        );
+                        var xl = Vector4.Lerp(xa, xb, u);
+                        var ya = new Vector2(xl.x, xl.z);
+                        var yb = new Vector2(xl.y, xl.w);
+                        var yl = Vector2.Lerp(ya, yb, v);
+                        var value = (Mathf.Lerp(yl.x, yl.y, w) + 1) * 0.5f * noiseScale;
+
+                        if (add)
+                        {
+                            noise[x, y, z] += value;
+                        }
+                        else
+                        {
+                            noise[x, y, z] = value;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static (int integer, float remainder) Split(float value)
+        {
+            value = value % 256;
+
+            if (value < 0)
+            {
+                value += 256;
+            }
+
+            var integer = (int)value;
+            var remainder = value - integer;
+            return (integer, remainder);
+        }
+
+        private static float Fade(float t)
+        {
+            // 6t^5 - 15t^4 + 10t^3
+            return t * t * t * (t * (t * 6 - 15) + 10);
+        }
+
+        private static float Grad(int hash, float x, float y, float z)
+        {
+            // Source: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
+
             switch (hash & 0xF)
             {
                 case 0x0: return x + y;
@@ -187,7 +192,7 @@ namespace Minecraft.Noises
                 case 0xD: return -y + z;
                 case 0xE: return y - x;
                 case 0xF: return -y - z;
-                default: return 0; // never happens
+                default: throw new ArgumentOutOfRangeException(nameof(hash));
             }
         }
     }
