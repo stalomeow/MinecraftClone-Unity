@@ -151,7 +151,7 @@ namespace Minecraft.PlayerControls
                 {
                     Vector3 pos = hit.Position + hit.Normal;
                     AABB playerBB = m_PlayerEntity.BoundingBox + m_PlayerEntity.Position;
-                    AABB blockBB = hit.Block.GetBoundingBox(pos);
+                    AABB blockBB = hit.Block.GetBoundingBox(pos, world).Value;
 
                     if (!playerBB.Intersects(blockBB))
                     {
@@ -178,8 +178,7 @@ namespace Minecraft.PlayerControls
 
         private void SetDigProgress(float progress)
         {
-            // 有 10 张贴图
-            ShaderUtility.DigProgress = (int)(progress * 10) - 1;
+            ShaderUtility.DigProgress = (int)(progress * m_PlayerEntity.World.RenderingManager.DigProgressTextureCount) - 1;
         }
     }
 }

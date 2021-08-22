@@ -13,7 +13,7 @@ inline half4 EaseIn(half4 a, half4 b, float w)
     return a + (b - a) * w * w * w; // 先慢后快
 }
 
-inline half4 GetHighlightColor(half4 color, float3 blockPos, float2 uv, half4 highlightColor, TEXTURE2D_ARRAY_PARAM(_DestroyProgressTex, sampler_DestroyProgressTex))
+inline void HighlightBlock(float3 blockPos, float2 uv, half4 highlightColor, inout half4 color)
 {
     float3 delta = blockPos - _TargetBlockPosition;
     float dist = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
@@ -26,11 +26,9 @@ inline half4 GetHighlightColor(half4 color, float3 blockPos, float2 uv, half4 hi
         UNITY_BRANCH
         if (_DigProgress > -1)
         {
-            color *= SAMPLE_TEXTURE2D_ARRAY(_DestroyProgressTex, sampler_DestroyProgressTex, uv, _DigProgress);
+            color.rgb *= SAMPLE_TEXTURE2D_ARRAY(_DigProgressTextures, sampler_DigProgressTextures, uv, _DigProgress).rgb;
         }
     }
-
-    return color;
 }
 
 struct BlockAttributes

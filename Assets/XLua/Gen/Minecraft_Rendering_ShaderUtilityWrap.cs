@@ -31,23 +31,27 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 7, 7);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 9, 9);
 			
 			
             
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "BlockTextures", _g_get_BlockTextures);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "DigProgressTextures", _g_get_DigProgressTextures);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "RenderDistance", _g_get_RenderDistance);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "ViewDistance", _g_get_ViewDistance);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "LightLimits", _g_get_LightLimits);
-            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "WorldAmbientColor", _g_get_WorldAmbientColor);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "WorldAmbientColorDay", _g_get_WorldAmbientColorDay);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "WorldAmbientColorNight", _g_get_WorldAmbientColorNight);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "TargetedBlockPosition", _g_get_TargetedBlockPosition);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "DigProgress", _g_get_DigProgress);
             
 			Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "BlockTextures", _s_set_BlockTextures);
+            Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "DigProgressTextures", _s_set_DigProgressTextures);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "RenderDistance", _s_set_RenderDistance);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "ViewDistance", _s_set_ViewDistance);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "LightLimits", _s_set_LightLimits);
-            Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "WorldAmbientColor", _s_set_WorldAmbientColor);
+            Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "WorldAmbientColorDay", _s_set_WorldAmbientColorDay);
+            Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "WorldAmbientColorNight", _s_set_WorldAmbientColorNight);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "TargetedBlockPosition", _s_set_TargetedBlockPosition);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "DigProgress", _s_set_DigProgress);
             
@@ -77,6 +81,18 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			    translator.Push(L, Minecraft.Rendering.ShaderUtility.BlockTextures);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_DigProgressTextures(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    translator.Push(L, Minecraft.Rendering.ShaderUtility.DigProgressTextures);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -120,11 +136,23 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_WorldAmbientColor(RealStatePtr L)
+        static int _g_get_WorldAmbientColorDay(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			    translator.PushUnityEngineColor(L, Minecraft.Rendering.ShaderUtility.WorldAmbientColor);
+			    translator.PushUnityEngineColor(L, Minecraft.Rendering.ShaderUtility.WorldAmbientColorDay);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_WorldAmbientColorNight(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    translator.PushUnityEngineColor(L, Minecraft.Rendering.ShaderUtility.WorldAmbientColorNight);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -163,6 +191,19 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			    Minecraft.Rendering.ShaderUtility.BlockTextures = (UnityEngine.Texture2DArray)translator.GetObject(L, 1, typeof(UnityEngine.Texture2DArray));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_DigProgressTextures(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    Minecraft.Rendering.ShaderUtility.DigProgressTextures = (UnityEngine.Texture2DArray)translator.GetObject(L, 1, typeof(UnityEngine.Texture2DArray));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -211,12 +252,26 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_WorldAmbientColor(RealStatePtr L)
+        static int _s_set_WorldAmbientColorDay(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			UnityEngine.Color gen_value;translator.Get(L, 1, out gen_value);
-				Minecraft.Rendering.ShaderUtility.WorldAmbientColor = gen_value;
+				Minecraft.Rendering.ShaderUtility.WorldAmbientColorDay = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_WorldAmbientColorNight(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			UnityEngine.Color gen_value;translator.Get(L, 1, out gen_value);
+				Minecraft.Rendering.ShaderUtility.WorldAmbientColorNight = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

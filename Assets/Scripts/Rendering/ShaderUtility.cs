@@ -6,10 +6,12 @@ namespace Minecraft.Rendering
     public static class ShaderUtility
     {
         private static readonly int s_BlockTextures = Shader.PropertyToID("_BlockTextures");
+        private static readonly int s_DigProgressTextures = Shader.PropertyToID("_DigProgressTextures");
         private static readonly int s_RenderDistance = Shader.PropertyToID("_RenderDistance");
         private static readonly int s_ViewDistance = Shader.PropertyToID("_ViewDistance");
         private static readonly int s_LightLimits = Shader.PropertyToID("_LightLimits");
-        private static readonly int s_WorldAmbientColor = Shader.PropertyToID("_WorldAmbientColor");
+        private static readonly int s_WorldAmbientColorDay = Shader.PropertyToID("_WorldAmbientColorDay");
+        private static readonly int s_WorldAmbientColorNight = Shader.PropertyToID("_WorldAmbientColorNight");
         private static readonly int s_TargetBlockPosition = Shader.PropertyToID("_TargetBlockPosition");
         private static readonly int s_DigProgress = Shader.PropertyToID("_DigProgress");
 
@@ -17,6 +19,12 @@ namespace Minecraft.Rendering
         {
             get => Shader.GetGlobalTexture(s_BlockTextures) as Texture2DArray;
             set => Shader.SetGlobalTexture(s_BlockTextures, value);
+        }
+
+        public static Texture2DArray DigProgressTextures
+        {
+            get => Shader.GetGlobalTexture(s_DigProgressTextures) as Texture2DArray;
+            set => Shader.SetGlobalTexture(s_DigProgressTextures, value);
         }
 
         public static int RenderDistance
@@ -37,10 +45,16 @@ namespace Minecraft.Rendering
             set => Shader.SetGlobalVector(s_LightLimits, value);
         }
 
-        public static Color WorldAmbientColor
+        public static Color WorldAmbientColorDay
         {
-            get => Shader.GetGlobalColor(s_WorldAmbientColor);
-            set => Shader.SetGlobalColor(s_WorldAmbientColor, value);
+            get => Shader.GetGlobalColor(s_WorldAmbientColorDay);
+            set => Shader.SetGlobalColor(s_WorldAmbientColorDay, value);
+        }
+
+        public static Color WorldAmbientColorNight
+        {
+            get => Shader.GetGlobalColor(s_WorldAmbientColorNight);
+            set => Shader.SetGlobalColor(s_WorldAmbientColorNight, value);
         }
 
         public static Vector3 TargetedBlockPosition

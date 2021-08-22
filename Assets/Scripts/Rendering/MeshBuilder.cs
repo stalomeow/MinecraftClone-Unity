@@ -150,6 +150,7 @@ namespace Minecraft.Rendering
                 | MeshUpdateFlags.DontNotifyMeshUsers
                 | MeshUpdateFlags.DontRecalculateBounds;
 
+            mesh.subMeshCount = 0; // 防止多个 subMesh 共享三角形的警告
             mesh.subMeshCount = m_IndexOffsetBuffer.Length;
             mesh.SetVertexBufferParams(m_VertexBuffer.Count, m_VertexAttributes);
             mesh.SetIndexBufferParams(m_IndexBuffer.Count, MeshIndexFormat);

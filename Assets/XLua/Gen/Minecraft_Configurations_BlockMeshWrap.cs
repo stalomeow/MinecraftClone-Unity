@@ -21,13 +21,15 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Minecraft.Configurations.BlockMesh);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 1, 1);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 2, 2);
 			
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Faces", _g_get_Faces);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "BoundingBox", _g_get_BoundingBox);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Faces", _g_get_Faces);
             
-			Utils.RegisterFunc(L, Utils.SETTER_IDX, "Faces", _s_set_Faces);
+			Utils.RegisterFunc(L, Utils.SETTER_IDX, "BoundingBox", _s_set_BoundingBox);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "Faces", _s_set_Faces);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -77,6 +79,20 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_BoundingBox(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Minecraft.Configurations.BlockMesh gen_to_be_invoked = (Minecraft.Configurations.BlockMesh)translator.FastGetCSObj(L, 1);
+                translator.PushMinecraftPhysicSystemAABB(L, gen_to_be_invoked.BoundingBox);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_Faces(RealStatePtr L)
         {
 		    try {
@@ -91,6 +107,22 @@ namespace XLua.CSObjectWrap
         }
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_BoundingBox(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Minecraft.Configurations.BlockMesh gen_to_be_invoked = (Minecraft.Configurations.BlockMesh)translator.FastGetCSObj(L, 1);
+                Minecraft.PhysicSystem.AABB gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.BoundingBox = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_Faces(RealStatePtr L)

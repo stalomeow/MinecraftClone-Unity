@@ -27,6 +27,8 @@ namespace Minecraft.Rendering
             public ShadowCastingMode CastShadows = ShadowCastingMode.Off;
             public bool ReceiveShadows = false;
             public bool EnableDestroyEffect = true;
+            public Texture2DArray DigProgressTexture;
+            public int DigProgressTextureCount = 10;
         }
 
         [SerializeField] private RenderingSetting m_Setting;
@@ -42,6 +44,8 @@ namespace Minecraft.Rendering
         private SectionMeshManager m_MeshManager;
         private IWorld m_World;
         private bool m_Initialized;
+
+        public int DigProgressTextureCount => m_Setting.DigProgressTextureCount;
 
         public void Initialize(IWorld world)
         {
@@ -59,6 +63,7 @@ namespace Minecraft.Rendering
             m_MeshManager.Initialize(world);
 
             ShaderUtility.BlockTextures = m_BlockTable.GetTextureArray();
+            ShaderUtility.DigProgressTextures = m_Setting.DigProgressTexture;
             ShaderUtility.RenderDistance = m_Setting.RenderingRadius * ChunkWidth;
             ShaderUtility.LightLimits = new Vector2(m_Setting.MinLightLimit, m_Setting.MaxLightLimit);
         }

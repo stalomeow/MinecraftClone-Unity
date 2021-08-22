@@ -13,6 +13,7 @@ struct BlockBRDFData
     half roughness;
     half skyLight;
     half blockLight;
+    float3 positionWS;
     float3 normalWS;
     float3 viewDirWS;
     float4 shadowCoord;
@@ -30,7 +31,7 @@ inline half3 FresnelLerp(half3 c0, half3 c1, half cosA)
     return lerp(c0, c1, t);
 }
 
-inline void InitializeBlockBRDFData(half4 albedo, float3 normalWS, half4 mer, float3 lights, float3 viewDirWS, float4 shadowCoord, out BlockBRDFData data)
+inline void InitializeBlockBRDFData(half4 albedo, half4 mer, float3 positionWS, float3 normalWS, float3 lights, float3 viewDirWS, float4 shadowCoord, out BlockBRDFData data)
 {
     data = (BlockBRDFData)0;
     data.albedo = albedo.rgb;
@@ -39,12 +40,13 @@ inline void InitializeBlockBRDFData(half4 albedo, float3 normalWS, half4 mer, fl
     data.roughness = mer.b;
     data.skyLight = lights.y;
     data.blockLight = lights.z;
+    data.positionWS = positionWS;
     data.normalWS = normalWS;
     data.viewDirWS = viewDirWS;
     data.shadowCoord = shadowCoord;
 }
 
-inline half4 BlockFragmentPBR(BlockBRDFData input, half alpha, float3 positionWS)
+inline half4 BlockFragmentPBR(BlockBRDFData input, half alpha)
 {
     half oneMinusReflectivity = OneMinusReflectivityMetallic(input.metallic);
 
@@ -85,8 +87,9 @@ inline half4 BlockFragmentPBR(BlockBRDFData input, half alpha, float3 positionWS
     half4 color = half4(emissionTerm + max(skyLightTerm, blockLightTerm), alpha);
 
     // fade
-    float dis = distance(positionWS.xz, GetCameraPositionWS().xz);
-    return EaseIn(color, _WorldAmbientColor, saturate(dis / max(min(_RenderDistance, _ViewDistance), 0.01)));
+    float dis = distance(input.positionWS.xz, GetCameraPositionWS().xz);
+    half4 worldAmbientColor = lerp(_WorldAmbientColorNight, _WorldAmbientColorDay, isDay);
+    return EaseIn(color, worldAmbientColor, saturate(dis / max(min(_RenderDistance, _ViewDistance), 0.01)));
 }
 
 #endif // MINECRAFT_BLOCK_BRDF_INCLUDED

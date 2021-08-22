@@ -2,7 +2,6 @@
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.burst": "1.4.8",
-    "com.unity.cinemachine": "2.6.9",
     "com.unity.collections": "0.15.0-preview.21",
     "com.unity.device-simulator": "3.0.1-preview",
     "com.unity.ide.rider": "2.0.7",
@@ -12,6 +11,7 @@
     "com.unity.jobs": "0.8.0-preview.23",
     "com.unity.memoryprofiler": "0.2.9-preview.3",
     "com.unity.postprocessing": "3.1.1",
+    "com.unity.recorder": "2.5.5",
     "com.unity.render-pipelines.core": "10.4.0",
     "com.unity.render-pipelines.universal": "10.4.0",
     "com.unity.scriptablebuildpipeline": "1.14.1",

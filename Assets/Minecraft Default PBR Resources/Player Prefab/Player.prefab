@@ -193,15 +193,18 @@ MonoBehaviour:
   - BlockName: lava
     VelocityMultiplier: 0.2
     ViewDistance: 0
-    AmbientColor: {r: 0.38250002, g: 0.080104716, b: 0, a: 1}
+    AmbientColorDay: {r: 0.38250002, g: 0.080104716, b: 0, a: 1}
+    AmbientColorNight: {r: 0.38431373, g: 0.078431375, b: 0, a: 1}
   - BlockName: water
     VelocityMultiplier: 0.2
     ViewDistance: 20
-    AmbientColor: {r: 0.011764706, g: 0.0882353, b: 0.19019608, a: 1}
+    AmbientColorDay: {r: 0.011764706, g: 0.0882353, b: 0.19019608, a: 1}
+    AmbientColorNight: {r: 0.011764706, g: 0.08627451, b: 0.1882353, a: 1}
   - BlockName: air
     VelocityMultiplier: 1
     ViewDistance: 99999
-    AmbientColor: {r: 0.3647059, g: 0.6431373, b: 1, a: 1}
+    AmbientColorDay: {r: 0.3647059, g: 0.6431373, b: 1, a: 1}
+    AmbientColorNight: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &8174688378270880554
 GameObject:
   m_ObjectHideFlags: 0

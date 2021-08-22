@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Minecraft
+namespace MinecraftEditor
 {
     public sealed class ScreenShot
     {

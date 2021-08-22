@@ -21,10 +21,13 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Minecraft.PhysicSystem.AABB);
-			Utils.BeginObjectRegister(type, L, translator, 2, 1, 3, 2);
+			Utils.BeginObjectRegister(type, L, translator, 3, 3, 3, 2);
 			Utils.RegisterFunc(L, Utils.OBJ_META_IDX, "__add", __AddMeta);
             Utils.RegisterFunc(L, Utils.OBJ_META_IDX, "__sub", __SubMeta);
+            Utils.RegisterFunc(L, Utils.OBJ_META_IDX, "__eq", __EqMeta);
             
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Equals", _m_Equals);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetHashCode", _m_GetHashCode);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Intersects", _m_Intersects);
 			
 			
@@ -150,7 +153,94 @@ namespace XLua.CSObjectWrap
             
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int __EqMeta(RealStatePtr L)
+        {
+            
+			try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+			
+				if (translator.Assignable<Minecraft.PhysicSystem.AABB>(L, 1) && translator.Assignable<Minecraft.PhysicSystem.AABB>(L, 2))
+				{
+					Minecraft.PhysicSystem.AABB leftside;translator.Get(L, 1, out leftside);
+					Minecraft.PhysicSystem.AABB rightside;translator.Get(L, 2, out rightside);
+					
+					LuaAPI.lua_pushboolean(L, leftside == rightside);
+					
+					return 1;
+				}
+            
+			}
+			catch(System.Exception gen_e) {
+				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+			}
+            return LuaAPI.luaL_error(L, "invalid arguments to right hand of == operator, need Minecraft.PhysicSystem.AABB!");
+            
+        }
         
+        
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_Equals(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Minecraft.PhysicSystem.AABB gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    object _obj = translator.GetObject(L, 2, typeof(object));
+                    
+                        var gen_ret = gen_to_be_invoked.Equals( _obj );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                        translator.UpdateMinecraftPhysicSystemAABB(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetHashCode(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Minecraft.PhysicSystem.AABB gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.GetHashCode(  );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                        translator.UpdateMinecraftPhysicSystemAABB(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_Intersects(RealStatePtr L)

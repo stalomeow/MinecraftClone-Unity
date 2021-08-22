@@ -31,11 +31,21 @@ namespace Minecraft.PhysicSystem
             m_Max = max;
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is AABB aabb && (aabb == this);
+        }
+
+        public override int GetHashCode()
+        {
+            return m_Min.GetHashCode() ^ m_Max.GetHashCode();
+        }
+
         public bool Intersects(AABB aabb)
         {
             return ((Min.x >= aabb.Min.x && Min.x <= aabb.Max.x) || (aabb.Min.x >= Min.x && aabb.Min.x <= Max.x))
-                   && ((Min.y >= aabb.Min.y && Min.y <= aabb.Max.y) || (aabb.Min.y >= Min.y && aabb.Min.y <= Max.y))
-                   && ((Min.z >= aabb.Min.z && Min.z <= aabb.Max.z) || (aabb.Min.z >= Min.z && aabb.Min.z <= Max.z));
+                && ((Min.y >= aabb.Min.y && Min.y <= aabb.Max.y) || (aabb.Min.y >= Min.y && aabb.Min.y <= Max.y))
+                && ((Min.z >= aabb.Min.z && Min.z <= aabb.Max.z) || (aabb.Min.z >= Min.z && aabb.Min.z <= Max.z));
         }
 
         public static AABB Merge(AABB left, AABB right)
@@ -53,5 +63,9 @@ namespace Minecraft.PhysicSystem
         public static AABB operator +(AABB aabb, Vector3 transform) => Transform(aabb, transform);
 
         public static AABB operator -(AABB aabb, Vector3 transform) => Transform(aabb, -transform);
+
+        public static bool operator ==(AABB left, AABB right) => left.m_Min == right.m_Min && left.m_Max == right.m_Max;
+
+        public static bool operator !=(AABB left, AABB right) => !(left == right);
     }
 }

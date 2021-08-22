@@ -3,6 +3,7 @@
     Properties
     {
 		[HDR] _MainColor("Main Color", Color) = (1, 1, 1, 1)
+		[HDR] _HighlightColor("Highlight Color", Color) = (1, 1, 1, 1)
 		_BumpScale("Bump Scale", Float) = 1.0
     }
     SubShader
@@ -12,6 +13,7 @@
 
 		CBUFFER_START(UnityPerMaterial)
 			half4 _MainColor;
+			half4 _HighlightColor;
 			half _BumpScale;
 		CBUFFER_END
 		ENDHLSL
@@ -50,6 +52,7 @@
 				float3 lights : TEXCOORD5;
 				float3 viewDirWS : TEXCOORD6;
 				float4 shadowCoord : TEXCOORD7;
+				float3 blockPositionWS : TEXCOORD8;
 				float4 positionCS : SV_POSITION;
 			};
 
@@ -70,6 +73,7 @@
 				output.lights = input.lights;
 				output.viewDirWS = viewDirWS;
 				output.shadowCoord = GetShadowCoord(vertexInput);
+				output.blockPositionWS = input.blockPositionWS;
 				output.positionCS = vertexInput.positionCS;
 				return output;
 			}
@@ -85,8 +89,11 @@
 				half4 mer = SAMPLE_BLOCK_MER(input.uv, input.texIndices);
 
 				BlockBRDFData data;
-				InitializeBlockBRDFData(albedo, normalWS, mer, input.lights, input.viewDirWS, input.shadowCoord, data);
-				return BlockFragmentPBR(data, albedo.a, input.positionWS);
+				InitializeBlockBRDFData(albedo, mer, input.positionWS, normalWS, input.lights, input.viewDirWS, input.shadowCoord, data);
+
+				half4 col = BlockFragmentPBR(data, albedo.a);
+				HighlightBlock(input.blockPositionWS, input.uv, _HighlightColor, col);
+				return col;
 			}
             ENDHLSL
         }

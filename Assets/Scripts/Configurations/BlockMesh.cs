@@ -1,5 +1,6 @@
 using System;
 using Minecraft.Lua;
+using Minecraft.PhysicSystem;
 using UnityEngine;
 
 namespace Minecraft.Configurations
@@ -16,6 +17,7 @@ namespace Minecraft.Configurations
             public int[] Indices;
         }
 
+        public AABB BoundingBox;
         public FaceData[] Faces;
     }
 }

@@ -1,0 +1,13 @@
+<linker>
+    <assembly fullname="mscorlib">
+        <namespace fullname="System.Collections.Generic" preserve="all"/>
+    </assembly>
+
+    <assembly fullname="UnityEngine.CoreModule">
+        <type fullname="UnityEngine.MaterialPropertyBlock" preserve="all"/>
+    </assembly>
+
+    <assembly fullname="UnityEngine.ParticleSystemModule">
+        <type fullname="UnityEngine.ParticleSystem" preserve="all"/>
+    </assembly>
+</linker>

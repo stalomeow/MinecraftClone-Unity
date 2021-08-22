@@ -6,19 +6,20 @@ namespace Minecraft.PhysicSystem
     [XLua.LuaCallCSharp]
     public static class BlockPhysicsUtility
     {
-        public static AABB GetBoundingBox(this BlockData block, float x, float y, float z)
+        public static AABB? GetBoundingBox(this BlockData block, float x, float y, float z, IWorld world)
         {
-            return GetBoundingBox(block, new Vector3(x, y, z));
+            return GetBoundingBox(block, new Vector3(x, y, z), world);
         }
 
-        public static AABB GetBoundingBox(this BlockData block, Vector3 position)
+        public static AABB? GetBoundingBox(this BlockData block, Vector3 position, IWorld world)
         {
             if (block == null || block.HasFlag(BlockFlags.IgnoreCollisions))
             {
-                return new AABB(position, position);
+                return null;
             }
 
-            return new AABB(position, position + Vector3.one);
+            BlockMesh mesh = world.BlockDataTable.GetMesh(block.Mesh.Value);
+            return mesh.BoundingBox + position;
         }
     }
 }

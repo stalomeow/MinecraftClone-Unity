@@ -185,25 +185,27 @@ namespace XLua.CSObjectWrap
             
 			    int gen_param_count = LuaAPI.lua_gettop(L);
             
-                if(gen_param_count == 4&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                if(gen_param_count == 5&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& translator.Assignable<Minecraft.IWorld>(L, 5)) 
                 {
                     float _x = (float)LuaAPI.lua_tonumber(L, 2);
                     float _y = (float)LuaAPI.lua_tonumber(L, 3);
                     float _z = (float)LuaAPI.lua_tonumber(L, 4);
+                    Minecraft.IWorld _world = (Minecraft.IWorld)translator.GetObject(L, 5, typeof(Minecraft.IWorld));
                     
-                        var gen_ret = gen_to_be_invoked.GetBoundingBox( _x, _y, _z );
-                        translator.PushMinecraftPhysicSystemAABB(L, gen_ret);
+                        var gen_ret = gen_to_be_invoked.GetBoundingBox( _x, _y, _z, _world );
+                        translator.PushAny(L, gen_ret);
                     
                     
                     
                     return 1;
                 }
-                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3>(L, 2)) 
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<Minecraft.IWorld>(L, 3)) 
                 {
                     UnityEngine.Vector3 _position;translator.Get(L, 2, out _position);
+                    Minecraft.IWorld _world = (Minecraft.IWorld)translator.GetObject(L, 3, typeof(Minecraft.IWorld));
                     
-                        var gen_ret = gen_to_be_invoked.GetBoundingBox( _position );
-                        translator.PushMinecraftPhysicSystemAABB(L, gen_ret);
+                        var gen_ret = gen_to_be_invoked.GetBoundingBox( _position, _world );
+                        translator.PushAny(L, gen_ret);
                     
                     
                     

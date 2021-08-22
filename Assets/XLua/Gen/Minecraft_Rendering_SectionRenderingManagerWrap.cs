@@ -21,13 +21,14 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Minecraft.Rendering.SectionRenderingManager);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 2, 1, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Initialize", _m_Initialize);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "MarkBlockMeshDirty", _m_MarkBlockMeshDirty);
 			
 			
-			
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "DigProgressTextureCount", _g_get_DigProgressTextureCount);
+            
 			
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -134,6 +135,20 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_DigProgressTextureCount(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Minecraft.Rendering.SectionRenderingManager gen_to_be_invoked = (Minecraft.Rendering.SectionRenderingManager)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.DigProgressTextureCount);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
         
         
         

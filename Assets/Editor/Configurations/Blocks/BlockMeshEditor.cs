@@ -46,6 +46,7 @@ namespace MinecraftEditor.Configurations.Blocks
 
         public override void OnInspectorGUI()
         {
+            DrawBoundingBoxField();
             InitAndSelectExistedFace();
             DrawNeverClipField();
             DrawAddAndRemoveButtons();
@@ -53,6 +54,12 @@ namespace MinecraftEditor.Configurations.Blocks
             DrawVerticesAndIndices();
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawBoundingBoxField()
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(BlockMesh.BoundingBox)));
+            EditorGUILayout.Space();
         }
 
         private SerializedProperty GetFaceProperty(SerializedProperty property)

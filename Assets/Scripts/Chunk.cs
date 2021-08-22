@@ -82,13 +82,20 @@ namespace Minecraft
             m_HeightMap[x, z] = (byte)value;
         }
 
-        private void UpdateSkyLightData(int x, int z)
+        private void UpdateSkyLightData(int x, int z, ModificationSource source)
         {
             int skyLight = SkyLight;
 
             for (int y = ChunkHeight - 1; y >= 0; y--)
             {
-                m_SkyLights[GetNibbleArrayIndex(x, y, z)] = (byte)skyLight;
+                int index = GetNibbleArrayIndex(x, y, z);
+
+                if (m_SkyLights[index] != skyLight)
+                {
+                    m_SkyLights[index] = (byte)skyLight;
+                    World.MarkBlockMeshDirty(x, y, z, source);
+                }
+
                 skyLight = GetBlockedLight(skyLight, m_Blocks[x, y, z]);
             }
         }
@@ -132,7 +139,7 @@ namespace Minecraft
                     }
                 }
 
-                UpdateSkyLightData(x, z);
+                UpdateSkyLightData(x, z, source);
 
                 this.AccessorSpaceToWorldSpacePosition(ref x, ref y, ref z);
 

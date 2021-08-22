@@ -11,7 +11,7 @@ namespace MinecraftEditor.Assets
 {
     public static class AssetBundleBuilder
     {
-        [MenuItem("Minecraft-Unity/Build AssetBundles")]
+        [MenuItem("Minecraft-Unity/Assets/Build AssetBundles")]
         public static void Build()
         {
             BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;

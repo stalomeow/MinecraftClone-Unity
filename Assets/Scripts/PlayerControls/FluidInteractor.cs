@@ -6,6 +6,7 @@ using Minecraft.Lua;
 using Minecraft.PhysicSystem;
 using Minecraft.Rendering;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static Minecraft.WorldConsts;
 
 namespace Minecraft.PlayerControls
@@ -18,7 +19,13 @@ namespace Minecraft.PlayerControls
             public string BlockName;
             public float VelocityMultiplier;
             public int ViewDistance;
-            [ColorUsage(true, true)] public Color AmbientColor;
+
+            [ColorUsage(true, true)]
+            [FormerlySerializedAs("AmbientColor")]
+            public Color AmbientColorDay;
+
+            [ColorUsage(true, true)]
+            public Color AmbientColorNight;
         }
 
         [SerializeField] private FluidInfo[] m_Fluids;
@@ -61,7 +68,8 @@ namespace Minecraft.PlayerControls
             {
                 m_BlockAtHead = block.InternalName;
                 ShaderUtility.ViewDistance = info.ViewDistance;
-                ShaderUtility.WorldAmbientColor = info.AmbientColor;
+                ShaderUtility.WorldAmbientColorDay = info.AmbientColorDay;
+                ShaderUtility.WorldAmbientColorNight = info.AmbientColorNight;
             }
         }
 

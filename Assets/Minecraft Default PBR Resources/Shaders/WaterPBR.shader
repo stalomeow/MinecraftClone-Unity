@@ -114,8 +114,8 @@
 				half4 mer = SAMPLE_BLOCK_MER(input.uv, input.texIndices);
 
 				BlockBRDFData data;
-				InitializeBlockBRDFData(albedo, normalWS, mer, input.lights, input.viewDirWS, input.shadowCoord, data);
-				return BlockFragmentPBR(data, albedo.a, input.positionWS);
+				InitializeBlockBRDFData(albedo, mer, input.positionWS, normalWS, input.lights, input.viewDirWS, input.shadowCoord, data);
+				return BlockFragmentPBR(data, albedo.a);
 			}
             ENDHLSL
         }

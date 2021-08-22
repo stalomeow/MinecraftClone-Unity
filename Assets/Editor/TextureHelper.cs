@@ -9,7 +9,7 @@ namespace MinecraftEditor
 {
     public static class TextureHelper
     {
-        [MenuItem("Minecraft-Unity/Merge Textures")]
+        [MenuItem("Minecraft-Unity/Textures/Merge Textures")]
         private static void Merge()
         {
             Object[] objs = Selection.objects;
@@ -62,7 +62,7 @@ namespace MinecraftEditor
             }
         }
 
-        [MenuItem("Minecraft-Unity/Split Texture From Array")]
+        [MenuItem("Minecraft-Unity/Textures/Split Texture From Array")]
         private static void Split()
         {
             Object obj = Selection.activeObject;

@@ -136,9 +136,9 @@ namespace Minecraft.PhysicSystem
                 // 检测新起点方块
                 Vector3Int pos = new Vector3Int(startX, startY, startZ);
                 BlockData block = world.RWAccessor.GetBlock(startX, startY, startZ);
-                AABB boundingBox = block.GetBoundingBox(pos);
+                AABB? boundingBox = block.GetBoundingBox(pos, world);
 
-                if (block.HasFlag(BlockFlags.IgnoreCollisions) || !selectBlock(block))
+                if (boundingBox == null || !selectBlock(block))
                 {
                     continue;
                 }
@@ -165,29 +165,23 @@ namespace Minecraft.PhysicSystem
         public static bool CheckGroundedAABB(Vector3 position, AABB aabb, IWorld world, out BlockData groundBlock)
         {
             aabb += position;
-            int y = Mathf.FloorToInt(aabb.Min.y) - 1;
+            int y = Mathf.FloorToInt(aabb.Min.y - 0.5f);
 
             if (y >= 0 && y < ChunkHeight)
             {
                 int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
+                int endX = Mathf.FloorToInt(aabb.Max.x);
                 int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
+                int endZ = Mathf.FloorToInt(aabb.Max.z);
 
                 for (int x = startX; x <= endX; x++)
                 {
                     for (int z = startZ; z <= endZ; z++)
                     {
                         groundBlock = world.RWAccessor.GetBlock(x, y, z);
+                        AABB? blockAABB = groundBlock.GetBoundingBox(x, y, z, world);
 
-                        if (groundBlock == null || groundBlock.HasFlag(BlockFlags.IgnoreCollisions))
-                        {
-                            continue;
-                        }
-
-                        AABB blockAABB = groundBlock.GetBoundingBox(x, y, z);
-
-                        if (aabb.Intersects(blockAABB))
+                        if (blockAABB != null && aabb.Intersects(blockAABB.Value))
                         {
                             return true;
                         }
@@ -211,9 +205,34 @@ namespace Minecraft.PhysicSystem
                 }
             }
 
-            movement = velocity * time;
             CollisionFlags flags = CollisionFlags.None;
+            bool negativeY = velocity.y < 0;
+            movement = default;
 
+            if (CollideWithTerrainAABB(1, aabb, world, material, time, ref velocity.y, out movement.y))
+            {
+                flags |= negativeY ? CollisionFlags.Below : CollisionFlags.Above;
+            }
+
+            aabb += new Vector3(0, movement.y, 0);
+
+            if (CollideWithTerrainAABB(0, aabb, world, material, time, ref velocity.x, out movement.x))
+            {
+                flags |= CollisionFlags.Sides;
+            }
+
+            aabb += new Vector3(movement.x, 0, 0);
+
+            if (CollideWithTerrainAABB(2, aabb, world, material, time, ref velocity.z, out movement.z))
+            {
+                flags |= CollisionFlags.Sides;
+            }
+
+            return flags;
+        }
+
+        private static void CalculateVelocityAfterCollisionWithTerrain(PhysicMaterial material, BlockData blockCollided, ref float velocity)
+        {
             // 碰撞公式：
             // v1' = ((m1 - e * m2) * v1 + (1 + e) * m2 * v2) / (m1 + m2)
             //
@@ -232,290 +251,125 @@ namespace Minecraft.PhysicSystem
             // 于是公式简化为：
             // v1' = -e * v1
 
-            static void CalculateVelocity(BlockData block, PhysicMaterial material, ref float velocity)
-            {
-                float e = block.PhysicMaterial.CoefficientOfRestitution;
-                e = PhysicMaterial.CombineValue(e, material.CoefficientOfRestitution);
-                velocity *= -e;
+            float e = blockCollided.PhysicMaterial.CoefficientOfRestitution;
+            e = PhysicMaterial.CombineValue(e, material.CoefficientOfRestitution);
+            velocity *= -e;
 
-                if (Mathf.Abs(velocity) <= Mathf.Epsilon)
+            if (Mathf.Abs(velocity) <= Mathf.Epsilon)
+            {
+                velocity = 0;
+            }
+        }
+
+        private static bool CollideWithTerrainAABB(int axis, AABB aabb, IWorld world, PhysicMaterial material, float time, ref float velocity, out float movement)
+        {
+            movement = velocity * time;
+
+            if (movement == 0)
+            {
+                return false;
+            }
+
+            Vector3Int start = default;
+            Vector3Int end = default;
+            Vector3Int step = default;
+
+            if (movement > 0)
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    velocity = 0;
+                    if (axis == i)
+                    {
+                        start[i] = Mathf.FloorToInt(aabb.Max[i]);
+                        end[i] = Mathf.FloorToInt(aabb.Max[i] + movement);
+                    }
+                    else
+                    {
+                        start[i] = Mathf.FloorToInt(aabb.Min[i]);
+                        end[i] = Mathf.FloorToInt(aabb.Max[i]);
+                    }
+
+                    step[i] = 1;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (axis == i)
+                    {
+                        end[i] = Mathf.FloorToInt(aabb.Min[i] + movement);
+                        step[i] = -1;
+                    }
+                    else
+                    {
+                        end[i] = Mathf.FloorToInt(aabb.Max[i]);
+                        step[i] = 1;
+                    }
+
+                    start[i] = Mathf.FloorToInt(aabb.Min[i]);
                 }
             }
 
-            if (movement.y > 0)
+            end += step;
+
+            for (int x = start.x; x != end.x; x += step.x)
             {
-                int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
-                int startY = Mathf.FloorToInt(aabb.Max.y);
-                int endY = Mathf.FloorToInt(aabb.Max.y + movement.y);
-                int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
-
-                for (int x = startX; x <= endX; x++)
+                for (int z = start.z; z != end.z; z += step.z)
                 {
-                    for (int z = startZ; z <= endZ; z++)
+                    for (int y = start.y; y != end.y; y += step.y)
                     {
-                        for (int y = startY; y <= endY; y++)
+                        BlockData block = world.RWAccessor.GetBlock(x, y, z);
+                        AABB? blockAABB = block.GetBoundingBox(x, y, z, world);
+
+                        if (blockAABB == null)
                         {
-                            BlockData block = world.RWAccessor.GetBlock(x, y, z);
+                            continue;
+                        }
 
-                            if (block != null && !block.HasFlag(BlockFlags.IgnoreCollisions))
+                        AABB blockBB = blockAABB.Value;
+                        bool flag = true;
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (i != axis)
                             {
-                                AABB blockAABB = block.GetBoundingBox(x, y, z);
-
-                                if (aabb.Intersects(blockAABB))
-                                {
-                                    flags |= CollisionFlags.Above;
-                                    movement.y = 0;
-                                    velocity.y = 0;
-                                }
-                                else
-                                {
-                                    float maxMovement = blockAABB.Min.y - aabb.Max.y;
-
-                                    if (movement.y > maxMovement)
-                                    {
-                                        flags |= CollisionFlags.Above;
-                                        movement.y = maxMovement;
-                                        CalculateVelocity(block, material, ref velocity.y);
-                                    }
-                                }
-                                break;
+                                flag &= blockBB.Max[i] > aabb.Min[i] && blockBB.Min[i] < aabb.Max[i];
                             }
                         }
-                    }
-                }
-            }
-            else if (movement.y < 0)
-            {
-                int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
-                int startY = Mathf.FloorToInt(aabb.Min.y);
-                int endY = Mathf.FloorToInt(aabb.Min.y + movement.y);
-                int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
 
-                for (int x = startX; x <= endX; x++)
-                {
-                    for (int z = startZ; z <= endZ; z++)
-                    {
-                        for (int y = startY; y >= endY; y--)
+                        if (!flag)
                         {
-                            BlockData block = world.RWAccessor.GetBlock(x, y, z);
+                            continue;
+                        }
 
-                            if (block != null && !block.HasFlag(BlockFlags.IgnoreCollisions))
+                        if (movement > 0 && aabb.Max[axis] <= blockBB.Min[axis])
+                        {
+                            float maxMovement = blockBB.Min[axis] - aabb.Max[axis];
+
+                            if (movement > maxMovement)
                             {
-                                AABB blockAABB = block.GetBoundingBox(x, y, z);
-
-                                if (aabb.Intersects(blockAABB))
-                                {
-                                    flags |= CollisionFlags.Below;
-                                    movement.y = 0;
-                                    velocity.y = 0;
-                                }
-                                else
-                                {
-                                    float maxMovement = blockAABB.Max.y - aabb.Min.y; // negative
-
-                                    if (movement.y < maxMovement)
-                                    {
-                                        flags |= CollisionFlags.Below;
-                                        movement.y = maxMovement;
-                                        CalculateVelocity(block, material, ref velocity.y);
-                                    }
-                                }
-                                break;
+                                CalculateVelocityAfterCollisionWithTerrain(material, block, ref velocity);
+                                movement = maxMovement;
+                                return true;
                             }
                         }
-                    }
-                }
-            }
-
-            aabb += new Vector3(0, movement.y, 0);
-
-            if (movement.x > 0)
-            {
-                int startX = Mathf.FloorToInt(aabb.Max.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x + movement.x);
-                int startY = Mathf.FloorToInt(aabb.Min.y);
-                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
-                int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
-
-                for (int z = startZ; z <= endZ; z++)
-                {
-                    for (int y = startY; y <= endY; y++)
-                    {
-                        for (int x = startX; x <= endX; x++)
+                        else if (movement < 0 && aabb.Min[axis] >= blockBB.Max[axis])
                         {
-                            BlockData block = world.RWAccessor.GetBlock(x, y, z);
+                            float maxMovement = blockBB.Max[axis] - aabb.Min[axis];
 
-                            if (block != null && !block.HasFlag(BlockFlags.IgnoreCollisions))
+                            if (movement < maxMovement)
                             {
-                                AABB blockAABB = block.GetBoundingBox(x, y, z);
-
-                                if (aabb.Intersects(blockAABB))
-                                {
-                                    flags |= CollisionFlags.Sides;
-                                    movement.x = 0;
-                                    velocity.x = 0;
-                                }
-                                else
-                                {
-                                    float maxMovement = blockAABB.Min.x - aabb.Max.x;
-
-                                    if (movement.x > maxMovement)
-                                    {
-                                        flags |= CollisionFlags.Sides;
-                                        movement.x = maxMovement;
-                                        CalculateVelocity(block, material, ref velocity.x);
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (movement.x < 0)
-            {
-                int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Min.x + movement.x);
-                int startY = Mathf.FloorToInt(aabb.Min.y);
-                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
-                int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.01f);
-
-                for (int z = startZ; z <= endZ; z++)
-                {
-                    for (int y = startY; y <= endY; y++)
-                    {
-                        for (int x = startX; x >= endX; x--)
-                        {
-                            BlockData block = world.RWAccessor.GetBlock(x, y, z);
-
-                            if (block != null && !block.HasFlag(BlockFlags.IgnoreCollisions))
-                            {
-                                AABB blockAABB = block.GetBoundingBox(x, y, z);
-
-                                if (aabb.Intersects(blockAABB))
-                                {
-                                    flags |= CollisionFlags.Sides;
-                                    movement.x = 0;
-                                    velocity.x = 0;
-                                }
-                                else
-                                {
-                                    float maxMovement = blockAABB.Max.x - aabb.Min.x; // negative
-
-                                    if (movement.x < maxMovement)
-                                    {
-                                        flags |= CollisionFlags.Sides;
-                                        movement.x = maxMovement;
-                                        CalculateVelocity(block, material, ref velocity.x);
-                                    }
-                                }
-                                break;
+                                CalculateVelocityAfterCollisionWithTerrain(material, block, ref velocity);
+                                movement = maxMovement;
+                                return true;
                             }
                         }
                     }
                 }
             }
 
-            aabb += new Vector3(movement.x, 0, 0);
-
-            if (movement.z > 0)
-            {
-                int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
-                int startY = Mathf.FloorToInt(aabb.Min.y);
-                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
-                int startZ = Mathf.FloorToInt(aabb.Max.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z + movement.z);
-
-                for (int x = startX; x <= endX; x++)
-                {
-                    for (int y = startY; y <= endY; y++)
-                    {
-                        for (int z = startZ; z <= endZ; z++)
-                        {
-                            BlockData block = world.RWAccessor.GetBlock(x, y, z);
-
-                            if (block != null && !block.HasFlag(BlockFlags.IgnoreCollisions))
-                            {
-                                AABB blockAABB = block.GetBoundingBox(x, y, z);
-
-                                if (aabb.Intersects(blockAABB))
-                                {
-                                    flags |= CollisionFlags.Sides;
-                                    movement.z = 0;
-                                    velocity.z = 0;
-                                }
-                                else
-                                {
-                                    float maxMovement = blockAABB.Min.z - aabb.Max.z;
-
-                                    if (movement.z > maxMovement)
-                                    {
-                                        flags |= CollisionFlags.Sides;
-                                        movement.z = maxMovement;
-                                        CalculateVelocity(block, material, ref velocity.z);
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (movement.z < 0)
-            {
-                int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x - 0.01f);
-                int startY = Mathf.FloorToInt(aabb.Min.y);
-                int endY = Mathf.FloorToInt(aabb.Max.y - 0.01f);
-                int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Min.z + movement.z);
-
-                for (int x = startX; x <= endX; x++)
-                {
-                    for (int y = startY; y <= endY; y++)
-                    {
-                        for (int z = startZ; z >= endZ; z--)
-                        {
-                            BlockData block = world.RWAccessor.GetBlock(x, y, z);
-
-                            if (block != null && !block.HasFlag(BlockFlags.IgnoreCollisions))
-                            {
-                                AABB blockAABB = block.GetBoundingBox(x, y, z);
-
-                                if (aabb.Intersects(blockAABB))
-                                {
-                                    flags |= CollisionFlags.Sides;
-                                    movement.z = 0;
-                                    velocity.z = 0;
-                                }
-                                else
-                                {
-                                    float maxMovement = blockAABB.Max.z - aabb.Min.z; // negative
-
-                                    if (movement.z < maxMovement)
-                                    {
-                                        flags |= CollisionFlags.Sides;
-                                        movement.z = maxMovement;
-                                        CalculateVelocity(block, material, ref velocity.z);
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return flags;
+            return false;
         }
     }
 }

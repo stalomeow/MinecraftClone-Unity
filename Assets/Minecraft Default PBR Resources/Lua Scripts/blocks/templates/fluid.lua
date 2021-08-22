@@ -20,7 +20,7 @@ function fluid:destroy(x, y, z)
     self.levels:Remove(Vector3Int(x, y, z))
 end
 
-function fluid:set_water(x, y, z, rwAccessor, level)
+function fluid:set_fluid(x, y, z, rwAccessor, level)
     local block = rwAccessor:GetBlock(x, y, z)
 
     if not block then
@@ -54,7 +54,7 @@ function fluid:tick(x, y, z)
     end
 
     local rwAccessor = self.world.RWAccessor
-    self:set_water(x, y - 1, z, rwAccessor, level) -- 可以无限向下流
+    self:set_fluid(x, y - 1, z, rwAccessor, level) -- 可以无限向下流
 
     level = level - 1
 
@@ -62,10 +62,10 @@ function fluid:tick(x, y, z)
         return
     end
 
-    self:set_water(x - 1, y, z, rwAccessor, level)
-    self:set_water(x + 1, y, z, rwAccessor, level)
-    self:set_water(x, y, z - 1, rwAccessor, level)
-    self:set_water(x, y, z + 1, rwAccessor, level)
+    self:set_fluid(x - 1, y, z, rwAccessor, level)
+    self:set_fluid(x + 1, y, z, rwAccessor, level)
+    self:set_fluid(x, y, z - 1, rwAccessor, level)
+    self:set_fluid(x, y, z + 1, rwAccessor, level)
 end
 
 return fluid

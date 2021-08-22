@@ -2,11 +2,11 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Minecraft
+namespace MinecraftEditor
 {
     public sealed class TextureAlphaSplit : EditorWindow
     {
-        [MenuItem("Minecraft-Unity/Split Texture Alpha")]
+        [MenuItem("Minecraft-Unity/Textures/Split Texture Alpha")]
         private static void Init()
         {
             GetWindow<TextureAlphaSplit>(true, "Split Texture Alpha");

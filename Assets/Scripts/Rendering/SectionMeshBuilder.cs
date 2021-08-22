@@ -28,8 +28,10 @@ namespace Minecraft.Rendering
             for (int i = 0; i < mesh.Faces.Length; i++)
             {
                 BlockMesh.FaceData face = mesh.Faces[i];
+                Vector3 size = mesh.BoundingBox.Max - mesh.BoundingBox.Min;
+                bool neverClip = face.NeverClip | size.x < 1 | size.y < 1 | size.z < 1; // 没有撑满一格的方块所有的面都渲染
 
-                if (!face.NeverClip && ClipFace(x, worldY, z, block, face.Face, accessor))
+                if (!neverClip && ClipFace(x, worldY, z, block, face.Face, accessor))
                     continue;
 
                 int?[] texIndices = block.Textures[i];
@@ -76,6 +78,14 @@ namespace Minecraft.Rendering
             if (neighbor == null)
             {
                 return AggressiveBlockFaceClipping;
+            }
+
+            BlockMesh mesh = accessor.World.BlockDataTable.GetMesh(neighbor.Mesh.Value);
+            Vector3 size = mesh.BoundingBox.Max - mesh.BoundingBox.Min;
+
+            if (size.x < 1 || size.y < 1 || size.z < 1)
+            {
+                return false;
             }
 
             switch (block.PhysicState)

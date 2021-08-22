@@ -4,7 +4,6 @@
 	{
 		[HDR] _MainColor("Main Color", Color) = (1, 1, 1, 1)
 		[HDR] _HighlightColor("Highlight Color", Color) = (1, 1, 1, 1)
-		_DestroyProgressTex("Destroy Progress Textures", 2DArray) = "white"{}
 		_AlphaCutoff("Alpha Cutoff", Range(0, 1)) = 0.9
 		_BumpScale("Bump Scale", Float) = 1.0
 	}
@@ -16,8 +15,6 @@
 		CBUFFER_START(UnityPerMaterial)
 			half4 _MainColor;
 			half4 _HighlightColor;
-			TEXTURE2D_ARRAY(_DestroyProgressTex);
-			SAMPLER(sampler_DestroyProgressTex);
 			half _AlphaCutoff;
 			half _BumpScale;
 		CBUFFER_END
@@ -99,10 +96,10 @@
 				half4 mer = SAMPLE_BLOCK_MER(input.uv, input.texIndices);
 
 				BlockBRDFData data;
-				InitializeBlockBRDFData(albedo, normalWS, mer, input.lights, input.viewDirWS, input.shadowCoord, data);
+				InitializeBlockBRDFData(albedo, mer, input.positionWS, normalWS, input.lights, input.viewDirWS, input.shadowCoord, data);
 
-				half4 col = BlockFragmentPBR(data, 1, input.positionWS);
-				col = GetHighlightColor(col, input.blockPositionWS, input.uv, _HighlightColor, TEXTURE2D_ARRAY_ARGS(_DestroyProgressTex, sampler_DestroyProgressTex));
+				half4 col = BlockFragmentPBR(data, 1);
+				HighlightBlock(input.blockPositionWS, input.uv, _HighlightColor, col);
 				return col;
 			}
             ENDHLSL
