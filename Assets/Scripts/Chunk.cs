@@ -14,6 +14,7 @@ namespace Minecraft
         private ChunkPos m_Position;
         private IWorld m_World;
         private BlockData[,,] m_Blocks;
+        private Quaternion[,,] m_Rotations;
         private NibbleArray m_SkyLights;
         private NibbleArray m_AmbientLights;
         private byte[,] m_HeightMap;
@@ -25,6 +26,7 @@ namespace Minecraft
             m_Position = default;
             m_World = default;
             m_Blocks = new BlockData[ChunkWidth, ChunkHeight, ChunkWidth];
+            m_Rotations = new Quaternion[ChunkWidth, ChunkHeight, ChunkWidth];
             m_SkyLights = new NibbleArray(ChunkWidth * ChunkHeight * ChunkWidth);
             m_AmbientLights = new NibbleArray(ChunkWidth * ChunkHeight * ChunkWidth);
             m_HeightMap = new byte[ChunkWidth, ChunkWidth];
@@ -64,14 +66,16 @@ namespace Minecraft
             m_SkyLights.Clear();
             m_AmbientLights.Clear();
             Array.Clear(m_Blocks, 0, m_Blocks.Length);
+            Array.Clear(m_Rotations, 0, m_Rotations.Length);
             Array.Clear(m_HeightMap, 0, m_HeightMap.Length);
         }
 
-        public void GetRawDataNoCheck(out ChunkPos pos, out IWorld world, out BlockData[,,] blocks, out NibbleArray skyLights, out byte[,] heightMap)
+        public void GetRawDataNoCheck(out ChunkPos pos, out IWorld world, out BlockData[,,] blocks, out Quaternion[,,] rotations, out NibbleArray skyLights, out byte[,] heightMap)
         {
             pos = m_Position;
             world = m_World;
             blocks = m_Blocks;
+            rotations = m_Rotations;
             skyLights = m_SkyLights;
             heightMap = m_HeightMap;
         }
@@ -101,7 +105,7 @@ namespace Minecraft
         }
 
 
-        public bool SetBlock(int x, int y, int z, BlockData value, ModificationSource source)
+        public bool SetBlock(int x, int y, int z, BlockData value, Quaternion rotation, ModificationSource source)
         {
             if (!Accessible)
             {
@@ -119,6 +123,7 @@ namespace Minecraft
             {
                 BlockData previousBlock = blockData;
                 blockData = value;
+                m_Rotations[x, y, z] = rotation;
 
                 int topVisibleBlockY = GetTopVisibleBlockY(x, z);
                 bool visible = !value.HasFlag(BlockFlags.AlwaysInvisible);
@@ -193,6 +198,21 @@ namespace Minecraft
             }
 
             return m_Blocks[x, y, z];
+        }
+
+        public Quaternion GetBlockRotation(int x, int y, int z, Quaternion defaultValue = default)
+        {
+            if (!Accessible)
+            {
+                throw new InvalidOperationException("Chunk is not accessible.");
+            }
+
+            if (y >= ChunkHeight || y < 0)
+            {
+                return defaultValue;
+            }
+
+            return m_Rotations[x, y, z];
         }
 
         public int GetAmbientLight(int x, int y, int z, int defaultValue = 0)

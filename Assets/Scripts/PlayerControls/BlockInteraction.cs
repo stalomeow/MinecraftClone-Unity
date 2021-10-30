@@ -85,7 +85,7 @@ namespace Minecraft.PlayerControls
                             {
                                 SetDigProgress(0);
                                 m_IsDigging = false;
-                                world.RWAccessor.SetBlock(hit.Position.x, hit.Position.y, hit.Position.z, world.BlockDataTable.GetBlock(0), ModificationSource.PlayerAction);
+                                world.RWAccessor.SetBlock(hit.Position.x, hit.Position.y, hit.Position.z, world.BlockDataTable.GetBlock(0), Quaternion.identity, ModificationSource.PlayerAction);
 
                                 //block.PlayDigAudio(m_AudioSource);
 
@@ -149,13 +149,29 @@ namespace Minecraft.PlayerControls
 
                 if (Physics.RaycastBlock(ray, RaycastMaxDistance, world, m_PlaceRaycastSelector, out BlockRaycastHit hit))
                 {
-                    Vector3 pos = hit.Position + hit.Normal;
+                    Vector3Int pos = (hit.Position + hit.Normal).FloorToInt();
                     AABB playerBB = m_PlayerEntity.BoundingBox + m_PlayerEntity.Position;
-                    AABB blockBB = hit.Block.GetBoundingBox(pos, world).Value;
+                    AABB blockBB = hit.Block.GetBoundingBox(pos, world, false).Value;
 
                     if (!playerBB.Intersects(blockBB))
                     {
-                        world.RWAccessor.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, block, ModificationSource.PlayerAction);
+                        Quaternion rotation = Quaternion.identity;
+
+                        // !!! 一定要按下面的顺序相乘，才能保证先绕 y 再绕 xz
+
+                        if ((block.RotationAxes & BlockRotationAxes.AroundXOrZAxis) == BlockRotationAxes.AroundXOrZAxis)
+                        {
+                            rotation *= Quaternion.FromToRotation(Vector3.up, hit.Normal); // 底部朝向法线
+                        }
+
+                        if ((block.RotationAxes & BlockRotationAxes.AroundYAxis) == BlockRotationAxes.AroundYAxis)
+                        {
+                            Vector3 forward = m_PlayerEntity.Forward;
+                            forward = Mathf.Abs(forward.x) > Mathf.Abs(forward.z) ? new Vector3(forward.x, 0, 0) : new Vector3(0, 0, forward.z);
+                            rotation *= Quaternion.LookRotation(-forward.normalized, Vector3.up); // 看向玩家
+                        }
+
+                        world.RWAccessor.SetBlock(pos.x, pos.y, pos.z, block, rotation, ModificationSource.PlayerAction);
                     }
                 }
             }

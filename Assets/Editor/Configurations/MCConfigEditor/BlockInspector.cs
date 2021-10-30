@@ -18,6 +18,7 @@ namespace MinecraftEditor.Configurations.MCConfigEditor
 
         private static GUIContent s_RewardItemContent = new GUIContent("Reward Item");
         private static GUIContent s_FlagsContent = new GUIContent("Flags");
+        private static GUIContent s_RotationAxesContent = new GUIContent("Rotation Axes");
         private static GUIContent s_EntityConversionContent = new GUIContent("Entity Conversion");
 
         private static GUIContent s_HardnessContent = new GUIContent("Hardness");
@@ -89,6 +90,7 @@ namespace MinecraftEditor.Configurations.MCConfigEditor
 
             block.RewardItem = EditorGUI.TextField(guiRect.Next, s_RewardItemContent, block.RewardItem);
             block.Flags = (BlockFlags)EditorGUI.EnumFlagsField(guiRect.Next, s_FlagsContent, block.Flags);
+            block.RotationAxes = (BlockRotationAxes)EditorGUI.EnumFlagsField(guiRect.Next, s_RotationAxesContent, block.RotationAxes);
             block.EntityConversion = (BlockEntityConversion)EditorGUI.EnumPopup(guiRect.Next, s_EntityConversionContent, block.EntityConversion);
         }
 

@@ -122,7 +122,7 @@ namespace Minecraft.ScriptableWorldGeneration
             }
         }
 
-        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
+        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, Quaternion[,,] rotations, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
         {
             BiomeData biome = context.Biomes[8, 8];
             Random rand = new Random(pos.X ^ pos.Z ^ helper.Seed);

@@ -43,7 +43,14 @@ inline void InitializeBlockBRDFData(half4 albedo, half4 mer, float3 positionWS, 
     data.positionWS = positionWS;
     data.normalWS = normalWS;
     data.viewDirWS = viewDirWS;
+
+#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     data.shadowCoord = shadowCoord;
+#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+    data.shadowCoord = TransformWorldToShadowCoord(positionWS);
+#else
+    data.shadowCoord = float4(0, 0, 0, 0);
+#endif
 }
 
 inline half4 BlockFragmentPBR(BlockBRDFData input, half alpha)

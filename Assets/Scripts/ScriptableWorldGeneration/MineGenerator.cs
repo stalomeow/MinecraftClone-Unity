@@ -16,7 +16,7 @@ namespace Minecraft.ScriptableWorldGeneration
         [SerializeField] private int m_MaxHeight = 128;
         [SerializeField] private string[] m_ReplaceableBlocks;
 
-        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
+        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, Quaternion[,,] rotations, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
         {
             int minHeight = m_MinHeight;
             int maxHeight = m_MaxHeight;

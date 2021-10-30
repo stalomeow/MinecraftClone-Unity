@@ -80,6 +80,8 @@ namespace Minecraft.Entities
             set => m_Transform.localPosition = value;
         }
 
+        public Vector3 Forward => m_Transform.forward;
+
         public IWorld World => m_World;
 
         public event UnityAction<CollisionFlags> OnCollisions

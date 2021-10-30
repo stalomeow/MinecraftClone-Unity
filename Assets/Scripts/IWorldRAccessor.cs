@@ -1,7 +1,6 @@
 using Minecraft.Configurations;
 using Minecraft.Lua;
 using UnityEngine;
-using XLua;
 
 namespace Minecraft
 {
@@ -14,6 +13,8 @@ namespace Minecraft
         IWorld World { get; }
 
         BlockData GetBlock(int x, int y, int z, BlockData defaultValue = null);
+
+        Quaternion GetBlockRotation(int x, int y, int z, Quaternion defaultValue = default);
 
         int GetMixedLightLevel(int x, int y, int z, int defaultValue = 0);
 

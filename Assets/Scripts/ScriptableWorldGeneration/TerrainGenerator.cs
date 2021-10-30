@@ -34,7 +34,7 @@ namespace Minecraft.ScriptableWorldGeneration
         public Vector3 MainNoiseScale = new Vector3(1 / 80f, 1 / 160f, 1 / 80f);
 
 
-        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
+        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, Quaternion[,,] rotations, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
         {
             // 生物群系生成
             NativeInt2DArray biomeIds = helper.GenLayers.GetInts(pos.X - 8, pos.Z - 8, 32, 32, Allocator.TempJob);

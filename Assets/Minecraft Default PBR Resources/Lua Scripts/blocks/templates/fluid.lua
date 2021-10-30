@@ -2,6 +2,7 @@ require "block"
 
 local Vector3Int = CS.UnityEngine.Vector3Int
 local playerModification = CS.Minecraft.ModificationSource.PlayerAction
+local quaternionIdentity = CS.UnityEngine.Quaternion.identity
 local fluid = create_block_behaviour()
 
 function fluid:init(world, block)
@@ -28,7 +29,7 @@ function fluid:set_fluid(x, y, z, rwAccessor, level)
     end
 
     if block.InternalName == self.air_name then
-        rwAccessor:SetBlock(x, y, z, self:get_block_data(), playerModification)
+        rwAccessor:SetBlock(x, y, z, self:get_block_data(), quaternionIdentity, playerModification)
         self.levels[Vector3Int(x, y, z)] = level
 
     elseif block.InternalName == self.InternalName then

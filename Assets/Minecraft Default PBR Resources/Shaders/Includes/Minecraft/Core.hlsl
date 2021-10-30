@@ -26,7 +26,9 @@ inline void HighlightBlock(float3 blockPos, float2 uv, half4 highlightColor, ino
         UNITY_BRANCH
         if (_DigProgress > -1)
         {
-            color.rgb *= SAMPLE_TEXTURE2D_ARRAY(_DigProgressTextures, sampler_DigProgressTextures, uv, _DigProgress).rgb;
+            half4 tex = SAMPLE_TEXTURE2D_ARRAY(_DigProgressTextures, sampler_DigProgressTextures, uv, _DigProgress);
+            color.rgb *= tex.rgb;
+            color.a = saturate(color.a + tex.a);
         }
     }
 }

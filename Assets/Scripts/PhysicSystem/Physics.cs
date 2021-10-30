@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Minecraft.Configurations;
 using UnityEngine;
 using static Minecraft.WorldConsts;
@@ -136,9 +136,9 @@ namespace Minecraft.PhysicSystem
                 // 检测新起点方块
                 Vector3Int pos = new Vector3Int(startX, startY, startZ);
                 BlockData block = world.RWAccessor.GetBlock(startX, startY, startZ);
-                AABB? boundingBox = block.GetBoundingBox(pos, world);
+                // AABB? boundingBox = block.GetBoundingBox(pos, world);
 
-                if (boundingBox == null || !selectBlock(block))
+                if (!selectBlock(block))
                 {
                     continue;
                 }
@@ -179,7 +179,7 @@ namespace Minecraft.PhysicSystem
                     for (int z = startZ; z <= endZ; z++)
                     {
                         groundBlock = world.RWAccessor.GetBlock(x, y, z);
-                        AABB? blockAABB = groundBlock.GetBoundingBox(x, y, z, world);
+                        AABB? blockAABB = groundBlock.GetBoundingBox(x, y, z, world, true);
 
                         if (blockAABB != null && aabb.Intersects(blockAABB.Value))
                         {
@@ -320,7 +320,7 @@ namespace Minecraft.PhysicSystem
                     for (int y = start.y; y != end.y; y += step.y)
                     {
                         BlockData block = world.RWAccessor.GetBlock(x, y, z);
-                        AABB? blockAABB = block.GetBoundingBox(x, y, z, world);
+                        AABB? blockAABB = block.GetBoundingBox(x, y, z, world, true);
 
                         if (blockAABB == null)
                         {

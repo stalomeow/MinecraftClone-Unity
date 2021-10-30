@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Minecraft.Configurations;
 using Minecraft.Rendering;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using XLua;
@@ -13,8 +14,7 @@ namespace Minecraft.Entities
     {
         [NonSerialized] private Mesh m_Mesh;
         [NonSerialized] private MaterialPropertyBlock m_MaterialProperty;
-        [NonSerialized] private List<SectionMeshVertexData> m_VertexBuffer;
-        [NonSerialized] private List<ushort> m_IndexBuffer;
+        [NonSerialized] private BlockMeshBuilder<ushort> m_MeshBuilder;
 
         [NonSerialized] private bool m_EnableRendering;
         [NonSerialized] private Material m_Material;
@@ -42,8 +42,7 @@ namespace Minecraft.Entities
             m_Mesh = new Mesh();
             m_Mesh.MarkDynamic();
             m_MaterialProperty = new MaterialPropertyBlock();
-            m_VertexBuffer = new List<SectionMeshVertexData>();
-            m_IndexBuffer = new List<ushort>();
+            m_MeshBuilder = BlockMeshBuilder<ushort>.CreateBlockEntityMeshBuilder(true);
 
             m_EnableRendering = true;
             m_Material = null;
@@ -74,8 +73,7 @@ namespace Minecraft.Entities
 
             m_Mesh.Clear(false);
             m_MaterialProperty.Clear();
-            m_VertexBuffer.Clear();
-            m_IndexBuffer.Clear();
+            // m_MeshBuilder.ClearBuffers();
 
             m_EnableRendering = true;
             m_Material = null;
@@ -86,42 +84,10 @@ namespace Minecraft.Entities
 
         private void BuildMesh(Vector3Int position)
         {
-            BlockMesh mesh = World.BlockDataTable.GetMesh(m_Block.Mesh.Value);
+            // 渲染在原点的位置
+            m_MeshBuilder.AddBlock(position, -position, m_Block, World.RWAccessor);
+            m_MeshBuilder.ApplyAndClearBuffers(m_Mesh, MeshTopology.Triangles, false, Allocator.Temp);
 
-            for (int i = 0; i < mesh.Faces.Length; i++)
-            {
-                BlockMesh.FaceData face = mesh.Faces[i];
-                int?[] texIndices = m_Block.Textures[i];
-
-                // !!! must add indices first
-                for (int j = 0; j < face.Indices.Length; j++)
-                {
-                    m_IndexBuffer.Add((ushort)(m_VertexBuffer.Count + face.Indices[j]));
-                }
-
-                for (int j = 0; j < face.Vertices.Length; j++)
-                {
-                    BlockVertexData vertex = face.Vertices[j];
-                    float emission = m_Block.GetEmissionValue();
-                    Vector2 ambient = LightingUtility.AmbientOcclusion(position.x, position.y, position.z, face.Face, vertex.CornerInFace, World.RWAccessor);
-
-                    m_VertexBuffer.Add(new SectionMeshVertexData
-                    {
-                        PositionOS = vertex.Position,
-                        UV = vertex.UV,
-                        TexIndices = new Vector3Int(texIndices[0].Value, texIndices[1].Value, texIndices[2].Value),
-                        Lights = new Vector3(emission, ambient.x, ambient.y),
-                        BlockPositionWS = new Vector3(-1, -1, -1)
-                    });
-                }
-            }
-
-            m_Mesh.SetVertexBufferParams(m_VertexBuffer.Count, SectionMeshVertexData.VertexAttributes);
-            m_Mesh.SetVertexBufferData(m_VertexBuffer, 0, 0, m_VertexBuffer.Count);
-            m_Mesh.SetIndexBufferParams(m_IndexBuffer.Count, IndexFormat.UInt16);
-            m_Mesh.SetIndexBufferData(m_IndexBuffer, 0, 0, m_IndexBuffer.Count);
-            m_Mesh.SetSubMesh(0, new SubMeshDescriptor(0, m_IndexBuffer.Count));
-            m_Mesh.UploadMeshData(false);
             m_Mesh.RecalculateNormals();
             m_Mesh.RecalculateTangents();
             m_Mesh.RecalculateBounds();

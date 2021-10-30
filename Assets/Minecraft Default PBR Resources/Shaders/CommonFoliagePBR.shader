@@ -56,7 +56,7 @@
 
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile _ _SHADOWS_SOFT
 
 			#pragma vertex vert
 			#pragma fragment frag
@@ -97,7 +97,10 @@
 				output.tangentWS = half4(normalInput.tangentWS.xyz, sign);
 				output.lights = input.lights;
 				output.viewDirWS = viewDirWS;
+
+#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
 				output.shadowCoord = GetShadowCoord(vertexInput);
+#endif
 				output.blockPositionWS = input.blockPositionWS;
 				output.positionCS = vertexInput.positionCS;
 				return output;
@@ -106,8 +109,6 @@
 			float4 frag(Varyings input) : SV_TARGET
 			{
 				half4 albedo = SAMPLE_BLOCK_ALBEDO(input.uv, input.texIndices) * _MainColor;
-				clip(albedo.a - _AlphaCutoff);
-
 				float3 bitangent = input.tangentWS.w * cross(input.normalWS.xyz, input.tangentWS.xyz);
 				float3 normalTS = UnpackNormalScale(SAMPLE_BLOCK_NORMAL(input.uv, input.texIndices), _BumpScale);
 				float3 normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz));
@@ -117,8 +118,9 @@
 				BlockBRDFData data;
 				InitializeBlockBRDFData(albedo, mer, input.positionWS, normalWS, input.lights, input.viewDirWS, input.shadowCoord, data);
 
-				half4 col = BlockFragmentPBR(data, 1);
+				half4 col = BlockFragmentPBR(data, albedo.a);
 				HighlightBlock(input.blockPositionWS, input.uv, _HighlightColor, col);
+				clip(col.a - _AlphaCutoff);
 				return col;
 			}
             ENDHLSL

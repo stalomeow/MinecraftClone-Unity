@@ -85,7 +85,7 @@ namespace Minecraft
             }
 
             chunk.Initialize(pos.X, pos.Z, m_World);
-            chunk.GetRawDataNoCheck(out _, out IWorld world, out BlockData[,,] blocks, out NibbleArray skyLights, out byte[,] heightMap);
+            chunk.GetRawDataNoCheck(out _, out IWorld world, out BlockData[,,] blocks, out _, out NibbleArray skyLights, out byte[,] heightMap);
 
             world.WorldGenPipeline.GenerateChunk(chunk);
             InitLightsAndColumns(pos, world, blocks, skyLights, heightMap);

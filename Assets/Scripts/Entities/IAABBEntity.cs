@@ -31,6 +31,8 @@ namespace Minecraft.Entities
 
         Vector3 LocalPosition { get; set; }
 
+        Vector3 Forward { get; }
+
         IWorld World { get; }
 
         event UnityAction<CollisionFlags> OnCollisions;

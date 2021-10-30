@@ -56,7 +56,7 @@ namespace Minecraft.Rendering
             job.Run();
         }
 
-        public static void AddSection<TIndex>(this SectionMeshBuilder<TIndex> builder, Vector3Int section, Chunk3x3Accessor accessor) where TIndex : unmanaged
+        public static void AddSection<TIndex>(this BlockMeshBuilder<TIndex> builder, Vector3Int section, Chunk3x3Accessor accessor) where TIndex : unmanaged
         {
             for (int x = 0; x < ChunkWidth; x++)
             {
@@ -74,7 +74,13 @@ namespace Minecraft.Rendering
                         }
 
                         BlockData block = accessor.GetBlock(x, worldY, z);
-                        builder.AddBlock(x, y, z, section.y, block, accessor);
+
+                        if (block.EntityConversion != BlockEntityConversion.Initial)
+                        {
+                            Vector3Int pos = new Vector3Int(x, worldY, z);
+                            Vector3Int offset = new Vector3Int(0, -section.y, 0);
+                            builder.AddBlock(pos, offset, block, accessor);
+                        }
                     }
                 }
             }

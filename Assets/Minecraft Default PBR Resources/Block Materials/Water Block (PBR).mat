@@ -21,15 +21,15 @@ Material:
     m_TexEnvs:
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: f346ac611615c8747a122d1874ca0ba4, type: 3}
-        m_Scale: {x: 0.05, y: 0.05}
+        m_Scale: {x: 0.005, y: 0.005}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 0.5
-    - _Depth: 1.5
-    - _FlowSpeed: 0.15
+    - _Depth: 0
+    - _FlowSpeed: 0.05
     m_Colors:
-    - _DeepColor: {r: 0.54901963, g: 1.0196079, b: 1.4117647, a: 0.9019608}
+    - _DeepColor: {r: 0.031536803, g: 0.40997842, b: 0.75294113, a: 0.8}
     - _FlowDirection1: {r: 0.1, g: 0, b: -0.15, a: 0}
-    - _FlowDirection2: {r: -0.15, g: 0, b: 0.245, a: 0}
-    - _MainColor: {r: 0.13333334, g: 0.73333335, b: 1, a: 0.69803923}
+    - _FlowDirection2: {r: -0.05, g: 0, b: 0.1, a: 0}
+    - _MainColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_BuildTextureStacks: []

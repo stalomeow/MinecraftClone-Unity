@@ -102,22 +102,41 @@ namespace Minecraft.ScriptableWorldGeneration
         public virtual void GenerateChunk(Chunk chunk)
         {
             GenerationContext context = GetGenerationContext();
-            chunk.GetRawDataNoCheck(out ChunkPos transform, out IWorld world, out BlockData[,,] blocks, out NibbleArray skyLights, out byte[,] heightMap);
+            chunk.GetRawDataNoCheck(out ChunkPos transform, out IWorld world, out BlockData[,,] blocks, out Quaternion[,,] rotations, out NibbleArray skyLights, out byte[,] heightMap);
+            InitializeBlockRotations(rotations);
 
-            m_TerrainGenerator.Generate(world, transform, blocks, heightMap, m_GenHelper, context);
+            m_TerrainGenerator.Generate(world, transform, blocks, rotations, heightMap, m_GenHelper, context);
 
             // 生成洞穴
             if (UseCaves)
             {
-                m_CaveGenerator.Generate(world, transform, blocks, heightMap, m_GenHelper, context);
+                m_CaveGenerator.Generate(world, transform, blocks, rotations, heightMap, m_GenHelper, context);
             }
 
             for (int i = 0; i < m_ExtraGenerators.Length; i++)
             {
-                m_ExtraGenerators[i].Generate(world, transform, blocks, heightMap, m_GenHelper, context);
+                m_ExtraGenerators[i].Generate(world, transform, blocks, rotations, heightMap, m_GenHelper, context);
             }
 
             RecycleGenerationContext(context);
+        }
+
+        private void InitializeBlockRotations(Quaternion[,,] rotations)
+        {
+            int len0 = rotations.GetLength(0);
+            int len1 = rotations.GetLength(1);
+            int len2 = rotations.GetLength(2);
+
+            for (int i = 0; i < len0; i++)
+            {
+                for (int j = 0; j < len1; j++)
+                {
+                    for (int k = 0; k < len2; k++)
+                    {
+                        rotations[i, j, k] = Quaternion.identity;
+                    }
+                }
+            }
         }
 
         protected GenerationContext GetGenerationContext()

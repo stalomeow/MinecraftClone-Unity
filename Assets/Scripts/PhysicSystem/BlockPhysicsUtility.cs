@@ -6,20 +6,21 @@ namespace Minecraft.PhysicSystem
     [XLua.LuaCallCSharp]
     public static class BlockPhysicsUtility
     {
-        public static AABB? GetBoundingBox(this BlockData block, float x, float y, float z, IWorld world)
+        public static AABB? GetBoundingBox(this BlockData block, int x, int y, int z, IWorld world, bool checkCollisionFlags)
         {
-            return GetBoundingBox(block, new Vector3(x, y, z), world);
+            return GetBoundingBox(block, new Vector3Int(x, y, z), world, checkCollisionFlags);
         }
 
-        public static AABB? GetBoundingBox(this BlockData block, Vector3 position, IWorld world)
+        public static AABB? GetBoundingBox(this BlockData block, Vector3Int position, IWorld world, bool checkCollisionFlags)
         {
-            if (block == null || block.HasFlag(BlockFlags.IgnoreCollisions))
+            if (block == null || (checkCollisionFlags && block.HasFlag(BlockFlags.IgnoreCollisions)))
             {
                 return null;
             }
 
             BlockMesh mesh = world.BlockDataTable.GetMesh(block.Mesh.Value);
-            return mesh.BoundingBox + position;
+            Quaternion rotation = world.RWAccessor.GetBlockRotation(position.x, position.y, position.z, Quaternion.identity);
+            return AABB.Rotate(mesh.BoundingBox, rotation, mesh.Pivot) + position;
         }
     }
 }

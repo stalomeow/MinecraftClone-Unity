@@ -21,7 +21,7 @@ namespace Minecraft.ScriptableWorldGeneration
         [NonSerialized] private HashSet<string> m_ReplaceableBlockSet;
 
 
-        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
+        public override void Generate(IWorld world, ChunkPos pos, BlockData[,,] blocks, Quaternion[,,] rotations, byte[,] heightMap, GenerationHelper helper, GenerationContext context)
         {
             pos = ChunkPos.Get(pos.X / ChunkWidth, pos.Z / ChunkWidth); // 。。。
 

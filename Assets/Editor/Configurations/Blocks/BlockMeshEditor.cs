@@ -46,6 +46,7 @@ namespace MinecraftEditor.Configurations.Blocks
 
         public override void OnInspectorGUI()
         {
+            DrawPivotField();
             DrawBoundingBoxField();
             InitAndSelectExistedFace();
             DrawNeverClipField();
@@ -54,6 +55,12 @@ namespace MinecraftEditor.Configurations.Blocks
             DrawVerticesAndIndices();
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawPivotField()
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(BlockMesh.Pivot)));
+            EditorGUILayout.Space();
         }
 
         private void DrawBoundingBoxField()

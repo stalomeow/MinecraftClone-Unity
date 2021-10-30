@@ -226,6 +226,19 @@ namespace Minecraft
                 return defaultValue;
             }
 
+            public Quaternion GetBlockRotation(int x, int y, int z, Quaternion defaultValue = default)
+            {
+                ChunkPos pos = ChunkPos.GetFromAny(x, z);
+
+                if (World.ChunkManager.GetChunk(pos, false, out Chunk chunk))
+                {
+                    this.AccessorSpaceToAccessorSpacePosition(chunk, ref x, ref y, ref z);
+                    return chunk.GetBlockRotation(x, y, z, defaultValue);
+                }
+
+                return defaultValue;
+            }
+
             public int GetMixedLightLevel(int x, int y, int z, int defaultValue = 0)
             {
                 ChunkPos pos = ChunkPos.GetFromAny(x, z);
@@ -279,14 +292,14 @@ namespace Minecraft
                 return false;
             }
 
-            public bool SetBlock(int x, int y, int z, BlockData value, ModificationSource source)
+            public bool SetBlock(int x, int y, int z, BlockData value, Quaternion rotation, ModificationSource source)
             {
                 ChunkPos pos = ChunkPos.GetFromAny(x, z);
 
                 if (World.ChunkManager.GetChunk(pos, false, out Chunk chunk))
                 {
                     this.AccessorSpaceToAccessorSpacePosition(chunk, ref x, ref y, ref z);
-                    return chunk.SetBlock(x, y, z, value, source);
+                    return chunk.SetBlock(x, y, z, value, rotation, source);
                 }
 
                 return false;

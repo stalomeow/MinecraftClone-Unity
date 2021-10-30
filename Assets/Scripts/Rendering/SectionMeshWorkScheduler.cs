@@ -13,7 +13,7 @@ using System;
 #if ENABLE_32BIT_MESH_INDEX
 using SMeshBuilder = Minecraft.Rendering.SectionMeshBuilder<int>;
 #else
-using SMeshBuilder = Minecraft.Rendering.SectionMeshBuilder<ushort>;
+using SMeshBuilder = Minecraft.Rendering.BlockMeshBuilder<ushort>;
 #endif
 
 namespace Minecraft.Rendering
@@ -138,7 +138,7 @@ namespace Minecraft.Rendering
 
             for (int i = m_MeshBuilderBuffer.Count; i < count; i++)
             {
-                m_MeshBuilderBuffer.Add(new SMeshBuilder(m_SubMeshCount, true));
+                m_MeshBuilderBuffer.Add(SMeshBuilder.CreateSectionMeshBuilder(m_SubMeshCount, true, true, true));
             }
         }
 
@@ -202,7 +202,7 @@ namespace Minecraft.Rendering
         {
             if (!m_BuildableMeshes.TryDequeue(out BuildableMesh mesh))
             {
-                SMeshBuilder builder = new SMeshBuilder(m_SubMeshCount, true);
+                SMeshBuilder builder = SMeshBuilder.CreateSectionMeshBuilder(m_SubMeshCount, true, true, true);
                 mesh = new BuildableMesh(builder);
             }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Minecraft.Configurations;
 using Minecraft.Lua;
 using Minecraft.Rendering.Jobs;
@@ -38,6 +39,7 @@ namespace Minecraft.Rendering
         private BlockTable m_BlockTable;
         private NativeArray<float4> m_FrustumPlanes;
         private NativeList<int> m_VisibleSectionIndices;
+        private List<(Mesh mesh, Vector3Int pos)> m_RenderMeshBuffer;
         private int3 m_SectionSize;
         private int3 m_SectionOffset;
         private NativeArray<int3> m_Sections;
@@ -53,6 +55,7 @@ namespace Minecraft.Rendering
             m_BlockTable = world.BlockDataTable;
             m_FrustumPlanes = new NativeArray<float4>(FrustumPlaneCount, Allocator.Persistent);
             m_VisibleSectionIndices = new NativeList<int>(Allocator.Persistent);
+            m_RenderMeshBuffer = new List<(Mesh mesh, Vector3Int pos)>();
             m_SectionSize = int3(ChunkWidth, SectionHeight, ChunkWidth);
             m_SectionOffset = default;
             InitSections();
@@ -190,37 +193,53 @@ namespace Minecraft.Rendering
         {
             Profiler.BeginSample("SectionRenderingManager.RenderMeshes");
 
+            int subMeshCount = m_BlockTable.MaterialCount;
+
+            if (subMeshCount <= 0)
+            {
+                return;
+            }
+
+            m_RenderMeshBuffer.Clear();
+            Material material = m_BlockTable.GetMaterial(0);
+
             for (int i = 0; i < m_VisibleSectionIndices.Length; i++)
             {
                 Mesh mesh = FindSectionMesh(m_VisibleSectionIndices[i], out Vector3Int pos);
-                RenderSectionMesh(mesh, pos, m_TargetLayer, m_World.MainCamera, m_Setting.CastShadows, m_Setting.ReceiveShadows);
+
+                if (mesh.subMeshCount != subMeshCount)
+                {
+                    continue;
+                }
+
+                m_RenderMeshBuffer.Add((mesh, pos));
+                RenderSectionMesh(mesh, 0, pos, material, m_TargetLayer, m_World.MainCamera, m_Setting.CastShadows, m_Setting.ReceiveShadows);
+            }
+
+            for (int i = 1; i < subMeshCount; i++)
+            {
+                material = m_BlockTable.GetMaterial(i);
+
+                for (int j = 0; j < m_RenderMeshBuffer.Count; j++)
+                {
+                    (Mesh mesh, Vector3Int pos) = m_RenderMeshBuffer[j];
+                    RenderSectionMesh(mesh, i, pos, material, m_TargetLayer, m_World.MainCamera, m_Setting.CastShadows, m_Setting.ReceiveShadows);
+                }
             }
 
             Profiler.EndSample();
         }
 
-        private void RenderSectionMesh(Mesh mesh, Vector3 position, int layer, Camera camera, ShadowCastingMode castShadows, bool receiveShadows)
+        private void RenderSectionMesh(Mesh mesh, int subMeshIndex, Vector3 position, Material material, int layer, Camera camera, ShadowCastingMode castShadows, bool receiveShadows)
         {
             Profiler.BeginSample("SectionRenderingManager.RenderSectionMesh");
 
-            int subMeshCount = m_BlockTable.MaterialCount;
-
-            if (mesh.subMeshCount != subMeshCount)
-            {
-                return;
-            }
-
             Matrix4x4 matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one);
+            SubMeshDescriptor subMesh = mesh.GetSubMesh(subMeshIndex);
 
-            for (int i = 0; i < subMeshCount; i++)
+            if (subMesh.indexCount > 0)
             {
-                SubMeshDescriptor subMesh = mesh.GetSubMesh(i);
-
-                if (subMesh.indexCount > 0)
-                {
-                    Material material = m_BlockTable.GetMaterial(i);
-                    Graphics.DrawMesh(mesh, matrix, material, layer, camera, i, null, castShadows, receiveShadows, null, false);
-                }
+                Graphics.DrawMesh(mesh, matrix, material, layer, camera, subMeshIndex, null, castShadows, receiveShadows, null, false);
             }
 
             Profiler.EndSample();

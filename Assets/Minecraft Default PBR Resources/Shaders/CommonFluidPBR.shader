@@ -72,7 +72,10 @@
 				output.tangentWS = half4(normalInput.tangentWS.xyz, sign);
 				output.lights = input.lights;
 				output.viewDirWS = viewDirWS;
+
+#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
 				output.shadowCoord = GetShadowCoord(vertexInput);
+#endif
 				output.blockPositionWS = input.blockPositionWS;
 				output.positionCS = vertexInput.positionCS;
 				return output;

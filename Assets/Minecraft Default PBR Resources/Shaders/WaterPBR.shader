@@ -55,6 +55,8 @@
             #pragma target 4.5
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
+			//#include "Includes/Minecraft/ScreenSpaceReflection.hlsl"
 
 			#pragma vertex vert
             #pragma fragment frag
@@ -89,7 +91,10 @@
 				output.tangentWS = half4(normalInput.tangentWS.xyz, sign);
 				output.lights = input.lights;
 				output.viewDirWS = viewDirWS;
+
+#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
 				output.shadowCoord = GetShadowCoord(vertexInput);
+#endif
 				output.screenPos = ComputeScreenPos(vertexInput.positionCS);
 				output.positionCS = vertexInput.positionCS;
 				return output;
@@ -97,8 +102,8 @@
 
 			float4 frag(Varyings input) : SV_TARGET
 			{
-				float depth = SampleSceneDepth(input.screenPos.xy / input.screenPos.w);
-				float depthValue = saturate(Linear01Depth(depth, _ZBufferParams) * _ProjectionParams.z - (input.screenPos.w + _Depth));
+				float depth = Linear01Depth(SampleSceneDepth(input.screenPos.xy / input.screenPos.w), _ZBufferParams);
+				float depthValue = saturate(depth * _ProjectionParams.z - (input.screenPos.w + _Depth));
 				half4 albedo = half4(SAMPLE_BLOCK_ALBEDO(input.uv, input.texIndices).rgb, 1) * lerp(_MainColor, _DeepColor, depthValue);
 
 				float2 normalUV1 = input.positionWS.xz * _BumpMap_ST.xy + _BumpMap_ST.zw + _FlowDirection1.xz * _FlowSpeed * _Time.z;

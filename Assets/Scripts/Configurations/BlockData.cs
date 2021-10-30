@@ -13,6 +13,7 @@ namespace Minecraft.Configurations
 
         public string RewardItem;
         public BlockFlags Flags;
+        public BlockRotationAxes RotationAxes;
         public BlockEntityConversion EntityConversion;
 
         public int Hardness = 16;

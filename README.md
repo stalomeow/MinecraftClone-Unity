@@ -1,10 +1,20 @@
-# Minecraft 演示项目
+# Minecraft Demo
 
 本项目使用 `Unity 2020.3.2f1c1` 制作。
 
+**以下图片均为游戏内实际画面。**
 
 
-![展示.gif](/Recordings/gif_animation_001.gif)
+![游戏内截图(1920x1080)](/Recordings/Capture.png)
+
+
+![生物群系交界处(1920x1080)](/Recordings/biome.png)
+
+
+![经典火柴盒(1920x1080)](/Recordings/house.png)
+
+
+![火柴盒内饰(1920x1080)](/Recordings/house_inside.png)
 
 
 
@@ -13,29 +23,29 @@
 * 无限世界，随机地形
 * 生物群系（热带稀树草原、沙漠、森林、沙滩、MORE+）
 * 矿洞、矿脉（钻石矿、煤矿、金矿、MORE+）
-* 光照、环境光遮蔽
-* 发光的萤石
+* 光照、环境光遮蔽、阴影
+* 萤石、火把
 * 飘动的树叶
 * 树木
 * 半砖（暂不支持合并）
-* 支持弹性碰撞的粘液块（项目未使用 Unity 内置的物理系统，重写了一个简单版）
+* 支持弹性碰撞的粘液块（项目未使用 Unity 内置的物理系统，自己写了一个简单版）
 * 能爆炸的 TNT（有粒子特效）
 * 受重力影响的沙子和沙砾
 * 可流动的水和岩浆（有最大流动格数的限制，一格水不会淹没整个世界（笑））
+* 方块朝向（旋转）
 * 昼夜更替
 * URP渲染管线 + 全 PBR 材质（[支持 NVIDIA 的 Minecraft PBR 材质包](https://www.nvidia.cn/geforce/guides/minecraft-rtx-texturing-guide/)）
-* 支持阴影，但不建议开启
 * 后处理特效
 * 可自定义的资源包
 * 方块数据、生物群系数据、物品数据高度可配置
-* MORE +
-* 对了，应该还有一些 ~~bug~~ 特性
+* 一些 ~~bug~~ 特性
 
 
 
 # Notice
 
-项目使用的材质包是在 [“我的世界 (Minecraft)”Windows 10 RTX Beta版：基于物理效果的渲染纹理答疑和免费资源包下载 (nvidia.cn)](https://www.nvidia.cn/geforce/news/minecraft-with-rtx-beta-your-pbr-questions-answered/) 下载的 `RTX Vanilla Conversion`，其创作者为：u/TheCivilHulk。也可以直接在 [TheCivilHulk/Minecraft-RTX-Vanilla-Conversion-and-Patches: Converted all (currently working) vanilla textures to the Minecraft Bedrock RTX format for testing/playing purposes. (github.com)](https://github.com/TheCivilHulk/Minecraft-RTX-Vanilla-Conversion-and-Patches) 下载。
+* 项目使用的材质包是在 [“我的世界 (Minecraft)”Windows 10 RTX Beta版：基于物理效果的渲染纹理答疑和免费资源包下载 (nvidia.cn)](https://www.nvidia.cn/geforce/news/minecraft-with-rtx-beta-your-pbr-questions-answered/) 下载的 `RTX Vanilla Conversion`，其创作者为：u/TheCivilHulk。也可以直接在 [TheCivilHulk/Minecraft-RTX-Vanilla-Conversion-and-Patches: Converted all (currently working) vanilla textures to the Minecraft Bedrock RTX format for testing/playing purposes. (github.com)](https://github.com/TheCivilHulk/Minecraft-RTX-Vanilla-Conversion-and-Patches) 下载。
+* 我高三了，要准备高考，**减缓**更新！
 
 
 
@@ -117,15 +127,15 @@ class Example : MonoBehaviour
 
 
 
-![编辑器_方块](Recordings/Custom/mc_config_editor_block.png)
+![编辑器-方块](EditorRecordings/mc_config_editor_block.png)
 
 
 
-![编辑器_物品](Recordings/Custom/mc_config_editor_item.png)
+![编辑器-物品](EditorRecordings/mc_config_editor_item.png)
 
 
 
-![编辑器_生物群系](Recordings/Custom/mc_config_editor_biome.png)
+![编辑器-生物群系](EditorRecordings/mc_config_editor_biome.png)
 
 
 
@@ -140,7 +150,6 @@ class Example : MonoBehaviour
 7. 保存的配置文件有一大坨，其中文件名前加了 `[editor]` 的都是只在 Unity Editor 下使用的
 8. 如果想知道第7条中提到的文件有啥作用的话，请看源码吧，这里空间太小，我写不下（费马行为）
 9. 如果还有啥问题就提个 issue 问我吧，我想不出来了
-10. 我要准备高考了，一段时间不会再更新了（从 2021-08-24 开始）
 
 
 

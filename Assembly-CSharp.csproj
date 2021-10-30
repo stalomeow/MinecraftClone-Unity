@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2020_3_2;UNITY_2020_3;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;ENABLE_LEGACY_INPUT_MANAGER;UNITY_POST_PROCESSING_STACK_V2;HOTFIX_ENABLE;LOAD_ASSET_BUNDLE_FROM_FILE;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER;DEVELOPMENT_BUILD</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2020_3_2;UNITY_2020_3;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;ENABLE_LEGACY_INPUT_MANAGER;UNITY_POST_PROCESSING_STACK_V2;HOTFIX_ENABLE;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -39,31 +39,21 @@
      <Compile Include="Assets\Scripts\PlayerControls\FluidInteractor.cs" />
      <Compile Include="Assets\XLua\util\Xxtea.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\PlantGenerator.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Audio_AudioManagerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BlockUtilityWrap.cs" />
      <Compile Include="Assets\XLua\Src\LuaDLL.cs" />
      <Compile Include="Assets\Scripts\PhysicSystem\PhysicMaterial.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BlockDataWrap.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\MineGenerator.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BlockVertexDataWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\UnityResourceAPI.cs" />
      <Compile Include="Assets\Scripts\Noises\INoise.cs" />
      <Compile Include="Assets\Scripts\Rendering\LightingUtility.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ChunkBuilderWrap.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\DefaultLayers\BiomeLayer.cs" />
      <Compile Include="Assets\Scripts\PlayerControls\BlockInteraction.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BlockTableWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_ShaderUtilityWrap.cs" />
      <Compile Include="Assets\Scripts\PhysicSystem\BlockPhysicsUtility.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_AssetPtrWrap.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\DefaultLayers\AddIslandLayer.cs" />
      <Compile Include="Assets\XLua\Src\MethodWarpsCache.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_WorldUtilityWrap.cs" />
      <Compile Include="Assets\Scripts\Collections\NibbleArray.cs" />
      <Compile Include="Assets\Scripts\ChunkManager.cs" />
      <Compile Include="Assets\Scripts\IWorldRAccessor.cs" />
      <Compile Include="Assets\Scripts\Entities\LuaBlockEntity.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Utils_ArrayUtilityWrap.cs" />
      <Compile Include="Assets\Scripts\WorldUtility.cs" />
      <Compile Include="Assets\Scripts\PlayerControls\FOVKick.cs" />
      <Compile Include="Assets\Scripts\PhysicSystem\Physics.cs" />
@@ -75,30 +65,18 @@
      <Compile Include="Assets\Scripts\Collections\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\Rendering\MeshBuilder.cs" />
      <Compile Include="Assets\Scripts\Utils\ArrayUtility.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Entities_IRenderableEntityWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\IAssetBundle.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_StatelessGeneratorWrap.cs" />
      <Compile Include="Assets\Scripts\PlayerControls\FirstPersonLook.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\DefaultLayers\IslandLayer.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenerationHelperWrap.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenerationHelper.cs" />
      <Compile Include="Assets\Scripts\Rendering\ShaderUtility.cs" />
-     <Compile Include="Assets\XLua\Gen\System_Collections_IEnumeratorBridge.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_MineGeneratorWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Lua_LuaManagerWrap.cs" />
      <Compile Include="Assets\Scripts\PlayerControls\LerpControlledBob.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_AddIslandLayerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_SectionRenderingManagerWrap.cs" />
      <Compile Include="Assets\Scripts\Utils\FPSCounter.cs" />
      <Compile Include="Assets\Scripts\Configurations\BiomeId.cs" />
      <Compile Include="Assets\Scripts\Noises\UniformRNG.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_SectionMeshVertexDataWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_IWorldRAccessorWrap.cs" />
      <Compile Include="Assets\Scripts\Entities\IAABBEntity.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_AsyncAssetWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\RuntimeAssetBundle.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\TerrainGenerator.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PlayerControls_BlockInteractionWrap.cs" />
      <Compile Include="Assets\Scripts\ChunkDebugger.cs" />
      <Compile Include="Assets\XLua\Src\LuaFunction.cs" />
      <Compile Include="Assets\Scripts\Rendering\Jobs\CalculateFrustumPlaneJob.cs" />
@@ -109,154 +87,92 @@
      <Compile Include="Assets\Scripts\Entities\IRenderableEntity.cs" />
      <Compile Include="Assets\XLua\Src\TypeExtensions.cs" />
      <Compile Include="Assets\Scripts\Utils\AOTUtils.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PhysicSystem_BlockPhysicsUtilityWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Lua_LuaUtilityWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Noises_INoiseWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\AsyncAsset.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_MathUtilityWrap.cs" />
      <Compile Include="Assets\Scripts\Lua\LuaUtility.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_PlantGeneratorWrap.cs" />
      <Compile Include="Assets\Scripts\Lua\LuaManager.cs" />
      <Compile Include="Assets\Scripts\Rendering\SectionMeshManager.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_CaveGeneratorWrap.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockFlags.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockUtility.cs" />
      <Compile Include="Assets\Scripts\DayNightCycle.cs" />
      <Compile Include="Assets\Scripts\Collections\HashUtility.cs" />
      <Compile Include="Assets\Scripts\PhysicSystem\AABB.cs" />
      <Compile Include="Assets\XLua\Src\CodeEmit.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Entities_PlayerEntityWrap.cs" />
      <Compile Include="Assets\Scripts\Lua\ICSharpCallLua.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Entities_EntityWrap.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockVertexData.cs" />
      <Compile Include="Assets\Scripts\Lua\ILuaCallCSharp.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_AddBeachLayerWrap.cs" />
      <Compile Include="Assets\XLua\Src\LuaException.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_ItemDataWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_IslandLayerWrap.cs" />
      <Compile Include="Assets\Scripts\PhysicSystem\PhysicState.cs" />
      <Compile Include="Assets\Scripts\ChunkPos.cs" />
      <Compile Include="Assets\Scripts\ChunkBuilder.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_ZoomLayerWrap.cs" />
      <Compile Include="Assets\Scripts\Configurations\IBlockBehaviour.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ChunkPosWrap.cs" />
      <Compile Include="Assets\Scripts\Utils\WorkScheduler.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_AssetBundleInfoWrap.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\WorldGeneratePipeline.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PhysicSystem_BlockRaycastHitWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\WrapPusher.cs" />
      <Compile Include="Assets\XLua\Src\LuaAsset.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_IOrderedConfigDataWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_IWorldRWAccessorWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetUtility.cs" />
      <Compile Include="Assets\XLua\Src\InternalGlobals.cs" />
      <Compile Include="Assets\Scripts\Rendering\SectionRenderingManager.cs" />
      <Compile Include="Assets\Scripts\WorldSinglePlayer.cs" />
-     <Compile Include="Assets\XLua\Gen\DelegatesGensBridge.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockFaceCorner.cs" />
      <Compile Include="Assets\XLua\Src\ObjectTranslatorPool.cs" />
      <Compile Include="Assets\XLua\Src\LuaTable.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_AddRiverLayerWrap.cs" />
      <Compile Include="Assets\Scripts\Configurations\BiomeTable.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_AssetCatalogWrap.cs" />
      <Compile Include="Assets\Scripts\World.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenerationContext.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\DefaultLayers\AddBeachLayer.cs" />
      <Compile Include="Assets\Scripts\Noises\GenericNoise.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Entities_EntityManagerWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\EnsureAssetTypeAttribute.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Chunk3x3AccessorWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Collections_NibbleArrayWrap.cs" />
      <Compile Include="Assets\XLua\Src\Utils.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PlayerControls_FluidInteractorWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetPtr.cs" />
      <Compile Include="Assets\XLua\Src\RawObject.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_RenderingUtilityWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Noises_UniformRNGWrap.cs" />
      <Compile Include="Assets\XLua\Src\TemplateEngine\TemplateEngine.cs" />
      <Compile Include="Assets\Scripts\PlayerControls\CurveControlledBob.cs" />
      <Compile Include="Assets\Scripts\Rendering\Jobs\FrustumCullingJob.cs" />
      <Compile Include="Assets\Scripts\ModificationSource.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_TerrainGeneratorWrap.cs" />
      <Compile Include="Assets\Scripts\Collections\LRULinkedMap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_WorldSettingWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_SectionMeshWorkSchedulerWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetManagerUpdater.cs" />
      <Compile Include="Assets\Scripts\Rendering\SectionMeshWorkScheduler.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_IWorldWrap.cs" />
      <Compile Include="Assets\XLua\Src\ObjectPool.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\StatelessGenerator.cs" />
-     <Compile Include="Assets\Scripts\Rendering\SectionMeshBuilder.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_AssetManagerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PhysicSystem_PhysicsWrap.cs" />
+     <Compile Include="Assets\Scripts\Rendering\BlockMeshBuilder.cs" />
      <Compile Include="Assets\Scripts\PhysicSystem\BlockRaycastHit.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BlockMeshWrap.cs" />
      <Compile Include="Assets\Scripts\IWorld.cs" />
      <Compile Include="Assets\XLua\Src\LuaBase.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Entities_IAABBEntityWrap.cs" />
      <Compile Include="Assets\Scripts\Noises\PerlinNoise.cs" />
      <Compile Include="Assets\Scripts\Entities\Entity.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Entities_LuaBlockEntityWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_NativeInt2DArrayWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\PackUnpack.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\NativeInt2DArray.cs" />
-     <Compile Include="Assets\XLua\Gen\XLuaGenAutoRegister.cs" />
      <Compile Include="Assets\Scripts\Configurations\IOrderedConfigData.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetCatalog.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_WorldGeneratePipelineWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\EnumWrap.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetInfo.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockData.cs" />
      <Compile Include="Assets\Scripts\InspectorExtensions\MinMaxSliderAttribute.cs" />
      <Compile Include="Assets\XLua\Src\GenAttributes.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Lua_ILuaCallCSharpWrap.cs" />
      <Compile Include="Assets\Scripts\WorldSetting.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenerationContextWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BiomeDataWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_WorldConstsWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Noises_PerlinNoiseWrap.cs" />
      <Compile Include="Assets\Scripts\Entities\EntityManager.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ChunkManagerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_StatelessGenLayerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_BiomeTableWrap.cs" />
      <Compile Include="Assets\XLua\Src\ObjectTranslator.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetManager.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_AssetInfoWrap.cs" />
      <Compile Include="Assets\Scripts\Chunk3x3Accessor.cs" />
      <Compile Include="Assets\XLua\Src\LuaEnv.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PhysicSystem_AABBWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_LightingUtilityWrap.cs" />
      <Compile Include="Assets\Scripts\Rendering\RenderingUtility.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Collections_HashUtilityWrap.cs" />
      <Compile Include="Assets\Scripts\WorldConsts.cs" />
      <Compile Include="Assets\Scripts\IWorldRWAccessor.cs" />
      <Compile Include="Assets\Scripts\Configurations\ItemData.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockTable.cs" />
      <Compile Include="Assets\Scripts\InspectorExtensions\ConditionalDisplayAttribute.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Assets_IAssetBundleWrap.cs" />
      <Compile Include="Assets\Scripts\Lua\IHotfixable.cs" />
      <Compile Include="Assets\XLua\Src\DelegateBridge.cs" />
      <Compile Include="Assets\Scripts\Assets\AssetBundleInfo.cs" />
      <Compile Include="Assets\XLua\Src\GenericDelegateBridge.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Lua_ICSharpCallLuaBridge.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_GenLayers_BiomeLayerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_PhysicSystem_PhysicMaterialWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Rendering_SectionMeshManagerWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_WorldWrap.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_Configurations_IBlockBehaviourBridge.cs" />
      <Compile Include="Assets\XLua\Src\CopyByValue.cs" />
      <Compile Include="Assets\XLua\Src\StaticLuaCallbacks.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\DefaultLayers\AddRiverLayer.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ChunkWrap.cs" />
      <Compile Include="Assets\Scripts\Chunk.cs" />
-     <Compile Include="Assets\XLua\Gen\Minecraft_ScriptableWorldGeneration_TreeGeneratorWrap.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\TreeGenerator.cs" />
      <Compile Include="Assets\Scripts\Configurations\BlockFace.cs" />
      <Compile Include="Assets\Scripts\Assets\EditorAssetBundle.cs" />
-     <Compile Include="Assets\Scripts\Rendering\SectionMeshVertexData.cs" />
+     <Compile Include="Assets\Scripts\Rendering\BlockMeshVertexData.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\CaveGenerator.cs" />
      <Compile Include="Assets\Scripts\ScriptableWorldGeneration\GenLayers\StatelessGenLayer.cs" />
-     <None Include="Assets\XLua\Gen\link.xml" />
+     <Compile Include="Assets\Scripts\Configurations\BlockRotationAxes.cs" />
      <None Include="Assets\Minecraft Default PBR Resources\Shaders\Includes\Minecraft\BlockBRDF.hlsl" />
      <None Include="Assets\Scripts\link.xml" />
      <None Include="Assets\Minecraft Default PBR Resources\Shaders\WaterPBR.shader" />
@@ -266,6 +182,7 @@
      <None Include="Assets\Minecraft Default PBR Resources\Shaders\CommonSolidPBR.shader" />
      <None Include="Assets\Minecraft Default PBR Resources\Shaders\Includes\Minecraft\ShadowCaster.hlsl" />
      <None Include="Assets\Minecraft Default PBR Resources\Shaders\Includes\Minecraft\Core.hlsl" />
+     <None Include="Assets\Minecraft Default PBR Resources\Shaders\Includes\Minecraft\ScreenSpaceReflection.hlsl" />
      <None Include="Assets\XLua\CHANGELOG.txt" />
     <Reference Include="UnityEngine">
         <HintPath>D:/Unity/2020.3.2f1c1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -843,6 +760,9 @@
     <Reference Include="System.Xml.XPath.XDocument">
         <HintPath>D:/Unity/2020.3.2f1c1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Recorder.Editor">
+        <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.MemoryProfiler">
         <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.MemoryProfiler.dll</HintPath>
     </Reference>
@@ -851,6 +771,9 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
         <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Recorder.Base">
+        <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
         <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
@@ -954,14 +877,8 @@
     <Reference Include="Unity.RenderPipelines.Core.Editor">
         <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Recorder.Editor">
-        <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Recorder">
         <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Recorder.Base">
-        <HintPath>D:/Unity/Unity Projects/Minecraft Clone/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

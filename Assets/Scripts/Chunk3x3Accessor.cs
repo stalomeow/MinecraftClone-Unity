@@ -86,6 +86,12 @@ namespace Minecraft
             return chunk.GetBlock(x, y, z, defaultValue);
         }
 
+        public Quaternion GetBlockRotation(int x, int y, int z, Quaternion defaultValue = default)
+        {
+            Chunk chunk = GetChunk(ref x, ref z);
+            return chunk.GetBlockRotation(x, y, z, defaultValue);
+        }
+
         public int GetMixedLightLevel(int x, int y, int z, int defaultValue = 0)
         {
             Chunk chunk = GetChunk(ref x, ref z);

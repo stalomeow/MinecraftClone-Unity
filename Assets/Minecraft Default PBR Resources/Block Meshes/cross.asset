@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3884e3f366370c84abb8f8f984950de4, type: 3}
   m_Name: cross
   m_EditorClassIdentifier: 
+  Pivot: {x: 0.5, y: 0.5, z: 0.5}
   BoundingBox:
     m_Min: {x: 0, y: 0, z: 0}
     m_Max: {x: 1, y: 1, z: 1}

@@ -10,6 +10,7 @@ namespace Minecraft.Entities
 {
     public class EntityManager : MonoBehaviour, ILuaCallCSharp
     {
+        [SerializeField] private int m_RenderLayer;
         [SerializeField] private Camera m_MainCamera;
         [NonSerialized] private Queue<LuaBlockEntity> m_BlockEntityPool;
         [NonSerialized] private HashSet<IRenderableEntity> m_RenderableEntities;
@@ -68,7 +69,7 @@ namespace Minecraft.Entities
 
                     if (entity.EnableRendering)
                     {
-                        entity.Render(8, m_MainCamera, ShadowCastingMode.Off, false);
+                        entity.Render(m_RenderLayer, m_MainCamera, ShadowCastingMode.On, true);
                     }
                 }
 

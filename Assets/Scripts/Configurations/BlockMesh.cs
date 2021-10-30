@@ -17,6 +17,7 @@ namespace Minecraft.Configurations
             public int[] Indices;
         }
 
+        public Vector3 Pivot;
         public AABB BoundingBox;
         public FaceData[] Faces;
     }

@@ -5,6 +5,7 @@ tnt = create_block_behaviour()
 local unityTime = CS.UnityEngine.Time
 local unityColor = CS.UnityEngine.Color
 local playerModification = CS.Minecraft.ModificationSource.PlayerAction
+local quaternionIdentity = CS.UnityEngine.Quaternion.identity
 local ignoreExplosionsFlag = CS.Minecraft.Configurations.BlockFlags.IgnoreExplosions
 local assetManager = CS.Minecraft.Assets.AssetManager.Instance
 local explosionEffectAssetName = "Assets/Minecraft Default PBR Resources/Effects/Explosion Effect.prefab"
@@ -42,8 +43,8 @@ function tnt:place(x, y, z)
 end
 
 function tnt:click(x, y, z)
-    self.world.RWAccessor:SetBlock(x, y, z, self.air_block_data, playerModification)
     self.world.EntityManager:CreateBlockEntityAt(x, y, z, self:get_block_data())
+    self.world.RWAccessor:SetBlock(x, y, z, self.air_block_data, quaternionIdentity, playerModification)
 end
 
 function tnt:explode(center_x, center_y, center_z, radius, accessor)
@@ -60,7 +61,7 @@ function tnt:explode(center_x, center_y, center_z, radius, accessor)
                 if block.InternalName == self.InternalName then
                     self:click(world_x, world_y, world_z) -- 炸到 TNT 的话，让这个 TNT 也炸
                 elseif not block:HasFlag(ignoreExplosionsFlag) then
-                    accessor:SetBlock(world_x, world_y, world_z, self.air_block_data, playerModification)
+                    accessor:SetBlock(world_x, world_y, world_z, self.air_block_data, quaternionIdentity, playerModification)
                 end
             end
         end

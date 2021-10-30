@@ -36,7 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AtmosphereThickness: 0.6
+    - _AtmosphereThickness: 0.5
     - _AuroraColorSeed: 1
     - _AuroraIntensity: 0
     - _AuroraSpeed: 0
@@ -65,7 +65,7 @@ Material:
     - _StarSpeed: 0.1
     - _SunDisk: 2
     - _SunSize: 0.05
-    - _SunSizeConvergence: 5
+    - _SunSizeConvergence: 10
     - _SurAuroraColFactor: 1
     - _UpperHeight: 1
     m_Colors:
@@ -76,7 +76,7 @@ Material:
     - _Color3: {r: 0, g: 0, b: 0, a: 1}
     - _DayBottomColor: {r: 0.3632075, g: 0.6424405, b: 1, a: 1}
     - _DayTopColor: {r: 0, g: 0.588235, b: 1, a: 1}
-    - _GroundColor: {r: 0.3647059, g: 0.6431373, b: 1, a: 1}
+    - _GroundColor: {r: 0.59460664, g: 0.7557406, b: 0.9622642, a: 1}
     - _MountainColor: {r: 0, g: 0, b: 0, a: 0}
     - _NightBottomColor: {r: 0, g: 0, b: 0.2, a: 1}
     - _NightTopColor: {r: 0, g: 0, b: 0, a: 1}

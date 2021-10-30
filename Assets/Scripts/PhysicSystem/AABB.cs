@@ -25,6 +25,8 @@ namespace Minecraft.PhysicSystem
 
         public Vector3 Center => (Min + Max) * 0.5f;
 
+        public Vector3 Size => Max - Min;
+
         public AABB(Vector3 min, Vector3 max)
         {
             m_Min = min;
@@ -53,19 +55,48 @@ namespace Minecraft.PhysicSystem
             return new AABB(Vector3.Min(left.Min, right.Min), Vector3.Max(left.Max, right.Max));
         }
 
-        public static AABB Transform(AABB aabb, Vector3 transform)
+        public static AABB Translate(AABB aabb, Vector3 translation)
         {
-            return new AABB(aabb.Min + transform, aabb.Max + transform);
+            return new AABB(aabb.Min + translation, aabb.Max + translation);
+        }
+
+        public static AABB Rotate(AABB aabb, Quaternion rotation)
+        {
+            return Rotate(aabb, rotation, aabb.Center);
+        }
+
+        public static AABB Rotate(AABB aabb, Quaternion rotation, Vector3 pivot)
+        {
+            Vector3 step = aabb.Max - aabb.Min;
+            Vector3 min = Vector3.positiveInfinity;
+            Vector3 max = Vector3.negativeInfinity;
+
+            for (float x = aabb.Min.x; x <= aabb.Max.x; x += step.x)
+            {
+                for (float y = aabb.Min.y; y <= aabb.Max.y; y += step.y)
+                {
+                    for (float z = aabb.Min.z; z <= aabb.Max.z; z += step.z)
+                    {
+                        Vector3 point = MathUtility.RotatePoint(new Vector3(x, y, z), rotation, pivot);
+                        min = Vector3.Min(min, point);
+                        max = Vector3.Max(max, point);
+                    }
+                }
+            }
+
+            return new AABB(min, max);
         }
 
         public static AABB operator +(AABB left, AABB right) => Merge(left, right);
 
-        public static AABB operator +(AABB aabb, Vector3 transform) => Transform(aabb, transform);
+        public static AABB operator +(AABB aabb, Vector3 translation) => Translate(aabb, translation);
 
-        public static AABB operator -(AABB aabb, Vector3 transform) => Transform(aabb, -transform);
+        public static AABB operator -(AABB aabb, Vector3 translation) => Translate(aabb, -translation);
+
+        public static AABB operator *(AABB aabb, Quaternion rotation) => Rotate(aabb, rotation);
 
         public static bool operator ==(AABB left, AABB right) => left.m_Min == right.m_Min && left.m_Max == right.m_Max;
 
-        public static bool operator !=(AABB left, AABB right) => !(left == right);
+        public static bool operator !=(AABB left, AABB right) => left.m_Min != right.m_Min || left.m_Max != right.m_Max;
     }
 }

@@ -1,3 +1,4 @@
+using System.Reflection.Emit;
 using Minecraft.Configurations;
 using UnityEngine;
 
@@ -228,17 +229,24 @@ namespace Minecraft.Rendering
             return Mathf.Clamp(light - block.LightOpacity, 0, MaxLight);
         }
 
-        public static Vector2 AmbientOcclusion(int x, int y, int z, BlockFace face, BlockFaceCorner corner, IWorldRAccessor accessor)
+        public static Vector2 AmbientOcclusion(Vector3Int pos, BlockFace face, BlockFaceCorner corner, IWorldRAccessor accessor, bool fastMode)
         {
+            if (fastMode)
+            {
+                float skyLight = MapLight01(accessor.GetSkyLight(pos.x, pos.y, pos.z));
+                float ambient = MapLight01(accessor.GetAmbientLight(pos.x, pos.y, pos.z));
+                return new Vector2(skyLight, ambient);
+            }
+
             int faceIndex = (int)face;
             int cornerIndex = (int)corner;
             Vector2 lights = Vector2Int.zero;
 
             for (int i = 0; i < AmbientLightSampleCount; i++)
             {
-                Vector3Int dir = AmbientLightSampleDirections[faceIndex, cornerIndex, i];
-                lights.x += accessor.GetSkyLight(x + dir.x, y + dir.y, z + dir.z);
-                lights.y += accessor.GetAmbientLight(x + dir.x, y + dir.y, z + dir.z);
+                Vector3Int p = pos + AmbientLightSampleDirections[faceIndex, cornerIndex, i];
+                lights.x += accessor.GetSkyLight(p.x, p.y, p.z);
+                lights.y += accessor.GetAmbientLight(p.x, p.y, p.z);
             }
 
             return MapLight01(lights / AmbientLightSampleCount);
