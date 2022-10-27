@@ -31,7 +31,7 @@ namespace Minecraft.PlayerControls
             m_CharacterRotation = character.localRotation;
             m_CameraRotation = camera.localRotation;
 
-            SwitchCursorLock();
+            SetCursorLockMode(true);
         }
 
         public void LookRotation(Vector2 rotation, float deltaTime)
@@ -57,9 +57,9 @@ namespace Minecraft.PlayerControls
             }
         }
 
-        public void SwitchCursorLock()
+        public void SetCursorLockMode(bool lockCursor)
         {
-            m_CursorLocked = !m_CursorLocked;
+            m_CursorLocked = lockCursor;
 
             if (m_CursorLocked)
             {

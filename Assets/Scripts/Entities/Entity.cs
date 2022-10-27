@@ -99,16 +99,18 @@ namespace Minecraft.Entities
         protected virtual void FixedUpdate()
         {
             float time = Time.fixedDeltaTime;
+
             Vector3 acceleration = m_AddedForce / m_Mass;
+            m_AddedForce = Vector3.zero;
 
             if (m_UseGravity)
             {
                 acceleration += Physics.Gravity * GravityMultiplier;
             }
 
-            m_Velocity += acceleration * time;
-            m_AddedForce = Vector3.zero;
-            Move(m_Velocity, time);
+            // 用匀速直线运动近似
+            Vector3 averageVelocity = m_Velocity + time * acceleration;
+            Move(averageVelocity, time);
         }
 
         public void InitializeEntityIfNot()
@@ -135,7 +137,9 @@ namespace Minecraft.Entities
 
         private void Move(Vector3 velocity, float time)
         {
-            if (velocity == Vector3.zero || time == 0)
+            m_Velocity = velocity;
+
+            if (m_Velocity == Vector3.zero || time <= 0)
             {
                 return;
             }

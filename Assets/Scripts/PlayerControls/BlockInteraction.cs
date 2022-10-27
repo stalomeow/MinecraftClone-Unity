@@ -16,7 +16,9 @@ namespace Minecraft.PlayerControls
         [Range(3, 12)] public float RaycastMaxDistance = 8;
         [Min(0.1f)] public float MaxClickSpacing = 0.4f;
 
+        [SerializeField] private Text m_CurrentHandBlockText;
         [SerializeField] private InputField m_HandBlockInput;
+        [SerializeField] private MonoBehaviour[] m_DisableWhenEditHandBlock;
 
         [NonSerialized] private Camera m_Camera;
         [NonSerialized] private IAABBEntity m_PlayerEntity;
@@ -28,6 +30,8 @@ namespace Minecraft.PlayerControls
         [NonSerialized] private Vector3Int m_FirstDigPos;
         [NonSerialized] private Vector3Int m_ClickedPos;
         [NonSerialized] private float m_ClickTime;
+
+        [NonSerialized] private GameObject m_HandBlockInputGO;
 
         public void Initialize(Camera camera, IAABBEntity playerEntity)
         {
@@ -45,6 +49,8 @@ namespace Minecraft.PlayerControls
             m_ClickedPos = Vector3Int.down;
             m_ClickTime = 0;
             SetDigProgress(0);
+
+            m_HandBlockInputGO = m_HandBlockInput.gameObject;
         }
 
         private void OnDisable()
@@ -55,6 +61,11 @@ namespace Minecraft.PlayerControls
 
         private void Update()
         {
+            if (ChangeHandBlock())
+            {
+                return;
+            }
+
             if (!m_Camera)
             {
                 return;
@@ -64,6 +75,43 @@ namespace Minecraft.PlayerControls
             IWorld world = m_PlayerEntity.World;
             DigBlock(ray, world);
             PlaceBlock(ray, world);
+        }
+
+        private bool ChangeHandBlock()
+        {
+            if (!Input.GetKeyDown(KeyCode.Return))
+            {
+                return m_HandBlockInputGO.activeInHierarchy;
+            }
+
+            if (m_HandBlockInputGO.activeInHierarchy)
+            {
+                // 不用 onSubmit 了
+
+                m_CurrentHandBlockText.text = m_HandBlockInput.text;
+                m_HandBlockInput.DeactivateInputField();
+                m_HandBlockInputGO.SetActive(false);
+
+                for (int i = 0; i < m_DisableWhenEditHandBlock.Length; i++)
+                {
+                    m_DisableWhenEditHandBlock[i].enabled = true;
+                }
+
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < m_DisableWhenEditHandBlock.Length; i++)
+                {
+                    m_DisableWhenEditHandBlock[i].enabled = false;
+                }
+
+                m_HandBlockInputGO.SetActive(true);
+                m_HandBlockInput.text = string.Empty;
+                m_HandBlockInput.ActivateInputField();
+
+                return true;
+            }
         }
 
         private void DigBlock(Ray ray, IWorld world)
@@ -145,7 +193,7 @@ namespace Minecraft.PlayerControls
         {
             if (Input.GetMouseButtonDown(1))
             {
-                BlockData block = world.BlockDataTable.GetBlock(m_HandBlockInput.text);
+                BlockData block = world.BlockDataTable.GetBlock(m_CurrentHandBlockText.text);
 
                 if (Physics.RaycastBlock(ray, RaycastMaxDistance, world, m_PlaceRaycastSelector, out BlockRaycastHit hit))
                 {

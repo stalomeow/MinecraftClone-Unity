@@ -1,6 +1,6 @@
 # Minecraft Demo
 
-本项目使用 `Unity 2020.3.2f1c1` 制作。
+本项目使用 `Unity 2021.3.8f1c1` 制作。
 
 **以下图片均为游戏内实际画面。**
 
@@ -45,31 +45,17 @@
 # Notice
 
 * 项目使用的材质包是在 [“我的世界 (Minecraft)”Windows 10 RTX Beta版：基于物理效果的渲染纹理答疑和免费资源包下载 (nvidia.cn)](https://www.nvidia.cn/geforce/news/minecraft-with-rtx-beta-your-pbr-questions-answered/) 下载的 `RTX Vanilla Conversion`，其创作者为：u/TheCivilHulk。也可以直接在 [TheCivilHulk/Minecraft-RTX-Vanilla-Conversion-and-Patches: Converted all (currently working) vanilla textures to the Minecraft Bedrock RTX format for testing/playing purposes. (github.com)](https://github.com/TheCivilHulk/Minecraft-RTX-Vanilla-Conversion-and-Patches) 下载。
-* 我高三了，要准备高考，**减缓**更新！
+* 随缘更新！
 
 
 
 # Guide
 
-## Input
+## How To Play In Unity?
 
-### Keyboard
-
-* WASD / Arrows 移动
-* 移动时按住 Left Shift 可以跑步
-* 双击空格键切换 行走 / 飞行 模式
-* 行走模式下，点击空格键可跳跃，长按空格键则会在每次落地时自动跳跃一次
-* 飞行模式下，长按空格键向上飞。如果同时按住了 Ctrl 键则向下飞~~（蹩脚的键位）~~
-* 点击 ` 键，切换光标锁定状态
-
-### Mouse
-
-* 移动鼠标，可转动视角
-* 点击鼠标左键，触发屏幕中心瞄准的方块的 `OnClick` 事件
-* 长按鼠标左键，挖掘屏幕中心瞄准的方块（不同方块需要的时间不同，有和原版 Minecraft 一样的方块碎裂效果提示进度）
-* 点击鼠标右键，在屏幕中心瞄准的方块的位置放置当前手持的方块（可以在游戏右上角的输入框中修改当前手持的方块）
-
-
+1. 打开 SinglePlayer 场景
+2. 点击播放按钮
+3. 根据屏幕上的键位提示进行游戏
 
 ## Asset Management
 

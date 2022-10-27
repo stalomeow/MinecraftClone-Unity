@@ -1,0 +1,3343 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12004, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PixelRect:
+    serializedVersion: 2
+    x: 0
+    y: 43.2
+    width: 1536
+    height: 772.8
+  m_ShowMode: 4
+  m_Title: Hierarchy
+  m_RootView: {fileID: 2}
+  m_MinSize: {x: 875, y: 300}
+  m_MaxSize: {x: 10000, y: 10000}
+  m_Maximized: 1
+--- !u!114 &2
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12008, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 3}
+  - {fileID: 5}
+  - {fileID: 4}
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1536
+    height: 772.8
+  m_MinSize: {x: 875, y: 300}
+  m_MaxSize: {x: 10000, y: 10000}
+  m_UseTopView: 1
+  m_TopViewHeight: 30
+  m_UseBottomView: 1
+  m_BottomViewHeight: 20
+--- !u!114 &3
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12011, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1536
+    height: 30
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_LastLoadedLayoutName: 
+--- !u!114 &4
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12042, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 752.8
+    width: 1536
+    height: 20
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+--- !u!114 &5
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 6}
+  - {fileID: 9}
+  - {fileID: 12}
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 30
+    width: 1536
+    height: 722.8
+  m_MinSize: {x: 300, y: 200}
+  m_MaxSize: {x: 24288, y: 16192}
+  vertical: 0
+  controlID: 13078
+--- !u!114 &6
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 7}
+  - {fileID: 8}
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 916.8
+    height: 722.8
+  m_MinSize: {x: 100, y: 200}
+  m_MaxSize: {x: 8096, y: 16192}
+  vertical: 1
+  controlID: 13055
+--- !u!114 &7
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: GameView
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 916.8
+    height: 561.6
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 13}
+  m_Panes:
+  - {fileID: 14}
+  - {fileID: 13}
+  m_Selected: 1
+  m_LastSelected: 0
+--- !u!114 &8
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: ConsoleWindow
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 561.6
+    width: 916.8
+    height: 161.20001
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 15}
+  m_Panes:
+  - {fileID: 15}
+  - {fileID: 16}
+  - {fileID: 17}
+  - {fileID: 18}
+  m_Selected: 0
+  m_LastSelected: 3
+--- !u!114 &9
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 10}
+  - {fileID: 11}
+  m_Position:
+    serializedVersion: 2
+    x: 916.8
+    y: 0
+    width: 299.2
+    height: 722.8
+  m_MinSize: {x: 100, y: 200}
+  m_MaxSize: {x: 8096, y: 16192}
+  vertical: 1
+  controlID: 13165
+--- !u!114 &10
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: SceneHierarchyWindow
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 299.2
+    height: 332.8
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 19}
+  m_Panes:
+  - {fileID: 19}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &11
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: ProjectBrowser
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 332.8
+    width: 299.2
+    height: 390
+  m_MinSize: {x: 232, y: 271}
+  m_MaxSize: {x: 10002, y: 10021}
+  m_ActualView: {fileID: 20}
+  m_Panes:
+  - {fileID: 20}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &12
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 1216
+    y: 0
+    width: 320
+    height: 722.8
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 21}
+  m_Panes:
+  - {fileID: 21}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &13
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12015, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Game
+    m_Image: {fileID: 4621777727084837110, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 73.6
+    width: 915.8
+    height: 540.6
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_SerializedViewNames: []
+  m_SerializedViewValues: []
+  m_PlayModeViewName: GameView
+  m_ShowGizmos: 0
+  m_TargetDisplay: 0
+  m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
+  m_TargetSize: {x: 1920, y: 1080}
+  m_TextureFilterMode: 0
+  m_TextureHideFlags: 61
+  m_RenderIMGUI: 1
+  m_EnterPlayModeBehavior: 0
+  m_UseMipMap: 0
+  m_VSyncEnabled: 1
+  m_Gizmos: 0
+  m_Stats: 0
+  m_SelectedSizes: 03000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_ZoomArea:
+    m_HRangeLocked: 0
+    m_VRangeLocked: 0
+    hZoomLockedByDefault: 0
+    vZoomLockedByDefault: 0
+    m_HBaseRangeMin: -768
+    m_HBaseRangeMax: 768
+    m_VBaseRangeMin: -432
+    m_VBaseRangeMax: 432
+    m_HAllowExceedBaseRangeMin: 1
+    m_HAllowExceedBaseRangeMax: 1
+    m_VAllowExceedBaseRangeMin: 1
+    m_VAllowExceedBaseRangeMax: 1
+    m_ScaleWithWindow: 0
+    m_HSlider: 0
+    m_VSlider: 0
+    m_IgnoreScrollWheelUntilClicked: 0
+    m_EnableMouseInput: 1
+    m_EnableSliderZoomHorizontal: 0
+    m_EnableSliderZoomVertical: 0
+    m_UniformScale: 1
+    m_UpDirection: 1
+    m_DrawArea:
+      serializedVersion: 2
+      x: 0
+      y: 21
+      width: 915.8
+      height: 519.6
+    m_Scale: {x: 0.59622395, y: 0.59622395}
+    m_Translation: {x: 457.9, y: 259.8}
+    m_MarginLeft: 0
+    m_MarginRight: 0
+    m_MarginTop: 0
+    m_MarginBottom: 0
+    m_LastShownAreaInsideMargins:
+      serializedVersion: 2
+      x: -768
+      y: -435.74228
+      width: 1536
+      height: 871.48456
+    m_MinimalGUI: 1
+  m_defaultScale: 0.59622395
+  m_LastWindowPixelSize: {x: 1144.75, y: 675.75}
+  m_ClearInEditMode: 1
+  m_NoCameraWarning: 1
+  m_LowResolutionForAspectRatios: 00000000000000000000
+  m_XRRenderMode: 0
+  m_RenderTexture: {fileID: 0}
+--- !u!114 &14
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12013, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Scene
+    m_Image: {fileID: 8634526014445323508, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 73.6
+    width: 915.8
+    height: 540.6
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData:
+    - dockPosition: 0
+      containerId: overlay-toolbar__top
+      floating: 0
+      collapsed: 0
+      displayed: 1
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: -100, y: -25.599976}
+      snapCorner: 3
+      id: Tool Settings
+      index: 0
+      layout: 1
+    - dockPosition: 0
+      containerId: overlay-toolbar__top
+      floating: 0
+      collapsed: 0
+      displayed: 1
+      snapOffset: {x: -141, y: 149}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 1
+      id: unity-grid-and-snap-toolbar
+      index: 1
+      layout: 1
+    - dockPosition: 1
+      containerId: overlay-toolbar__top
+      floating: 0
+      collapsed: 0
+      displayed: 1
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: unity-scene-view-toolbar
+      index: 0
+      layout: 1
+    - dockPosition: 1
+      containerId: overlay-toolbar__top
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 1
+      id: unity-search-toolbar
+      index: 1
+      layout: 1
+    - dockPosition: 0
+      containerId: overlay-container--left
+      floating: 0
+      collapsed: 0
+      displayed: 1
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: unity-transform-toolbar
+      index: 0
+      layout: 2
+    - dockPosition: 0
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 1
+      snapOffset: {x: 67.5, y: -124}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 2
+      id: Orientation
+      index: 0
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Light Settings
+      index: 0
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Camera
+      index: 1
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Cloth Constraints
+      index: 2
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Cloth Collisions
+      index: 3
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Navmesh Display
+      index: 4
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Agent Display
+      index: 5
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Obstacle Display
+      index: 6
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Occlusion Culling
+      index: 7
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Physics Debugger
+      index: 8
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Scene Visibility
+      index: 9
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: Scene View/Particles
+      index: 10
+      layout: 4
+  m_WindowGUID: cc27987af1a868c49b0894db9c0f5429
+  m_Gizmos: 1
+  m_OverrideSceneCullingMask: 6917529027641081856
+  m_SceneIsLit: 1
+  m_SceneLighting: 1
+  m_2DMode: 1
+  m_isRotationLocked: 0
+  m_PlayAudio: 0
+  m_AudioPlay: 0
+  m_Position:
+    m_Target: {x: 866.1383, y: 484.57208, z: 2.2321603}
+    speed: 2
+    m_Value: {x: 857.3643, y: 489.58932, z: 1.9138265}
+  m_RenderMode: 0
+  m_CameraMode:
+    drawMode: 0
+    name: Shaded
+    section: Shading Mode
+  m_ValidateTrueMetals: 0
+  m_DoValidateTrueMetals: 0
+  m_ExposureSliderValue: 0
+  m_SceneViewState:
+    m_AlwaysRefresh: 0
+    showFog: 1
+    showSkybox: 1
+    showFlares: 1
+    showImageEffects: 1
+    showParticleSystems: 1
+    showVisualEffectGraphs: 1
+    m_FxEnabled: 1
+  m_Grid:
+    xGrid:
+      m_Fade:
+        m_Target: 0
+        speed: 2
+        m_Value: 0
+      m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
+      m_Pivot: {x: 0, y: 0, z: 0}
+      m_Size: {x: 0, y: 0}
+    yGrid:
+      m_Fade:
+        m_Target: 0
+        speed: 2
+        m_Value: 0
+      m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
+      m_Pivot: {x: 0, y: 0, z: 0}
+      m_Size: {x: 1, y: 1}
+    zGrid:
+      m_Fade:
+        m_Target: 1
+        speed: 2
+        m_Value: 1
+      m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
+      m_Pivot: {x: 0, y: 0, z: 0}
+      m_Size: {x: 1, y: 1}
+    m_ShowGrid: 1
+    m_GridAxis: 1
+    m_gridOpacity: 0.5
+  m_Rotation:
+    m_Target: {x: 0, y: 0, z: 0, w: 1}
+    speed: 2
+    m_Value: {x: 0, y: 0, z: 0, w: 1}
+  m_Size:
+    m_Target: 675.5777
+    speed: 2
+    m_Value: 707.4112
+  m_Ortho:
+    m_Target: 1
+    speed: 2
+    m_Value: 1
+  m_CameraSettings:
+    m_Speed: 1
+    m_SpeedNormalized: 0.5
+    m_SpeedMin: 0.001
+    m_SpeedMax: 2
+    m_EasingEnabled: 1
+    m_EasingDuration: 0.4
+    m_AccelerationEnabled: 1
+    m_FieldOfViewHorizontalOrVertical: 60
+    m_NearClip: 0.03
+    m_FarClip: 10000
+    m_DynamicClip: 1
+    m_OcclusionCulling: 0
+  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+  m_LastSceneViewOrtho: 0
+  m_ReplacementShader: {fileID: 0}
+  m_ReplacementString: 
+  m_SceneVisActive: 1
+  m_LastLockedObject: {fileID: 0}
+  m_ViewIsLockedToObject: 0
+--- !u!114 &15
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12003, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Console
+    m_Image: {fileID: -4950941429401207979, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 635.2
+    width: 915.8
+    height: 140.20001
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+--- !u!114 &16
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13953, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 800, y: 250}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Package Manager
+    m_Image: {fileID: 5076950121296946556, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 195.2
+    width: 922.2
+    height: 580.2
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+--- !u!114 &17
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee0d56e2acb44d148aa89b6ae23dcc16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 500, y: 150}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: MC Config Editor
+    m_Image: {fileID: -5179483145760003458, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: MC Config Editor - C:/Projects/Unity/MinecraftClone/Assets/Minecraft
+      Default PBR Resources/Tables/Configs
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 245.6
+    width: 922.2
+    height: 529.8
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_ConfigFolder: C:/Projects/Unity/MinecraftClone/Assets/Minecraft Default PBR Resources/Tables/Configs
+  m_GUIMode: 0
+  m_SplittedRects:
+    m_LeftWidth: 210
+  m_TreeViewState:
+    scrollPos: {x: 0, y: 60}
+    m_SelectedIDs: 01000000
+    m_LastClickedID: 1
+    m_ExpandedIDs: ffffffff
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+      m_EditFieldRect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      m_UserData: 0
+      m_IsWaitingForDelay: 0
+      m_IsRenaming: 0
+      m_OriginalEventType: 11
+      m_IsRenamingFilename: 0
+      m_ClientGUIView: {fileID: 0}
+    m_SearchString: 
+  Blocks:
+  - ID: 0
+    InternalName: air
+    RewardItem: empty
+    Flags: 55
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 0
+    LightValue: 0
+    LightOpacity: 0
+    PhysicState: 1
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 1
+    InternalName: dirt
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 5
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 2
+    InternalName: grass
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 5
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 3
+    InternalName: gold_block
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 10
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 4
+    InternalName: glowstone
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 10
+    LightValue: 15
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 5
+    InternalName: bedrock
+    RewardItem: 
+    Flags: 16
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 999999
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 6
+    InternalName: water
+    RewardItem: 
+    Flags: 17
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 5
+    LightValue: 0
+    LightOpacity: 2
+    PhysicState: 1
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 7
+    InternalName: sand
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 2
+    Hardness: 5
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 8
+    InternalName: stone
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 10
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 9
+    InternalName: gravel
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 10
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 10
+    InternalName: tnt
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 2
+    Hardness: 6
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 11
+    InternalName: lava
+    RewardItem: 
+    Flags: 17
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 15
+    LightOpacity: 2
+    PhysicState: 1
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 12
+    InternalName: coal_ore
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 13
+    InternalName: diamond_ore
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 14
+    InternalName: gold_ore
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 15
+    InternalName: iron_ore
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 16
+    InternalName: leaves_oak
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 2
+    LightValue: 0
+    LightOpacity: 2
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 17
+    InternalName: log_oak
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 2
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 18
+    InternalName: redstone_ore
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 19
+    InternalName: stone_granite
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 20
+    InternalName: stone_diorite
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 21
+    InternalName: stone_andesite
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 22
+    InternalName: cactus_DO_NOT_USE
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 23
+    InternalName: flower_rose
+    RewardItem: 
+    Flags: 3
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 2
+    LightValue: 0
+    LightOpacity: 0
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 24
+    InternalName: slime
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 9
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0.8
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 25
+    InternalName: concrete_white
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 26
+    InternalName: stripped_spruce_log
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 2
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 27
+    InternalName: quartz_block_half
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 28
+    InternalName: glass_block
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 1
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 29
+    InternalName: concrete_gray
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 30
+    InternalName: planks_birch
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 31
+    InternalName: bookshelf
+    RewardItem: 
+    Flags: 0
+    RotationAxes: 1
+    EntityConversion: 0
+    Hardness: 16
+    LightValue: 0
+    LightOpacity: 15
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 32
+    InternalName: torch
+    RewardItem: 
+    Flags: 1
+    RotationAxes: 0
+    EntityConversion: 0
+    Hardness: 6
+    LightValue: 14
+    LightOpacity: 0
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  - ID: 33
+    InternalName: wall_torch
+    RewardItem: 
+    Flags: 1
+    RotationAxes: 1
+    EntityConversion: 0
+    Hardness: 6
+    LightValue: 14
+    LightOpacity: 0
+    PhysicState: 0
+    PhysicMaterial:
+      CoefficientOfRestitution: 0
+      CoefficientOfStaticFriction: 0
+      CoefficientOfDynamicFriction: 0
+    DigAudio:
+      AssetGUID: 
+    PlaceAudio:
+      AssetGUID: 
+    StepAudios: []
+  Items:
+  - ID: 0
+    InternalName: empty
+    Icon:
+      AssetGUID: 
+    Block: air
+    Attack: 5
+    Rarity: 1
+    MaxStackCount: 1
+    Description: "\u5360\u4F4D\u7528\u7684\u7269\u54C1\uFF0C\u6B63\u5982\u5176\u540D\uFF0C\u62E5\u6709\u8FD9\u4E2A\u7269\u54C1\u5C31\u548C\u6CA1\u6709\u7269\u54C1\u4E00\u6837\u3002"
+    Usage: "\u6682\u65E0\u3002"
+    ObtainApproach: "\u7A7A\u624B\u83B7\u5F97\u3002"
+  - ID: 1
+    InternalName: test_item
+    Icon:
+      AssetGUID: 
+    Block: 
+    Attack: 5
+    Rarity: 6
+    MaxStackCount: 64
+    Description: "\u6D4B\u8BD5\u7528\u7684\u7269\u54C1\u3002"
+    Usage: "\u4EC5\u7528\u4E8E\u6D4B\u8BD5\u3002"
+    ObtainApproach: ...
+  Biomes:
+  - ID: 0
+    InternalName: Ocean
+    BaseHeight: -1
+    HeightVariation: 0.1
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 1
+    InternalName: Plains
+    BaseHeight: 0.125
+    HeightVariation: 0.05
+    Temperature: 0.8
+    Rainfall: 0.4
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 2
+    InternalName: Desert
+    BaseHeight: 0.125
+    HeightVariation: 0.05
+    Temperature: 2
+    Rainfall: 0
+    EnableSnow: 0
+    EnableRain: 0
+    TopBlock: sand
+    FillerBlock: sand
+    TreesPerChunk: -999
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 2
+    ReedsPerChunk: 50
+    CactiPerChunk: 10
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 3
+    InternalName: Mountains
+    BaseHeight: 1
+    HeightVariation: 0.5
+    Temperature: 0.2
+    Rainfall: 0.3
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 4
+    InternalName: Forest
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.7
+    Rainfall: 0.8
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 10
+    ExtraTreeChance: 0
+    GrassPerChunk: 2
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 5
+    InternalName: Taiga
+    BaseHeight: 0.2
+    HeightVariation: 0.2
+    Temperature: 0.7
+    Rainfall: 0.8
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 10
+    ExtraTreeChance: 0
+    GrassPerChunk: 2
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 1
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 6
+    InternalName: Swamp
+    BaseHeight: -0.2
+    HeightVariation: 0.1
+    Temperature: 0.8
+    Rainfall: 0.9
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 2
+    ExtraTreeChance: 0
+    GrassPerChunk: 5
+    FlowersPerChunk: 1
+    MushroomsPerChunk: 8
+    DeadBushPerChunk: 1
+    ReedsPerChunk: 10
+    CactiPerChunk: 0
+    ClayPerChunk: 1
+    WaterlilyPerChunk: 4
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 7
+    InternalName: River
+    BaseHeight: -0.5
+    HeightVariation: 0
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 8
+    InternalName: Nether
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 9
+    InternalName: TheEnd
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 10
+    InternalName: FrozenOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 11
+    InternalName: FrozenRiver
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 12
+    InternalName: SnowyTundra
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 13
+    InternalName: SnowyMountains
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 14
+    InternalName: MushroomFields
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 15
+    InternalName: MushroomFieldShore
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 16
+    InternalName: Beach
+    BaseHeight: 0
+    HeightVariation: 0.025
+    Temperature: 0.8
+    Rainfall: 0.4
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: sand
+    FillerBlock: sand
+    TreesPerChunk: -999
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 17
+    InternalName: DesertHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 18
+    InternalName: WoodedHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 19
+    InternalName: TaigaHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 20
+    InternalName: MountainEdge
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 21
+    InternalName: Jungle
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 22
+    InternalName: JungleHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 23
+    InternalName: JungleEdge
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 24
+    InternalName: DeepOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 25
+    InternalName: StoneShore
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 26
+    InternalName: SnowyBeach
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 27
+    InternalName: BirchForest
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 28
+    InternalName: BirchForestHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 29
+    InternalName: DarkForest
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 30
+    InternalName: SnowyTaiga
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 31
+    InternalName: SnowyTaigaHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 32
+    InternalName: GiantTreeTaiga
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 33
+    InternalName: GiantTreeTaigaHills
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 34
+    InternalName: WoodedMountains
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 35
+    InternalName: Savanna
+    BaseHeight: 0.125
+    HeightVariation: 0.005
+    Temperature: 1.2
+    Rainfall: 0
+    EnableSnow: 0
+    EnableRain: 0
+    TopBlock: grass
+    FillerBlock: dirt
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 36
+    InternalName: SavannaPlateau
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 37
+    InternalName: Badlands
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 38
+    InternalName: WoodedBadlandsPlateau
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 39
+    InternalName: BadlandsPlateau
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 40
+    InternalName: SmallEndIslands
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 41
+    InternalName: EndMidlands
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 42
+    InternalName: EndHighlands
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 43
+    InternalName: EndBarrens
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 44
+    InternalName: WarmOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 45
+    InternalName: LukewarmOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 46
+    InternalName: ColdOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 47
+    InternalName: DeepWarmOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 48
+    InternalName: DeepLukewarmOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 49
+    InternalName: DeepColdOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  - ID: 50
+    InternalName: DeepFrozenOcean
+    BaseHeight: 0.1
+    HeightVariation: 0.2
+    Temperature: 0.5
+    Rainfall: 0.5
+    EnableSnow: 0
+    EnableRain: 1
+    TopBlock: 
+    FillerBlock: 
+    TreesPerChunk: 0
+    ExtraTreeChance: 0
+    GrassPerChunk: 0
+    FlowersPerChunk: 0
+    MushroomsPerChunk: 0
+    DeadBushPerChunk: 0
+    ReedsPerChunk: 0
+    CactiPerChunk: 0
+    ClayPerChunk: 0
+    WaterlilyPerChunk: 0
+    SandPatchesPerChunk: 0
+    GravelPatchesPerChunk: 0
+  BlockMeshes:
+    Elements:
+    - Asset:
+        AssetGUID: 615dece8af05b5f4e8bd9ee9b8f57c06
+      RefCount: 1
+    - Asset:
+        AssetGUID: 0de41f8d340969449b7147a7b50078c6
+      RefCount: 30
+    - Asset:
+        AssetGUID: 90a8756e524d4fe458792a8909568f88
+      RefCount: 1
+    - Asset:
+        AssetGUID: b63c449be347bb241bd83b956db9653d
+      RefCount: 1
+    - Asset:
+        AssetGUID: 81d188c938e946c439c99f82e78ff2e8
+      RefCount: 1
+    - Asset:
+        AssetGUID: 4a3e79131fe90fc4888745f2af4b9a95
+      RefCount: 1
+  BlockTextures:
+    Elements:
+    - Asset:
+        AssetGUID: 93d2494ec2c3e394699b3647fec70bf0
+      RefCount: 7
+    - Asset:
+        AssetGUID: 12e9d03419492bb4dab515551609d5dd
+      RefCount: 7
+    - Asset:
+        AssetGUID: a1c30c59b2e16d14c8d1ec8322097255
+      RefCount: 7
+    - Asset:
+        AssetGUID: 3960eeff40728de4cab94b15b90ad64a
+      RefCount: 4
+    - Asset:
+        AssetGUID: df48dd995ae76ef439bda4d1b8339270
+      RefCount: 4
+    - Asset:
+        AssetGUID: 90c77f5e34999c6499415ce7af11252e
+      RefCount: 4
+    - Asset:
+        AssetGUID: ce893e34eb279a148b35f4c2cdf2cada
+      RefCount: 1
+    - Asset:
+        AssetGUID: 857835698beeb6a4eb350e954bdc2560
+      RefCount: 1
+    - Asset:
+        AssetGUID: f52714714efa11e458f7a3b471c4c495
+      RefCount: 1
+    - Asset:
+        AssetGUID: 2ff19db0aef00534296bc1c0be8e269e
+      RefCount: 6
+    - Asset:
+        AssetGUID: c5d410af615dbf540b9a89805c761efd
+      RefCount: 6
+    - Asset:
+        AssetGUID: fbec4621fbfe44e47af01eb6d53635e9
+      RefCount: 6
+    - Asset:
+        AssetGUID: 3f4c759c4cc976044b21f108390c91d6
+      RefCount: 6
+    - Asset:
+        AssetGUID: 2dffaaf673929304d888aa59e729b0f9
+      RefCount: 6
+    - Asset:
+        AssetGUID: 66de5a91a9f85984f9bf07756479139a
+      RefCount: 6
+    - Asset:
+        AssetGUID: e329207515de1ee4899511dadf629e47
+      RefCount: 6
+    - Asset:
+        AssetGUID: 7adcc8aa6e547b140ba47c4ffc3b4628
+      RefCount: 6
+    - Asset:
+        AssetGUID: 6d01fb465933bfc48975c40d96be785d
+      RefCount: 6
+    - Asset:
+        AssetGUID: 6226cbbb3f3ac144cb9b8eff5e76767d
+      RefCount: 6
+    - Asset:
+        AssetGUID: e8bc5b6b81851c54d90ec99d6091af72
+      RefCount: 6
+    - Asset:
+        AssetGUID: 2225e718623d4b14694643839571ff5e
+      RefCount: 6
+    - Asset:
+        AssetGUID: 21cb454a7deff864db6b6bcd93b45670
+      RefCount: 6
+    - Asset:
+        AssetGUID: c8c1b9bc8c5805245a033c201c3e73ed
+      RefCount: 6
+    - Asset:
+        AssetGUID: b659d6cd22b7828449bf10570902d244
+      RefCount: 6
+    - Asset:
+        AssetGUID: 2d5814f79916de049b8c3ca19a763944
+      RefCount: 6
+    - Asset:
+        AssetGUID: 05d9b4bcb72a5344ba216f753c2305d5
+      RefCount: 6
+    - Asset:
+        AssetGUID: d87c084ee6c1e804dbdb7c10604b1ed1
+      RefCount: 6
+    - Asset:
+        AssetGUID: a865d964040a5804f8c907be91285027
+      RefCount: 4
+    - Asset:
+        AssetGUID: 2b772b3f6bcfaca41bc9c5f41ab9d221
+      RefCount: 4
+    - Asset:
+        AssetGUID: d3ed40424e805044898f95987a13c41b
+      RefCount: 4
+    - Asset:
+        AssetGUID: 8f5af8e9c5094744eb706c5b33b9a96a
+      RefCount: 1
+    - Asset:
+        AssetGUID: c90431487417536469599a08bda29b9c
+      RefCount: 1
+    - Asset:
+        AssetGUID: 89d3b0663d3110848afe54f07041ed3b
+      RefCount: 1
+    - Asset:
+        AssetGUID: 292bf3a5a50aee34591093775925c414
+      RefCount: 1
+    - Asset:
+        AssetGUID: b145b64addc266e49a329f5fa26c2b22
+      RefCount: 1
+    - Asset:
+        AssetGUID: 3fb2e0d7e0ab37a4a8a05583e76203ab
+      RefCount: 1
+    - Asset:
+        AssetGUID: 0a2a8844b169f76448939070aac16c6a
+      RefCount: 6
+    - Asset:
+        AssetGUID: d224f8075d0412f448ecdb222bd8122c
+      RefCount: 6
+    - Asset:
+        AssetGUID: b82ed1a4331821e469e2c7b23e62dbaa
+      RefCount: 6
+    - Asset:
+        AssetGUID: 6eb33f27663538c4db3f167db925353b
+      RefCount: 6
+    - Asset:
+        AssetGUID: 1aa1dcb97a7191e45bbcd1d1271af68b
+      RefCount: 6
+    - Asset:
+        AssetGUID: 7085247f38438fb49bddb4c5030c9405
+      RefCount: 6
+    - Asset:
+        AssetGUID: 4b2f289fce1d97c408ef1634c97ec433
+      RefCount: 6
+    - Asset:
+        AssetGUID: b6df3012202481a4d9c1fd659e006c44
+      RefCount: 6
+    - Asset:
+        AssetGUID: 0978e14c27d023747b847c3822f79915
+      RefCount: 6
+    - Asset:
+        AssetGUID: b9042fc50cf3eb042944505cfe9a6e32
+      RefCount: 6
+    - Asset:
+        AssetGUID: 4a5e003a88728aa478181a9c6235e053
+      RefCount: 6
+    - Asset:
+        AssetGUID: 15392451bafc69d48b21cf983b6f458b
+      RefCount: 6
+    - Asset:
+        AssetGUID: 6dc994abcf4eb0f43b8043a96b7750b6
+      RefCount: 6
+    - Asset:
+        AssetGUID: 546ef89712283db4186fc4f8759e0128
+      RefCount: 6
+    - Asset:
+        AssetGUID: b6491c23eeac3ae449f35c0908cc5ce4
+      RefCount: 6
+    - Asset:
+        AssetGUID: 7bf5701313181da4abf64fb8a7556476
+      RefCount: 6
+    - Asset:
+        AssetGUID: d6152500cd31e5c4681fa4a1a131c07a
+      RefCount: 6
+    - Asset:
+        AssetGUID: 626f3d77b0e73e24d8f428bfab4678e8
+      RefCount: 6
+    - Asset:
+        AssetGUID: 8d867044bb0e9e245a0c8557abfa23c4
+      RefCount: 6
+    - Asset:
+        AssetGUID: 5f923ce54799f3b4f83c2df4727fb87a
+      RefCount: 6
+    - Asset:
+        AssetGUID: ed70600eabe5a014580c433de38622f0
+      RefCount: 6
+    - Asset:
+        AssetGUID: 0c4365b1bcc65d449a945944f3f86538
+      RefCount: 4
+    - Asset:
+        AssetGUID: 85485a371d29e9643868fa9d339210a9
+      RefCount: 4
+    - Asset:
+        AssetGUID: 6f05474cbe72d1440b330d02f0291c74
+      RefCount: 4
+    - Asset:
+        AssetGUID: a4305a3a0de938e4f86fb76180b11eb8
+      RefCount: 2
+    - Asset:
+        AssetGUID: b5ea7f853282cca4ab64b5149668b5cc
+      RefCount: 2
+    - Asset:
+        AssetGUID: 0ff5b0322b6ff434c945aaf214f2d105
+      RefCount: 2
+    - Asset:
+        AssetGUID: 46242af2587a23745a0009b7aa505e2a
+      RefCount: 6
+    - Asset:
+        AssetGUID: 091f82c657ecc354ab9d9f59c6467bee
+      RefCount: 6
+    - Asset:
+        AssetGUID: 0f311ff129272e84fa967e666df55740
+      RefCount: 6
+    - Asset:
+        AssetGUID: 424ca5fb62e3c5a418e39e3b8dfff26f
+      RefCount: 6
+    - Asset:
+        AssetGUID: 0d895fc9d8cf59e4e870c2df3ee798bd
+      RefCount: 6
+    - Asset:
+        AssetGUID: 451ddd037fcc6c54a85edece5ddc9683
+      RefCount: 6
+    - Asset:
+        AssetGUID: 6ee299a3eebb125478cf37080180865e
+      RefCount: 6
+    - Asset:
+        AssetGUID: b8b661fb3de76f24096e125000397b71
+      RefCount: 6
+    - Asset:
+        AssetGUID: d6e2ec7087862454eb867a2d6599f63f
+      RefCount: 6
+    - Asset:
+        AssetGUID: 52c806a3fd0a69448b03dabe118f7b77
+      RefCount: 6
+    - Asset:
+        AssetGUID: 8e25e4e13d1359b4fb5877beb6d2e4ed
+      RefCount: 6
+    - Asset:
+        AssetGUID: 87996ff36b313f14fbccde1f72a18e68
+      RefCount: 6
+    - Asset:
+        AssetGUID: 39613b1dca3cf494a94d27f750bc5229
+      RefCount: 4
+    - Asset:
+        AssetGUID: adecc4d72a1c4de4997d6cc3beb45611
+      RefCount: 4
+    - Asset:
+        AssetGUID: 78c1f9f2172570945a4e775ef30c4dd5
+      RefCount: 4
+    - Asset:
+        AssetGUID: f4a8034eb42312f4cbb9f3ad94643b25
+      RefCount: 1
+    - Asset:
+        AssetGUID: 08dc72d8305e7a5439fa7989581054d9
+      RefCount: 1
+    - Asset:
+        AssetGUID: 44315aaf6399fdc408227f6b1202fd0e
+      RefCount: 1
+    - Asset:
+        AssetGUID: bc50aa5bf164b334b95ec3cadcca2a60
+      RefCount: 1
+    - Asset:
+        AssetGUID: f0ceb7c17cb8fa0408a9cbd0e3720f06
+      RefCount: 1
+    - Asset:
+        AssetGUID: 948bb7ca2a28b56498b77588918f2a2b
+      RefCount: 1
+    - Asset:
+        AssetGUID: 1c65542e27011d844841169d71360ed5
+      RefCount: 2
+    - Asset:
+        AssetGUID: 3a3d31b244e10c84094d518c3e5a38c0
+      RefCount: 2
+    - Asset:
+        AssetGUID: 874ad6cd683fd7a4db7a9db8dee5eada
+      RefCount: 2
+    - Asset:
+        AssetGUID: 8f56dd7c62d292d43aba7102eb6d2733
+      RefCount: 6
+    - Asset:
+        AssetGUID: 77485126aa0a17d4f831d5a8bbc1d52c
+      RefCount: 6
+    - Asset:
+        AssetGUID: a1b01f94c5dbd854dbcfc570db309f9a
+      RefCount: 6
+    - Asset:
+        AssetGUID: b580340ad7ec0ff459bd9e4836da452a
+      RefCount: 8
+    - Asset:
+        AssetGUID: b5cea8ac95f5fb644a3fe829b9819a08
+      RefCount: 7
+    - Asset:
+        AssetGUID: 3517e8fb01f54584fa1af4c6c77709b1
+      RefCount: 7
+    - Asset:
+        AssetGUID: 30a0d15ce4dfb394ca3a858fcb506c72
+      RefCount: 4
+    - Asset:
+        AssetGUID: baf9a90d1c7662b4594ca7d88fc746f2
+      RefCount: 4
+    - Asset:
+        AssetGUID: 4bdf01cd780545c4faf13436301fd60e
+      RefCount: 4
+    - Asset:
+        AssetGUID: 520903026232bfa4d9db12ec6c24f09e
+      RefCount: 2
+    - Asset:
+        AssetGUID: b0e7126af23d3c24095bcb31ce051d72
+      RefCount: 2
+    - Asset:
+        AssetGUID: 09def65ce648d7a4f975c51a8fefe911
+      RefCount: 2
+    - Asset:
+        AssetGUID: 9e8ad7d94fc4f2046ae4904c066c5a80
+      RefCount: 4
+    - Asset:
+        AssetGUID: 5ee9c04024dca174084a4db45d86c914
+      RefCount: 4
+    - Asset:
+        AssetGUID: 57ab5104eaa33ca43b96bd828bc144ce
+      RefCount: 4
+    - Asset:
+        AssetGUID: 3b6cf90f590edc24785ca3bc21efcc14
+      RefCount: 2
+    - Asset:
+        AssetGUID: e8a7f493cbfe3034db7412121406b715
+      RefCount: 2
+    - Asset:
+        AssetGUID: 2a70725caa7b780419b4f201f7185e7c
+      RefCount: 2
+    - Asset:
+        AssetGUID: 97b1f84471f244f42b604553a9cc1ddb
+      RefCount: 6
+    - Asset:
+        AssetGUID: eaa7b431740382543a2bacc8fb053e57
+      RefCount: 6
+    - Asset:
+        AssetGUID: a5c016c8bb4fb114b97487a9fde240cf
+      RefCount: 6
+    - Asset:
+        AssetGUID: 3a2a1df75c946fa4e934538f988a29fb
+      RefCount: 6
+    - Asset:
+        AssetGUID: 56c91cedae53cbd498aef8a15717ef22
+      RefCount: 6
+    - Asset:
+        AssetGUID: 511c4994f51b6b04195824cf2d0cd8bb
+      RefCount: 6
+    - Asset:
+        AssetGUID: 064d711ea50049647b76855c8a292e91
+      RefCount: 6
+    - Asset:
+        AssetGUID: 7d09b0e39334e7848be1b74fe16ef55b
+      RefCount: 6
+    - Asset:
+        AssetGUID: 18989f4fac2d62748b9f20e00d7e68cb
+      RefCount: 6
+    - Asset:
+        AssetGUID: c1082fc46a702a445b9513486f840235
+      RefCount: 2
+    - Asset:
+        AssetGUID: 4e1ab34ec26d0d248b2377b8a998e8c9
+      RefCount: 2
+    - Asset:
+        AssetGUID: d280476c401b04245babe7b05c2c877e
+      RefCount: 2
+    - Asset:
+        AssetGUID: 6e31eac0efd93684a964664793aebca1
+      RefCount: 4
+    - Asset:
+        AssetGUID: 9f2863f920cf0bd44af20b384acce73c
+      RefCount: 4
+    - Asset:
+        AssetGUID: 099114efd94f4364ba5f920f974e5ca3
+      RefCount: 4
+    - Asset:
+        AssetGUID: 60616269b0aa7074bb15579fbbbdf773
+      RefCount: 12
+    - Asset:
+        AssetGUID: d4096dff7c716074083a795117c1390f
+      RefCount: 12
+    - Asset:
+        AssetGUID: e7c13a9dc26327f4e80b50995eb08336
+      RefCount: 12
+  BlockMaterials:
+    Elements:
+    - Asset:
+        AssetGUID: da5305b249bd56642b16bff05c2f0093
+      RefCount: 30
+    - Asset:
+        AssetGUID: 0b3ad422c14bb1a4fb9d66e5af2383c4
+      RefCount: 1
+    - Asset:
+        AssetGUID: 31047685e64a061468f4920a0841b948
+      RefCount: 2
+    - Asset:
+        AssetGUID: 03282efb6c9d4294da5d6bea33521558
+      RefCount: 1
+--- !u!114 &18
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12914, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Animator
+    m_Image: {fileID: 1711060831702674872, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 424.80002
+    width: 922.2
+    height: 350.59998
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_ViewTransforms:
+    m_KeySerializationHelper:
+    - {fileID: -8008530456751603984, guid: 90023cafdac65ea4382f710ae4b06cbd, type: 2}
+    - {fileID: 4371072041530618994, guid: 90023cafdac65ea4382f710ae4b06cbd, type: 2}
+    m_ValueSerializationHelper:
+    - e00: 1.0774375
+      e01: 0
+      e02: 0
+      e03: 126.969955
+      e10: 0
+      e11: 1.0774375
+      e12: 0
+      e13: -87.22516
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    - e00: 1.0774375
+      e01: 0
+      e02: 0
+      e03: 126.969955
+      e10: 0
+      e11: 1.0774375
+      e12: 0
+      e13: -87.22516
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+  m_PreviewAnimator: {fileID: 0}
+  m_AnimatorController: {fileID: 9100000, guid: 90023cafdac65ea4382f710ae4b06cbd,
+    type: 2}
+  m_BreadCrumbs:
+  - m_Target: {fileID: 4371072041530618994, guid: 90023cafdac65ea4382f710ae4b06cbd,
+      type: 2}
+    m_ScrollPosition: {x: 0, y: 0}
+  stateMachineGraph: {fileID: 0}
+  stateMachineGraphGUI: {fileID: 0}
+  blendTreeGraph: {fileID: 0}
+  blendTreeGraphGUI: {fileID: 0}
+  m_AutoLiveLink: 1
+  m_MiniTool: 0
+  m_LockTracker:
+    m_IsLocked: 0
+  m_CurrentEditor: 0
+  m_LayerEditor:
+    m_SelectedLayerIndex: 1
+--- !u!114 &19
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12061, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Hierarchy
+    m_Image: {fileID: -3734745235275155857, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 916.8
+    y: 73.6
+    width: 297.2
+    height: 311.8
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_SceneHierarchy:
+    m_TreeViewState:
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 02fbffff
+      m_RenameOverlay:
+        m_UserAcceptedRename: 0
+        m_Name: 
+        m_OriginalName: 
+        m_EditFieldRect:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        m_UserData: 0
+        m_IsWaitingForDelay: 0
+        m_IsRenaming: 0
+        m_OriginalEventType: 11
+        m_IsRenamingFilename: 0
+        m_ClientGUIView: {fileID: 7}
+      m_SearchString: 
+    m_ExpandedScenes: []
+    m_CurrenRootInstanceID: 0
+    m_LockTracker:
+      m_IsLocked: 0
+    m_CurrentSortingName: TransformSorting
+  m_WindowGUID: 4c969a2b90040154d917609493e03593
+--- !u!114 &20
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12014, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 230, y: 250}
+  m_MaxSize: {x: 10000, y: 10000}
+  m_TitleContent:
+    m_Text: Project
+    m_Image: {fileID: -5179483145760003458, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 916.8
+    y: 406.4
+    width: 297.2
+    height: 369
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_SearchFilter:
+    m_NameFilter: 
+    m_ClassNames: []
+    m_AssetLabels: []
+    m_AssetBundleNames: []
+    m_VersionControlStates: []
+    m_SoftLockControlStates: []
+    m_ReferencingInstanceIDs: 
+    m_SceneHandles: 
+    m_ShowAllHits: 0
+    m_SkipHidden: 0
+    m_SearchArea: 1
+    m_Folders:
+    - Assets/Minecraft Default PBR Resources/Input
+    m_Globs: []
+    m_OriginalText: 
+  m_ViewMode: 0
+  m_StartGridSize: 64
+  m_LastFolders:
+  - Assets
+  m_LastFoldersGridSize: -1
+  m_LastProjectPath: C:\Projects\Unity\MinecraftClone
+  m_LockTracker:
+    m_IsLocked: 0
+  m_FolderTreeState:
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 1aac0000
+    m_LastClickedID: 44058
+    m_ExpandedIDs: ffffffff00000000a8620000aa620000ac620000ae620000
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+      m_EditFieldRect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      m_UserData: 0
+      m_IsWaitingForDelay: 0
+      m_IsRenaming: 0
+      m_OriginalEventType: 11
+      m_IsRenamingFilename: 1
+      m_ClientGUIView: {fileID: 0}
+    m_SearchString: 
+    m_CreateAssetUtility:
+      m_EndAction: {fileID: 0}
+      m_InstanceID: 0
+      m_Path: 
+      m_Icon: {fileID: 0}
+      m_ResourceFile: 
+  m_AssetTreeState:
+    scrollPos: {x: 0, y: 60}
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: ffffffff00000000a8620000aa620000ac620000ae620000
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+      m_EditFieldRect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      m_UserData: 0
+      m_IsWaitingForDelay: 0
+      m_IsRenaming: 0
+      m_OriginalEventType: 11
+      m_IsRenamingFilename: 1
+      m_ClientGUIView: {fileID: 11}
+    m_SearchString: 
+    m_CreateAssetUtility:
+      m_EndAction: {fileID: 0}
+      m_InstanceID: 0
+      m_Path: 
+      m_Icon: {fileID: 0}
+      m_ResourceFile: 
+  m_ListAreaState:
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 0
+    m_ExpandedInstanceIDs: c6230000
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+      m_EditFieldRect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      m_UserData: 0
+      m_IsWaitingForDelay: 0
+      m_IsRenaming: 0
+      m_OriginalEventType: 11
+      m_IsRenamingFilename: 1
+      m_ClientGUIView: {fileID: 0}
+    m_CreateAssetUtility:
+      m_EndAction: {fileID: 0}
+      m_InstanceID: 0
+      m_Path: 
+      m_Icon: {fileID: 0}
+      m_ResourceFile: 
+    m_NewAssetIndexInList: -1
+    m_ScrollPosition: {x: 0, y: 0}
+    m_GridSize: 64
+  m_SkipHiddenPackages: 0
+  m_DirectoriesAreaWidth: 207
+--- !u!114 &21
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12019, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Inspector
+    m_Image: {fileID: -440750813802333266, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 1216
+    y: 73.6
+    width: 319
+    height: 701.8
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_ObjectsLockedBeforeSerialization: []
+  m_InstanceIDsLockedBeforeSerialization: 
+  m_PreviewResizer:
+    m_CachedPref: -151
+    m_ControlHash: -371814159
+    m_PrefName: Preview_InspectorPreview
+  m_LastInspectedObjectInstanceID: -1
+  m_LastVerticalScrollValue: 0
+  m_GlobalObjectId: 
+  m_InspectorMode: 0
+  m_LockTracker:
+    m_IsLocked: 0
+  m_PreviewWindow: {fileID: 0}

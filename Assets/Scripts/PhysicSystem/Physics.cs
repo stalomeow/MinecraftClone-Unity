@@ -170,9 +170,9 @@ namespace Minecraft.PhysicSystem
             if (y >= 0 && y < ChunkHeight)
             {
                 int startX = Mathf.FloorToInt(aabb.Min.x);
-                int endX = Mathf.FloorToInt(aabb.Max.x);
+                int endX = Mathf.FloorToInt(aabb.Max.x - 0.05f); // 稍微做一个偏移，避免误判
                 int startZ = Mathf.FloorToInt(aabb.Min.z);
-                int endZ = Mathf.FloorToInt(aabb.Max.z);
+                int endZ = Mathf.FloorToInt(aabb.Max.z - 0.05f); // 稍微做一个偏移，避免误判
 
                 for (int x = startX; x <= endX; x++)
                 {
@@ -343,7 +343,8 @@ namespace Minecraft.PhysicSystem
                             continue;
                         }
 
-                        if (movement > 0 && aabb.Max[axis] <= blockBB.Min[axis])
+                        // 下面两个 if 中的注释是多余条件。注释掉可以解决部分情况下穿墙的问题
+                        if (movement > 0 /* && aabb.Max[axis] <= blockBB.Min[axis] */)
                         {
                             float maxMovement = blockBB.Min[axis] - aabb.Max[axis];
 
@@ -354,7 +355,7 @@ namespace Minecraft.PhysicSystem
                                 return true;
                             }
                         }
-                        else if (movement < 0 && aabb.Min[axis] >= blockBB.Max[axis])
+                        else if (movement < 0 /* && aabb.Min[axis] >= blockBB.Max[axis] */)
                         {
                             float maxMovement = blockBB.Max[axis] - aabb.Min[axis];
 

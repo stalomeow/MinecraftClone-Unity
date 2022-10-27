@@ -1,6 +1,6 @@
-﻿using System;
-using Minecraft.Configurations;
+﻿using Minecraft.Configurations;
 using Minecraft.PlayerControls;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -40,7 +40,7 @@ namespace Minecraft.Entities
 
 
         [NonSerialized] private InputAction m_MoveAction;
-        [NonSerialized] private InputAction m_RunAction;
+        // [NonSerialized] private InputAction m_RunAction;
         [NonSerialized] private InputAction m_LookAction;
         [NonSerialized] private InputAction m_JumpAction;
         [NonSerialized] private InputAction m_FlyAction;
@@ -53,12 +53,13 @@ namespace Minecraft.Entities
 
         private Vector3 m_OriginalCameraPosition;
         private bool m_Jump;
-        private bool m_IsFlying;
         private bool m_FlyDown;
         private bool m_IsRunning;
         private bool m_PreviouslyGrounded;
         private float m_StepCycle;
         private float m_NextStep;
+
+        private float m_LastTimePressW;
 
 
         protected override void Start()
@@ -67,7 +68,7 @@ namespace Minecraft.Entities
 
             m_InputActions.Enable();
             m_MoveAction = m_InputActions["Player/Move"];
-            m_RunAction = m_InputActions["Player/Run"];
+            // m_RunAction = m_InputActions["Player/Run"];
             m_LookAction = m_InputActions["Player/Look"];
             m_JumpAction = m_InputActions["Player/Jump"];
             m_FlyAction = m_InputActions["Player/Fly"];
@@ -86,7 +87,9 @@ namespace Minecraft.Entities
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle * 0.5f;
 
-            m_RunAction.performed += SwitchRunMode;
+            m_LastTimePressW = 0f;
+
+            // m_RunAction.performed += SwitchRunMode;
             m_JumpAction.performed += SwitchJumpMode;
             m_FlyAction.performed += SwitchFlyMode;
             m_FlyDownAction.performed += SwitchFlyDownMode;
@@ -102,10 +105,10 @@ namespace Minecraft.Entities
             m_Jump = context.ReadValueAsButton();
         }
 
-        private void SwitchRunMode(InputAction.CallbackContext context)
-        {
-            m_IsRunning = context.ReadValueAsButton();
-        }
+        // private void SwitchRunMode(InputAction.CallbackContext context)
+        // {
+        //     m_IsRunning = true;
+        // }
 
         private void SwitchFlyMode(InputAction.CallbackContext context)
         {
@@ -114,16 +117,22 @@ namespace Minecraft.Entities
 
         private void SwitchFlyDownMode(InputAction.CallbackContext context)
         {
-            m_FlyDown = !m_FlyDown;
+            m_FlyDown = context.ReadValueAsButton();
         }
 
         private void SwitchCursorState(InputAction.CallbackContext context)
         {
-            m_FirstPersonLook.SwitchCursorLock();
+            bool value = context.ReadValueAsButton();
+            m_FirstPersonLook.SetCursorLockMode(!value);
         }
 
         private void Update()
         {
+            // 在 Update 里读取输入。
+            // 如果在 FixedUpdate 里读输入会出现丢失，
+            // 因为 FixedUpdate 不是按实际帧率执行
+            SwitchWalkAndRunMode();
+
             m_FirstPersonLook.LookRotation(m_LookAction.ReadValue<Vector2>(), Time.deltaTime);
 
             bool isGrounded = GetIsGrounded(out BlockData groundBlock);
@@ -146,11 +155,24 @@ namespace Minecraft.Entities
 
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 velocity = m_Transform.forward * input.y + m_Transform.right * input.x;
-            velocity = velocity.normalized * speed * vMultiplier;
+            velocity = speed * vMultiplier * velocity.normalized;
 
             if (UseGravity)
             {
                 velocity.y = Velocity.y; // 不管 y 方向
+
+                bool isGrounded = GetIsGrounded(out BlockData groundBlock);
+
+                if (isGrounded && m_Jump)
+                {
+                    // 向上跳起
+                    AddInstantForce(new Vector3(0, JumpHeight * Mass / Time.fixedDeltaTime, 0));
+                    PlayBlockStepSound(groundBlock);
+                    // m_Jump = false;
+                }
+
+                ProgressStepCycle(input, speed, isGrounded, groundBlock);
+                UpdateCameraPosition(speed, isGrounded);
             }
             else if (m_FlyDown)
             {
@@ -167,22 +189,6 @@ namespace Minecraft.Entities
 
             // 施加力来调整速度
             AddInstantForce((velocity - Velocity) * Mass / Time.fixedDeltaTime);
-
-            if (UseGravity)
-            {
-                bool isGrounded = GetIsGrounded(out BlockData groundBlock);
-
-                if (isGrounded && m_Jump)
-                {
-                    // 向上跳起
-                    AddInstantForce(new Vector3(0, JumpHeight * Mass / Time.fixedDeltaTime, 0));
-                    PlayBlockStepSound(groundBlock);
-                    //m_Jump = false;
-                }
-
-                ProgressStepCycle(input, speed, isGrounded, groundBlock);
-                UpdateCameraPosition(speed, isGrounded);
-            }
 
             base.FixedUpdate(); // move
         }
@@ -233,9 +239,33 @@ namespace Minecraft.Entities
             m_CameraTransform.localPosition = newCameraPosition;
         }
 
+        private void SwitchWalkAndRunMode()
+        {
+            // TODO: 如何用 Input System 实现这个功能？
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                float currentTime = Time.time;
+
+                if (currentTime - m_LastTimePressW <= 0.2f)
+                {
+                    // 此时认为玩家双击了 W 或者 向上箭头
+                    m_IsRunning = true;
+                }
+
+                m_LastTimePressW = currentTime;
+            }
+        }
+
         private float GetInput(out Vector2 input)
         {
             input = m_MoveAction.ReadValue<Vector2>();
+
+            if (input == Vector2.zero)
+            {
+                // 一旦玩家停止移动，结束跑步状态
+                m_IsRunning = false;
+            }
+
             return m_IsRunning ? RunSpeed : WalkSpeed;
         }
 

@@ -19,7 +19,7 @@ inline void HighlightBlock(float3 blockPos, float2 uv, half4 highlightColor, ino
     float dist = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
 
     UNITY_BRANCH
-    if (dist == 0)
+    if (dist <= 0.01)
     {
         color += highlightColor;
 

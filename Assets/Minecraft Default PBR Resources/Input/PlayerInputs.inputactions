@@ -11,7 +11,8 @@
                     "id": "49d29af8-1d81-4d68-ac2b-3e6ab7e8eea9",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Run",
@@ -19,7 +20,8 @@
                     "id": "701ec56b-258c-481b-85db-47ccd982179b",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Look",
@@ -27,7 +29,8 @@
                     "id": "855e7a62-7b68-4245-83fd-7d5ebf988064",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Jump",
@@ -35,7 +38,8 @@
                     "id": "7fe882bd-b884-473b-b403-b77cab5632e6",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Fly",
@@ -43,7 +47,8 @@
                     "id": "3e37f689-1774-4c4d-8bc5-a0112cffc519",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Fly Down",
@@ -51,7 +56,8 @@
                     "id": "0cd1f54b-0b05-416a-9f22-d38883e5afc9",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Cursor State",
@@ -59,7 +65,8 @@
                     "id": "b459a144-064b-4494-87fd-717ecfda9c02",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -89,7 +96,7 @@
                     "name": "",
                     "id": "2673e00b-3e22-4f58-a802-16408de703d5",
                     "path": "<Keyboard>/space",
-                    "interactions": "MultiTap",
+                    "interactions": "MultiTap(tapDelay=0.2)",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Fly",
@@ -99,8 +106,19 @@
                 {
                     "name": "",
                     "id": "63e5b221-2908-4980-b2af-2d77d752e193",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "Press(behavior=2)",
+                    "path": "<Keyboard>/w",
+                    "interactions": "MultiTap(tapDelay=0.2)",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4bf01fa6-b1b0-497c-bd93-8a487cfddf42",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "MultiTap(tapDelay=0.2)",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Run",
@@ -220,8 +238,8 @@
                 {
                     "name": "",
                     "id": "5a779168-081c-49ab-9faf-25026a8a5950",
-                    "path": "<Keyboard>/backquote",
-                    "interactions": "",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Cursor State",
@@ -229,37 +247,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Button With One Modifier",
-                    "id": "706142bb-71b2-4968-bb11-303c437d1030",
-                    "path": "ButtonWithOneModifier",
+                    "name": "",
+                    "id": "60d9c316-560b-46c8-9bbe-8ec33913f078",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "Cursor State",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8fd8f99-95b5-4b51-a269-5c78207adbf3",
+                    "path": "<Keyboard>/shift",
                     "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Fly Down",
-                    "isComposite": true,
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "modifier",
-                    "id": "4c10917a-2130-45b2-941e-4042ea99a4dd",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
+                    "name": "",
+                    "id": "c6492111-4df7-410d-983e-b6987f8aea57",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Fly Down",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "button",
-                    "id": "4b1b864f-82b6-4166-822a-5532bf4d2998",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Fly Down",
-                    "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }
